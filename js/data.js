@@ -1,9 +1,9 @@
 /* =====================================================================
-   data.js — כל הנתונים באתר בדיוניים לחלוטין (נוצרים דטרמיניסטית)
+   data.js - כל הנתונים באתר בדיוניים לחלוטין (נוצרים דטרמיניסטית)
    ===================================================================== */
 const DATA = (() => {
 
-  // מחולל אקראי דטרמיניסטי — אותם "נתונים" בכל טעינה
+  // מחולל אקראי דטרמיניסטי - אותם "נתונים" בכל טעינה
   function rng(seed) {
     let a = seed >>> 0;
     return () => {
@@ -19,7 +19,7 @@ const DATA = (() => {
   const PAL = { s1: '#3987e5', s2: '#199e70', s3: '#c98500', s4: '#008300', s5: '#9085e9', s6: '#e66767', s7: '#d55181', s8: '#d95926' };
   const MONTHS = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
 
-  /* ================= 1) גיוס — NovaTech ================= */
+  /* ================= 1) גיוס - NovaTech ================= */
   const recruit = (() => {
     const r = rng(42);
     const depts = [
@@ -86,16 +86,16 @@ const DATA = (() => {
     });
 
     const ageBuckets = [
-      { key: 'a1', label: '0–30 יום', test: d => d <= 30, color: PAL.s2 },
-      { key: 'a2', label: '31–60 יום', test: d => d > 30 && d <= 60, color: PAL.s1 },
-      { key: 'a3', label: '61–99 יום', test: d => d > 60 && d < 100, color: PAL.s3 },
+      { key: 'a1', label: '0-30 יום', test: d => d <= 30, color: PAL.s2 },
+      { key: 'a2', label: '31-60 יום', test: d => d > 30 && d <= 60, color: PAL.s1 },
+      { key: 'a3', label: '61-99 יום', test: d => d > 60 && d < 100, color: PAL.s3 },
       { key: 'a4', label: '100+ יום', test: d => d >= 100, color: PAL.s6 },
     ];
 
     return { depts, reasons, fillTypes, positions, monthly, headcount, quota, ageBuckets };
   })();
 
-  /* ================= 2) היעדרויות — הוגוורטס ================= */
+  /* ================= 2) היעדרויות - הוגוורטס ================= */
   const hogwarts = (() => {
     const r = rng(1991);
     const houses = [
@@ -130,7 +130,7 @@ const DATA = (() => {
       }
     });
 
-    // סדרות חודשיות לשתי שנים (להשוואה אשתקד) — ממוצע אחוז ניצול מצטבר
+    // סדרות חודשיות לשתי שנים (להשוואה אשתקד) - ממוצע אחוז ניצול מצטבר
     const monthlySeries = {}; // house -> year -> {vac:[], sick:[], tot:[]}
     const acadMonths = ['ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר', 'ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני'];
     houses.forEach((h, hi) => {
@@ -154,7 +154,7 @@ const DATA = (() => {
     return { houses, staff, years, acadMonths, monthlySeries };
   })();
 
-  /* ================= 3) סטטוס הרשמה — מנויי Claude ================= */
+  /* ================= 3) סטטוס הרשמה - מנויי Claude ================= */
   const claude = (() => {
     const r = rng(777);
     const cycles = [
@@ -198,7 +198,7 @@ const DATA = (() => {
           const reg = [], act = [], cand = [], appr = [];
           let cum = base * 0.12;
           for (let w = 0; w < nW; w++) {
-            // צמיחה לוגיסטית — ספרינט של הרגע האחרון לפני סוף המבצע
+            // צמיחה לוגיסטית - ספרינט של הרגע האחרון לפני סוף המבצע
             const tt = w / (nW - 1);
             const target = base * (0.12 + 0.88 / (1 + Math.exp(-8 * (tt - 0.78))));
             cum = Math.max(cum, target * (0.95 + r() * 0.1));
@@ -215,7 +215,7 @@ const DATA = (() => {
     return { cycles, blocs, parties, tracks, weeks, statuses, data };
   })();
 
-  /* ================= 4) פילוח ארגוני — נאס"א ================= */
+  /* ================= 4) פילוח ארגוני - נאס"א ================= */
   const nasa = (() => {
     const r = rng(66);
     const centers = [
@@ -280,7 +280,7 @@ const DATA = (() => {
     return { centers, tracks, guestRanks, divisions, years, yearly };
   })();
 
-  /* ================= 5) פילוח עובדים — משלחת אולימפית ================= */
+  /* ================= 5) פילוח עובדים - משלחת אולימפית ================= */
   const olympic = (() => {
     const r = rng(2028); // לוס אנג'לס
     const sports = [
@@ -294,12 +294,12 @@ const DATA = (() => {
     const centers = ['מכון וינגייט', 'תל אביב', 'ירושלים', 'חיפה', 'אילת'];
     const genders = [{ key: 'f', label: 'ספורטאיות' }, { key: 'm', label: 'ספורטאים' }];
     const ageBuckets = [
-      { key: 'b1', label: 'עד 18' }, { key: 'b2', label: '19–22' }, { key: 'b3', label: '23–26' },
-      { key: 'b4', label: '27–30' }, { key: 'b5', label: '31–35' }, { key: 'b6', label: '36+' },
+      { key: 'b1', label: 'עד 18' }, { key: 'b2', label: '19-22' }, { key: 'b3', label: '23-26' },
+      { key: 'b4', label: '27-30' }, { key: 'b5', label: '31-35' }, { key: 'b6', label: '36+' },
     ];
     const tenureBuckets = [
-      { key: 't1', label: 'עד שנתיים' }, { key: 't2', label: '3–5' }, { key: 't3', label: '6–9' },
-      { key: 't4', label: '10–14' }, { key: 't5', label: '15+' },
+      { key: 't1', label: 'עד שנתיים' }, { key: 't2', label: '3-5' }, { key: 't3', label: '6-9' },
+      { key: 't4', label: '10-14' }, { key: 't5', label: '15+' },
     ];
 
     const list = [];

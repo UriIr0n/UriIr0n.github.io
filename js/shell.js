@@ -1,5 +1,5 @@
 /* =====================================================================
-   shell.js — שלד אחיד לעמוד דשבורד: כותרת, "על הפרויקט", טאבים, סיפור
+   shell.js - שלד אחיד לעמוד דשבורד: כותרת, "על הפרויקט", טאבים, סיפור
    ===================================================================== */
 const Shell = (() => {
 
@@ -22,7 +22,7 @@ const Shell = (() => {
         </div>
 
         <details class="about-proj">
-          <summary>${ICONS.spark} על הפרויקט המקורי — מה בניתי ולמה <span class="tw">▾</span></summary>
+          <summary>${ICONS.spark} על הפרויקט המקורי: מה בניתי ולמה <span class="tw">▾</span></summary>
           <div class="body">
             <div class="col"><h4>האתגר העסקי</h4><p>${cfg.about.problem}</p></div>
             <div class="col"><h4>מה בניתי</h4><ul>${cfg.about.built.map(x => `<li>${x}</li>`).join('')}</ul></div>

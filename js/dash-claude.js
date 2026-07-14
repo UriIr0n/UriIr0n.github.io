@@ -1,6 +1,6 @@
 /* =====================================================================
-   דשבורד 3 — סטטוס הרשמה | מנויי Claude
-   שחזור של "סטטוס הרשמה — השוואה תקופתית במצבי ההרשמה"
+   דשבורד 3 - סטטוס הרשמה | מנויי Claude
+   שחזור של "סטטוס הרשמה - השוואה תקופתית במצבי ההרשמה"
    ===================================================================== */
 const DashClaude = (() => {
   const D = DATA.claude;
@@ -14,21 +14,21 @@ const DashClaude = (() => {
   function build() {
     ui = Shell.build(root, {
       key: 'claude', emoji: '✨',
-      title: 'המרוץ למיליון — הרשמות ומנויים בהשקות Claude',
-      original: 'סטטוס הרשמה — השוואה תקופתית (Power BI)',
+      title: 'המרוץ למיליון: הרשמות ומנויים בהשקות Claude',
+      original: 'סטטוס הרשמה: השוואה תקופתית (Power BI)',
       about: {
         problem: 'במשך שנים, עובדת ישבה פעם בשבוע ארבע שעות והכינה ידנית דוח אקסל מבולגן על מצב ההרשמה. נתוני העבר היו פזורים בעשרות קבצים כאלה, בלי מבנה אחיד, וכל השוואה בין שנים הייתה ניחוש.',
         built: [
-          'שיטחתי שנים של דוחות אקסל ישנים לבסיס נתונים אחד אחיד — כך שנתוני העבר נשמרו והפכו שמישים',
+          'שיטחתי שנים של דוחות אקסל ישנים לבסיס נתונים אחד אחיד, כך שנתוני העבר נשמרו והפכו שמישים',
           'אוטומציה מקצה לקצה: הדוח השוטף ממערכת "מכלול" עובר טרנספורמציה ונטען לבסיס הנתונים אוטומטית, בלי מגע יד',
-          'ציר זמן מנורמל שמיישר את כל המחזורים — אפשר להשוות כל נקודה לאותה נקודה בשנים קודמות',
+          'ציר זמן מנורמל שמיישר את כל המחזורים, אפשר להשוות כל נקודה לאותה נקודה בשנים קודמות',
           'ארבעה גרפי מגמה במקביל, אחד לכל שלב במשפך ההרשמה, על פני ארבע שנות נתונים',
         ],
         tech: [
           'טבלת Snapshot עם ציר תאריך-תצוגה מנורמל',
           'Python + Power Query לטרנספורמציה וטעינה אוטומטית',
           'DAX להשוואת מחזורים (Cycle-over-Cycle)',
-          'עיצוב Small Multiples — אותו ציר בכל הגרפים',
+          'עיצוב Small Multiples: אותו ציר בכל הגרפים',
         ],
         impact: 'הפרויקט המשמעותי ביותר שבניתי: ארבע שעות עבודה ידנית בשבוע ירדו לאפס, ארבע שנות היסטוריה נשמרו במקום אחד, והמערכת תמשיך לרוץ קדימה לבד. את זרימת ההרשמה לאוניברסיטה רואים היום במבט אחד. אפיינתי את התהליך מקצה לקצה והצגתי אותו להנהלה.',
       },
@@ -90,12 +90,12 @@ const DashClaude = (() => {
     });
     $('cl-clear').addEventListener('click', () => { Object.assign(state, { country: null, region: null, track: null }); render(); });
 
-    // KPI — סוף מחזור נוכחי מול קודם
+    // KPI - סוף מחזור נוכחי מול קודם
     const regNow = seriesFor(2026, 'reg').at(-1);
     const regPrev = seriesFor(2025, 'reg').at(-1);
     const apprNow = seriesFor(2026, 'appr').at(-1);
     const growth = regPrev ? (regNow / regPrev - 1) * 100 : 0;
-    C.kpi($('cl-k1'), { label: 'נרשמו — השקת Claude 5', value: C.fmt(regNow), accent: true, sub: 'נכון לסוף מבצע ההשקה' });
+    C.kpi($('cl-k1'), { label: 'נרשמו: השקת Claude 5', value: C.fmt(regNow), accent: true, sub: 'נכון לסוף מבצע ההשקה' });
     C.kpi($('cl-k2'), { label: 'צמיחה מול השקת Claude 4', value: (growth >= 0 ? '+' : '') + C.pctF(growth, 1), sub: `${C.fmt(regPrev)} נרשמו ב-2025` });
     C.kpi($('cl-k3'), { label: 'הפכו למנויים בתשלום', value: C.fmt(apprNow), sub: 'המרה מחשבון חינמי למנוי' });
 
@@ -111,7 +111,7 @@ const DashClaude = (() => {
     const reg26 = seriesFor(2026, 'reg');
     const lastTwo = reg26.at(-1) - reg26[reg26.length - 4];
     const lastPct = C.pctF(lastTwo / reg26.at(-1) * 100, 0);
-    ui.setStory(`הדפוס חוזר בכל השקה: <b>${lastPct} מהנרשמים מגיעים בשלושת השבועות האחרונים</b>, רגע לפני שמחיר ההשקה נגמר. בפרויקט המקורי — הרשמת סטודנטים — הדפוס היה זהה, רק שהדדליין היה פתיחת הסמסטר. נסו לסנן אזור או מדינה: כל ארבעת הגרפים מגיבים יחד.`);
+    ui.setStory(`הדפוס חוזר בכל השקה: <b>${lastPct} מהנרשמים מגיעים בשלושת השבועות האחרונים</b>, רגע לפני שמחיר ההשקה נגמר. בפרויקט המקורי (הרשמת סטודנטים) הדפוס היה זהה, רק שהדדליין היה פתיחת הסמסטר. נסו לסנן אזור או מדינה: כל ארבעת הגרפים מגיבים יחד.`);
   }
 
   /* ================= טאב 2: מפת המדינות ================= */
@@ -121,7 +121,7 @@ const DashClaude = (() => {
         <div class="slicer"><label>פלטפורמה</label><div id="cg-track"></div></div>
       </div>
       <div class="tiles">
-        <div class="tile col-7"><div class="t-head"><h3>נרשמים לפי מדינה — סוף מבצע Claude 5</h3><span class="t-sub">צבע לפי אזור</span></div><div id="cg-bars"></div></div>
+        <div class="tile col-7"><div class="t-head"><h3>נרשמים לפי מדינה: סוף מבצע Claude 5</h3><span class="t-sub">צבע לפי אזור</span></div><div id="cg-bars"></div></div>
         <div class="tile col-5"><div class="t-head"><h3>חלוקת ההרשמות בין האזורים</h3></div><div id="cg-donut"></div></div>
         <div class="tile col-12"><div class="t-head"><h3>מי צמחה הכי מהר? Claude 5 מול Claude 4</h3><span class="t-sub">אחוז שינוי בנרשמים</span></div><div id="cg-growth"></div></div>
       </div>`;
@@ -159,7 +159,7 @@ const DashClaude = (() => {
     C.hbars($('cg-growth'), { items: growth, valueFmt: v => (v >= 0 ? '+' : '') + C.pctF(v, 1), valueLabel: 'צמיחה' });
 
     const top = rows[0], fastest = growth[0];
-    ui.setStory(`<b>${top.label}</b> מובילה בגודל (${C.fmt(top.value)} נרשמים), אבל הסיפור האמיתי הוא <b>${fastest.label}</b> — צמיחה של ${C.pctF(fastest.value, 0)} בין השקה להשקה. גודל זה נתון; מומנטום זו תובנה. <span style="color:var(--ink-3)">(והאתר הזה נבנה עם Claude Code, אז הדשבורד הזה הוא סגירת מעגל.)</span>`);
+    ui.setStory(`<b>${top.label}</b> מובילה בגודל (${C.fmt(top.value)} נרשמים), אבל הסיפור האמיתי הוא <b>${fastest.label}</b>, צמיחה של ${C.pctF(fastest.value, 0)} בין השקה להשקה. גודל זה נתון; מומנטום זו תובנה. <span style="color:var(--ink-3)">(והאתר הזה נבנה עם Claude Code, אז הדשבורד הזה הוא סגירת מעגל.)</span>`);
   }
 
   function render() {

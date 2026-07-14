@@ -59,7 +59,7 @@
   function renderChart() {
     Promise.all(ROLES.map(r => fetchCount(r.counter))).then(counts => {
       const items = ROLES.map((r, i) => ({ label: r.label, value: counts[i], color: r.color, key: r.key }));
-      Charts.donut(chartEl, { items, size: 116, centerTitle: 'מבקרים', valueLabel: 'מבקרים' });
+      Charts.donut(chartEl, { items, size: 116, centerTitle: 'ענו', valueLabel: 'ענו' });
     });
   }
 

@@ -212,11 +212,15 @@ footer .links a:hover { color: var(--ink); }
 }
 .visitors-live-head .kicker { color: var(--s1); font-weight: 700; font-size: 12.5px; letter-spacing: 1.5px; }
 .visitors-live-head h2 { font-size: 19px; font-weight: 800; flex-basis: 100%; }
+.visitors-live-head .visitor-count-big {
+  flex-basis: 100%; margin-top: 10px;
+  display: flex; align-items: baseline; gap: 8px;
+}
+.visitor-count-big b { font-size: 34px; font-weight: 800; color: var(--s1); line-height: 1; }
+.visitor-count-big span { font-size: 12.5px; color: var(--ink-3); }
 .visitors-live-body {
   display: flex; align-items: center; justify-content: center; gap: 34px; flex-wrap: wrap; text-align: center;
 }
-.visitor-count-big b { display: block; font-size: 46px; font-weight: 800; color: var(--s1); line-height: 1; }
-.visitor-count-big span { display: block; margin-top: 6px; font-size: 12.5px; color: var(--ink-3); max-width: 160px; }
 .visitor-roles { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .visitor-roles-prompt { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .visitor-roles-label { font-size: 14px; color: var(--ink); font-weight: 600; }

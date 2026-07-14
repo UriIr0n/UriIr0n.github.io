@@ -145,38 +145,24 @@
   window.addEventListener('hashchange', route);
   route();
 
-  /* ---------- כפתורי מייל: פתיחת טיוטה מותאמת למבקר + העתקה ללוח ---------- */
+  /* ---------- כפתורי מייל: פתיחת חלון כתיבה עם טיוטה מוכנה + העתקה ללוח ---------- */
   (function emailCopy() {
     const EMAIL = 'uriiron20@gmail.com';
-    const ROLE_KEY = 'uriiron_portfolio_role';
 
-    // טיוטה מוכנה לפי סוג המבקר (מהשאלון "מי אני?"). המבקר הוא שכותב אליי,
-    // אז הניסוח מנוסח מצדו - נושא + גוף שהוא רק צריך להשלים ולשלוח.
-    const DRAFTS = {
-      recruiter: {
-        subject: 'פנייה דרך תיק העבודות – הזדמנות תעסוקתית',
-        body: 'היי אורי,\n\nהגעתי לתיק העבודות שלך והפרויקטים עשו עליי רושם.\nיש אצלנו תפקיד בתחום ה-BI/דאטה שנראה לי מתאים לך, ואשמח לתאם שיחה קצרה.\n\nמתי נוח לך לדבר?\n\n',
-      },
-      employer: {
-        subject: 'פנייה בנוגע לתפקיד BI / דאטה',
-        body: 'היי אורי,\n\nראיתי את האתר ואת הדשבורדים שבנית, וזה בדיוק סוג העבודה שאנחנו מחפשים.\nאשמח שנקבע שיחה כדי לבדוק התאמה.\n\nתודה,\n\n',
-      },
-      bi: {
-        subject: 'רשמים מהאתר – מ-BI ל-BI',
-        body: 'היי אורי,\n\nנהניתי לעבור על האתר, במיוחד על מנוע התרשימים שכתבת בוונילה.\nאשמח להחליף רשמים ולשמוע איך בנית את זה.\n\nכל טוב,\n\n',
-      },
-      friend: {
-        subject: 'היי, נכנסתי לאתר שלך',
-        body: 'היי אורי,\n\nנכנסתי לאתר וזה יצא ממש מגניב.\nרק רציתי להגיד יישר כוח.\n\n',
-      },
-      other: {
-        subject: 'פנייה דרך תיק העבודות',
-        body: 'היי אורי,\n\nהגעתי לתיק העבודות שלך ורציתי ליצור קשר.\n\n',
-      },
+    // טיוטה אחידה שנפתחת מוכנה - המבקר רק משלים ושולח.
+    const DRAFT = {
+      subject: 'פנייה דרך תיק העבודות',
+      body: 'היי אורי,\n\nהגעתי דרך תיק העבודות שלך\n',
     };
+
+    // חלון כתיבה של Gmail בלשונית חדשה - נפתח מיד עם הכתובת, הנושא והתוכן,
+    // ורק נשאר ללחוץ "שלח" או לערוך. אמין יותר מ-mailto שלפעמים רק שומר טיוטה שקטה.
+    function gmailUrl() {
+      const p = new URLSearchParams({ view: 'cm', fs: '1', to: EMAIL, su: DRAFT.subject, body: DRAFT.body });
+      return 'https://mail.google.com/mail/?' + p.toString();
+    }
     function mailtoUrl() {
-      const d = DRAFTS[localStorage.getItem(ROLE_KEY)] || DRAFTS.other;
-      return `mailto:${EMAIL}?subject=${encodeURIComponent(d.subject)}&body=${encodeURIComponent(d.body)}`;
+      return `mailto:${EMAIL}?subject=${encodeURIComponent(DRAFT.subject)}&body=${encodeURIComponent(DRAFT.body)}`;
     }
 
     let toast = null, toastT = null;
@@ -213,11 +199,13 @@
         e.preventDefault();
         // קודם מעתיקים את הכתובת ללוח (בזמן שיש עדיין פוקוס), כגיבוי
         copy(EMAIL).then(
-          () => showToast('✉ פתחתי לך טיוטה במייל · הכתובת גם הועתקה: ' + EMAIL),
+          () => showToast('✉ פתחתי לך חלון כתיבה במייל · הכתובת גם הועתקה: ' + EMAIL),
           () => showToast('המייל שלי: ' + EMAIL),
         );
-        // ואז פותחים בתוכנת המייל טיוטה מוכנה, מותאמת לסוג המבקר
-        window.location.href = mailtoUrl();
+        // פותחים חלון כתיבה של Gmail בלשונית חדשה, עם טיוטה מוכנה ומותאמת
+        const win = window.open(gmailUrl(), '_blank', 'noopener');
+        // אם חוסם חלונות מנע את הפתיחה - נופלים חזרה ל-mailto (תוכנת המייל של המכשיר)
+        if (!win) window.location.href = mailtoUrl();
       });
     });
   })();

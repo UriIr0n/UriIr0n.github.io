@@ -104,11 +104,12 @@
       ?.addEventListener('click', () => { banner.hidden = true; });
   }
 
-  // מונה החוזרים
+  // מונה החוזרים - אייקון SVG נקי בלי רקע (בסגנון קו, כמו שאר האתר)
+  const RET_ICON = '<svg class="ret-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>';
   const countEl = document.getElementById('visitor-returning-count');
   const render = n => {
     if (countEl && typeof n === 'number')
-      countEl.innerHTML = `<b>${n.toLocaleString('he-IL')}</b><span>🔁 חזרו לבקר שוב</span>`;
+      countEl.innerHTML = `<b>${n.toLocaleString('he-IL')}</b><span>${RET_ICON} חזרו לבקר שוב</span>`;
   };
 
   const firstReturn = isReturning && localStorage.getItem(RET_COUNTED_KEY) !== '1';

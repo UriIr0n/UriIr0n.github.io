@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=21">
+<link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
 
@@ -28,6 +28,12 @@
 
 <!-- ===================== עמוד הבית ===================== -->
 <div class="page active" id="page-home">
+
+  <div class="welcome-back" id="welcome-back" hidden>
+    <span class="wb-emoji" aria-hidden="true">👋</span>
+    <span class="wb-text">אני שמח לראות אותך שוב!</span>
+    <button type="button" class="wb-close" id="welcome-back-close" aria-label="סגירת ההודעה">✕</button>
+  </div>
 
   <section class="hero">
     <div class="ghost-dash" aria-hidden="true">
@@ -60,6 +66,7 @@
       <span class="kicker">LIVE</span>
       <h2>מי נכנס לאתר?</h2>
       <div class="visitor-count-big" id="visitor-count"></div>
+      <div class="visitor-count-big returning" id="visitor-returning-count"></div>
     </div>
     <div class="visitors-live-body">
       <div class="visitor-roles">
@@ -240,7 +247,7 @@
 <script src="js/dash-claude.js?v=16"></script>
 <script src="js/dash-nasa.js?v=16"></script>
 <script src="js/dash-olympic.js?v=16"></script>
-<script src="js/main.js?v=16"></script>
-<script src="js/visitors.js?v=21"></script>
+<script src="js/main.js?v=17"></script>
+<script src="js/visitors.js?v=22"></script>
 </body>
 </html>

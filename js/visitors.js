@@ -81,3 +81,45 @@
 
   renderChart();
 })();
+
+/* =====================================================================
+   מבקר חוזר - הודעת "שמח לראות אותך שוב" + מונה חוזרים ייחודי
+   מונה נפרד ב-CounterAPI שסופר כל מכשיר פעם אחת בלבד, בכניסה החוזרת
+   הראשונה שלו (כל מי שנכנס יותר מפעם אחת).
+   ===================================================================== */
+(() => {
+  const NS = 'uriiron-portfolio';
+  const RET_COUNTER = 'returning-visits';
+  const SEEN_KEY = 'uriiron_portfolio_first_seen';            // סומן אחרי הכניסה הראשונה
+  const RET_COUNTED_KEY = 'uriiron_portfolio_returning_counted'; // המכשיר כבר נספר כחוזר
+
+  const isReturning = localStorage.getItem(SEEN_KEY) === '1';
+  if (!isReturning) localStorage.setItem(SEEN_KEY, '1'); // כניסה ראשונה - לא מציגים כלום
+
+  // הודעת "שמח לראות אותך שוב"
+  const banner = document.getElementById('welcome-back');
+  if (isReturning && banner) {
+    banner.hidden = false;
+    document.getElementById('welcome-back-close')
+      ?.addEventListener('click', () => { banner.hidden = true; });
+  }
+
+  // מונה החוזרים
+  const countEl = document.getElementById('visitor-returning-count');
+  const render = n => {
+    if (countEl && typeof n === 'number')
+      countEl.innerHTML = `<b>${n.toLocaleString('he-IL')}</b><span>🔁 חזרו לבקר שוב</span>`;
+  };
+
+  const firstReturn = isReturning && localStorage.getItem(RET_COUNTED_KEY) !== '1';
+  const counter = firstReturn ? RET_COUNTER + '/up' : RET_COUNTER + '/';
+  const url = `https://api.counterapi.dev/v1/${NS}/${counter}`;
+
+  fetch(url)
+    .then(r => r.json())
+    .then(d => {
+      if (firstReturn) localStorage.setItem(RET_COUNTED_KEY, '1');
+      render(d.count);
+    })
+    .catch(() => {}); // כשל שקט
+})();

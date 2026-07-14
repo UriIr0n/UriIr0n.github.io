@@ -108,8 +108,16 @@
   }
 
   /* ---------- ניתוב ---------- */
-  let active = null; // הדשבורד הפעיל
+  let active = null;   // הדשבורד הפעיל
+  let onHome = true;   // האם המסך הנוכחי הוא עמוד הבית
+  let homeScroll = 0;  // מיקום הגלילה האחרון בעמוד הבית - לשחזור מדויק ב"חזרה"
+  // מבטלים את שחזור הגלילה האוטומטי של הדפדפן כדי לשלוט בו בעצמנו
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
   function route() {
+    // לפני שעוזבים את עמוד הבית - זוכרים בדיוק איפה היינו
+    if (onHome) homeScroll = window.scrollY;
+
     const h = location.hash.replace(/^#\/?/, '');
     const [page, anchor] = h.split('#');
     const target = DASHBOARDS[page] ? page : 'home';
@@ -119,13 +127,17 @@
 
     if (target === 'home') {
       active = null;
+      onHome = true;
       if (anchor) {
         requestAnimationFrame(() => document.getElementById(anchor)?.scrollIntoView({ behavior: 'smooth' }));
       } else {
-        window.scrollTo({ top: 0 });
+        // חזרה מדשבורד - קופצים בדיוק לנקודה שממנה יצאנו
+        const y = homeScroll;
+        requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, y)));
       }
     } else {
       active = target;
+      onHome = false;
       window.scrollTo({ top: 0 });
       DASHBOARDS[target]();
     }
@@ -133,9 +145,40 @@
   window.addEventListener('hashchange', route);
   route();
 
-  /* ---------- כפתורי מייל: העתקה ללוח + אישור ---------- */
+  /* ---------- כפתורי מייל: פתיחת טיוטה מותאמת למבקר + העתקה ללוח ---------- */
   (function emailCopy() {
     const EMAIL = 'uriiron20@gmail.com';
+    const ROLE_KEY = 'uriiron_portfolio_role';
+
+    // טיוטה מוכנה לפי סוג המבקר (מהשאלון "מי אני?"). המבקר הוא שכותב אליי,
+    // אז הניסוח מנוסח מצדו - נושא + גוף שהוא רק צריך להשלים ולשלוח.
+    const DRAFTS = {
+      recruiter: {
+        subject: 'פנייה דרך תיק העבודות – הזדמנות תעסוקתית',
+        body: 'היי אורי,\n\nהגעתי לתיק העבודות שלך והפרויקטים עשו עליי רושם.\nיש אצלנו תפקיד בתחום ה-BI/דאטה שנראה לי מתאים לך, ואשמח לתאם שיחה קצרה.\n\nמתי נוח לך לדבר?\n\n',
+      },
+      employer: {
+        subject: 'פנייה בנוגע לתפקיד BI / דאטה',
+        body: 'היי אורי,\n\nראיתי את האתר ואת הדשבורדים שבנית, וזה בדיוק סוג העבודה שאנחנו מחפשים.\nאשמח שנקבע שיחה כדי לבדוק התאמה.\n\nתודה,\n\n',
+      },
+      bi: {
+        subject: 'רשמים מהאתר – מ-BI ל-BI',
+        body: 'היי אורי,\n\nנהניתי לעבור על האתר, במיוחד על מנוע התרשימים שכתבת בוונילה.\nאשמח להחליף רשמים ולשמוע איך בנית את זה.\n\nכל טוב,\n\n',
+      },
+      friend: {
+        subject: 'היי, נכנסתי לאתר שלך',
+        body: 'היי אורי,\n\nנכנסתי לאתר וזה יצא ממש מגניב.\nרק רציתי להגיד יישר כוח.\n\n',
+      },
+      other: {
+        subject: 'פנייה דרך תיק העבודות',
+        body: 'היי אורי,\n\nהגעתי לתיק העבודות שלך ורציתי ליצור קשר.\n\n',
+      },
+    };
+    function mailtoUrl() {
+      const d = DRAFTS[localStorage.getItem(ROLE_KEY)] || DRAFTS.other;
+      return `mailto:${EMAIL}?subject=${encodeURIComponent(d.subject)}&body=${encodeURIComponent(d.body)}`;
+    }
+
     let toast = null, toastT = null;
     function showToast(msg) {
       if (!toast) {
@@ -168,16 +211,13 @@
     document.querySelectorAll('[data-copy-email]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
+        // קודם מעתיקים את הכתובת ללוח (בזמן שיש עדיין פוקוס), כגיבוי
         copy(EMAIL).then(
-          () => showToast('✓ הכתובת הועתקה: ' + EMAIL),
+          () => showToast('✉ פתחתי לך טיוטה במייל · הכתובת גם הועתקה: ' + EMAIL),
           () => showToast('המייל שלי: ' + EMAIL),
         );
-        // גם מנסים לפתוח את תוכנת המייל אם מוגדרת - לא מזיק אם אין
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = 'mailto:' + EMAIL;
-        document.body.appendChild(iframe);
-        setTimeout(() => iframe.remove(), 1500);
+        // ואז פותחים בתוכנת המייל טיוטה מוכנה, מותאמת לסוג המבקר
+        window.location.href = mailtoUrl();
       });
     });
   })();

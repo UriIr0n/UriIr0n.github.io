@@ -54,6 +54,26 @@ button { font-family: inherit; cursor: pointer; }
 }
 .topnav nav a:hover { color: var(--ink); background: var(--surface-2); }
 
+/* ---------- באנר "שמח לראות אותך שוב" (מבקר חוזר) ---------- */
+.welcome-back {
+  max-width: 1180px; margin: 16px auto -8px; padding: 11px 18px;
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(155deg, color-mix(in srgb, var(--s2) 16%, var(--surface)), color-mix(in srgb, var(--s1) 10%, var(--surface)));
+  border: 1px solid color-mix(in srgb, var(--s2) 45%, var(--hairline-2));
+  border-radius: var(--radius);
+  box-shadow: 0 14px 32px -22px color-mix(in srgb, var(--s2) 60%, transparent);
+  animation: wbIn 0.5s ease both;
+}
+.welcome-back[hidden] { display: none; }
+.welcome-back .wb-emoji { font-size: 20px; line-height: 1; }
+.welcome-back .wb-text { font-weight: 700; color: var(--ink); font-size: 15px; }
+.welcome-back .wb-close {
+  margin-inline-start: auto; background: none; border: none;
+  color: var(--ink-3); font-size: 15px; line-height: 1; padding: 4px 7px; border-radius: 6px;
+}
+.welcome-back .wb-close:hover { color: var(--ink); background: var(--surface-2); }
+@keyframes wbIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -218,6 +238,8 @@ footer .links a:hover { color: var(--ink); }
 }
 .visitor-count-big b { font-size: 34px; font-weight: 800; color: var(--s1); line-height: 1; }
 .visitor-count-big span { font-size: 12.5px; color: var(--ink-3); }
+.visitor-count-big.returning { margin-top: 6px; }
+.visitor-count-big.returning b { font-size: 26px; color: var(--s2); }
 .visitors-live-body {
   display: flex; align-items: center; justify-content: center; gap: 34px; flex-wrap: wrap; text-align: center;
 }

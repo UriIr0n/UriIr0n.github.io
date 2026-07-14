@@ -19,7 +19,7 @@
     .then(data => {
       if (!alreadyCounted) localStorage.setItem(STORAGE_KEY, '1');
       if (typeof data.count === 'number') {
-        el.textContent = `👁 ${data.count.toLocaleString('he-IL')} מבקרים באתר`;
+        el.innerHTML = `<b>${data.count.toLocaleString('he-IL')}</b><span>👁 מבקרים באתר</span>`;
       }
     })
     .catch(() => {}); // כשל שקט - לא חוסם את האתר

@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=18">
+<link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body>
 
@@ -51,6 +51,24 @@
       <div class="stat"><b>100%</b><span>נתוני דמה, אפס מידע ארגוני חשוף</span></div>
       <div class="stat"><b>0</b><span>ספריות חיצוניות, הכול קוד מאפס</span></div>
       <div class="stat"><b>∞</b><span>לחיצות מותרות, הכול אינטראקטיבי</span></div>
+    </div>
+  </section>
+
+  <section class="visitors-live">
+    <div class="visitors-live-head">
+      <span class="live-dot"></span>
+      <span class="kicker">LIVE</span>
+      <h2>מי נכנס לאתר?</h2>
+    </div>
+    <div class="visitors-live-body">
+      <div class="visitor-count-big" id="visitor-count"></div>
+      <div class="visitor-roles">
+        <div class="visitor-roles-prompt" id="visitor-roles-prompt">
+          <span class="visitor-roles-label">מי אתה שנכנס/ת לאתר? ספרו לי, ותופיעו בגרף:</span>
+          <div class="seg" id="visitor-roles-btns"></div>
+        </div>
+        <div class="visitor-roles-chart" id="visitor-roles-chart"></div>
+      </div>
     </div>
   </section>
 
@@ -212,14 +230,6 @@
   </div>
   <div>נבנה עם <b>Claude Code</b> ב-HTML / CSS / JavaScript ונילה, ללא ספריות וללא Power BI Service.<br>
   כל הנתונים באתר הם נתוני דמה שנוצרו לשמירה על פרטיות הארגון. © אורי עירון</div>
-  <div class="visitor-widget">
-    <div class="visitor-count" id="visitor-count"></div>
-    <div class="visitor-roles-prompt" id="visitor-roles-prompt">
-      <span class="visitor-roles-label">מי אתה שנכנס/ת לאתר? ספרו לי, ותופיעו בגרף למטה:</span>
-      <div class="seg" id="visitor-roles-btns"></div>
-    </div>
-    <div class="visitor-roles-chart" id="visitor-roles-chart"></div>
-  </div>
 </footer>
 
 <script src="js/charts.js?v=16"></script>
@@ -231,6 +241,6 @@
 <script src="js/dash-nasa.js?v=16"></script>
 <script src="js/dash-olympic.js?v=16"></script>
 <script src="js/main.js?v=16"></script>
-<script src="js/visitors.js?v=18"></script>
+<script src="js/visitors.js?v=20"></script>
 </body>
 </html>

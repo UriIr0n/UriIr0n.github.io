@@ -219,7 +219,17 @@ footer .links a:hover { color: var(--ink); }
 .visitor-count-big span { display: block; margin-top: 6px; font-size: 12.5px; color: var(--ink-3); max-width: 160px; }
 .visitor-roles { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .visitor-roles-prompt { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.visitor-roles-label { font-size: 12.5px; color: var(--ink-3); }
+.visitor-roles-label { font-size: 14px; color: var(--ink); font-weight: 600; }
+.visitor-roles-prompt .seg { justify-content: center; }
+.visitor-roles-prompt .seg button {
+  background: color-mix(in srgb, var(--s1) 18%, var(--surface-2));
+  border-color: color-mix(in srgb, var(--s1) 50%, transparent);
+  color: var(--ink); font-weight: 600;
+}
+.visitor-roles-prompt .seg button:hover {
+  background: color-mix(in srgb, var(--s1) 30%, var(--surface-2));
+  border-color: color-mix(in srgb, var(--s1) 70%, transparent);
+}
 .visitor-roles-chart { max-width: 300px; width: 100%; }
 .visitor-roles-chart .chart-empty { padding: 4px 0; font-size: 12px; }
 @media (max-width: 700px) { .visitors-live { padding: 20px; } .visitors-live-body { gap: 22px; } }

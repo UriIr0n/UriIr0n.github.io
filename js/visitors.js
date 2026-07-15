@@ -33,11 +33,9 @@
   const NS = 'uriiron-portfolio';
   const STORAGE_KEY = 'uriiron_portfolio_role';
   const ROLES = [
-    { key: 'recruiter', label: 'מגייס/ת',      counter: 'role-recruiter', color: '#3987e5' },
-    { key: 'employer',  label: 'מעסיק/ה',       counter: 'role-employer',  color: '#199e70' },
-    { key: 'bi',        label: 'עמית/ה ל-BI',   counter: 'role-bi',        color: '#9085e9' },
-    { key: 'friend',    label: 'חבר/מכר',       counter: 'role-friend',    color: '#e66767' },
-    { key: 'other',     label: 'אחר',           counter: 'role-other',     color: '#c98500' },
+    { key: 'recruiter', label: 'מגייס/ת',       counter: 'role-recruiter', mergeCounters: ['role-employer'], color: '#3987e5' },
+    { key: 'bi',        label: 'קולגה',          counter: 'role-bi',        color: '#9085e9' },
+    { key: 'friend',    label: 'חבר/מכר/סקרן',  counter: 'role-friend',    color: '#e66767' },
   ];
 
   const promptEl = document.getElementById('visitor-roles-prompt');
@@ -56,8 +54,13 @@
       .catch(() => 0); // מונה שעוד לא נוצר / כשל רשת - מתייחסים כ-0
   }
 
+  function fetchRoleTotal(role) {
+    const counters = [role.counter, ...(role.mergeCounters || [])];
+    return Promise.all(counters.map(fetchCount)).then(vals => vals.reduce((a, b) => a + b, 0));
+  }
+
   function renderChart() {
-    Promise.all(ROLES.map(r => fetchCount(r.counter))).then(counts => {
+    Promise.all(ROLES.map(fetchRoleTotal)).then(counts => {
       const items = ROLES.map((r, i) => ({ label: r.label, value: counts[i], color: r.color, key: r.key }));
       Charts.donut(chartEl, { items, size: 116, centerTitle: 'ענו', valueLabel: 'ענו' });
     });

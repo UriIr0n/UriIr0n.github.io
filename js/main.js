@@ -97,16 +97,6 @@
   }
   renderProjects();
 
-  /* ---------- חותמת תאריך ושעה עדכנית בעמוד הבית ---------- */
-  const refreshEl = document.getElementById('hero-refresh');
-  if (refreshEl) {
-    const now = new Date();
-    refreshEl.textContent = '· ' +
-      now.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
-      ' ' +
-      now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
-  }
-
   /* ---------- ניתוב ---------- */
   let active = null;   // הדשבורד הפעיל
   let onHome = true;   // האם המסך הנוכחי הוא עמוד הבית
@@ -145,9 +135,10 @@
   window.addEventListener('hashchange', route);
   route();
 
-  /* ---------- כפתורי מייל: פתיחת חלון כתיבה עם טיוטה מוכנה + העתקה ללוח ---------- */
-  (function emailCopy() {
+  /* ---------- יצירת קשר: כפתורי מייל/טלפון + תפריט הבחירה בניווט ---------- */
+  (function contactActions() {
     const EMAIL = 'uriiron20@gmail.com';
+    const PHONE = '052-624-6347';
 
     // טיוטה אחידה שנפתחת מוכנה - המבקר רק משלים ושולח.
     const DRAFT = {
@@ -206,8 +197,42 @@
         const win = window.open(gmailUrl(), '_blank', 'noopener');
         // אם חוסם חלונות מנע את הפתיחה - נופלים חזרה ל-mailto (תוכנת המייל של המכשיר)
         if (!win) window.location.href = mailtoUrl();
+        closeContactMenu();
       });
     });
+
+    document.querySelectorAll('[data-copy-phone]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        copy(PHONE).then(
+          () => showToast('📞 מספר הטלפון הועתק: ' + PHONE),
+          () => showToast('הטלפון שלי: ' + PHONE),
+        );
+        closeContactMenu();
+      });
+    });
+
+    // תפריט "צור קשר" בניווט: בחירה בין שליחת מייל להעתקת הטלפון
+    const contactToggle = document.querySelector('[data-contact-toggle]');
+    const contactOptions = document.querySelector('[data-contact-options]');
+    function closeContactMenu() {
+      if (!contactToggle) return;
+      contactOptions.hidden = true;
+      contactToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (contactToggle && contactOptions) {
+      contactToggle.addEventListener('click', e => {
+        e.stopPropagation();
+        const willOpen = contactOptions.hidden;
+        contactOptions.hidden = !willOpen;
+        contactToggle.setAttribute('aria-expanded', String(willOpen));
+      });
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.contact-menu')) closeContactMenu();
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeContactMenu();
+      });
+    }
   })();
 
   /* ---------- דשבורד הרפאים ברקע ה-Hero ---------- */

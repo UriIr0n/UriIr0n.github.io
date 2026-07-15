@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=23">
+<link rel="stylesheet" href="css/style.css?v=24">
 </head>
 <body>
 
@@ -22,7 +22,13 @@
     <a href="#/" data-nav>ראשי</a>
     <a href="#/#projects" data-nav>פרויקטים</a>
     <a href="#/#about" data-nav>אודות</a>
-    <a href="mailto:uriiron20@gmail.com" data-copy-email>צור קשר</a>
+    <div class="contact-menu">
+      <button type="button" class="contact-toggle" data-contact-toggle aria-haspopup="true" aria-expanded="false">צור קשר</button>
+      <div class="contact-options" data-contact-options hidden>
+        <a href="mailto:uriiron20@gmail.com" data-copy-email>✉ שליחת מייל</a>
+        <button type="button" data-copy-phone>📞 העתקת מספר טלפון</button>
+      </div>
+    </div>
   </nav>
 </header>
 
@@ -39,7 +45,6 @@
     <div class="ghost-dash" aria-hidden="true">
       <svg id="gd-svg" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice"></svg>
     </div>
-    <div class="eyebrow"><span class="dot"></span> אנליטיקת נתונים · פיתוח BI · אוטומציה <span id="hero-refresh" class="refresh"></span></div>
     <h1>דאטה זה רק חצי מהעבודה.<br><span class="accent">החצי השני הוא הסיפור.</span></h1>
     <p class="sub">
       אני בונה ב-Power BI כלי עבודה תפעוליים: דשבורדים שמנהלים פותחים בשוטף כדי להחליט מה הלאה.
@@ -50,7 +55,7 @@
     <div class="cta">
       <a class="btn primary" href="#/#projects">לצפייה בדשבורדים ↓</a>
       <a class="btn" href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="btn" href="mailto:uriiron20@gmail.com" data-copy-email>✉ העתק מייל</a>
+      <a class="btn" href="mailto:uriiron20@gmail.com" data-copy-email>✉ שליחת מייל</a>
     </div>
     <div class="stats">
       <div class="stat"><b>5</b><span>עולמות תוכן, דשבורד לכל אחד</span></div>
@@ -235,6 +240,7 @@
 <footer>
   <div class="links">
     <a href="mailto:uriiron20@gmail.com" data-copy-email>uriiron20@gmail.com</a>
+    <button type="button" data-copy-phone>052-624-6347</button>
     <a href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
   </div>
   <div>נבנה עם <b>Claude Code</b> ב-HTML / CSS / JavaScript ונילה, ללא ספריות וללא Power BI Service.<br>
@@ -249,7 +255,7 @@
 <script src="js/dash-claude.js?v=16"></script>
 <script src="js/dash-nasa.js?v=16"></script>
 <script src="js/dash-olympic.js?v=16"></script>
-<script src="js/main.js?v=18"></script>
+<script src="js/main.js?v=19"></script>
 <script src="js/visitors.js?v=23"></script>
 </body>
 </html>

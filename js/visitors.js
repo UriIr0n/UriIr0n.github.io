@@ -59,24 +59,33 @@
     return Promise.all(counters.map(fetchCount)).then(vals => vals.reduce((a, b) => a + b, 0));
   }
 
+  let lastCounts = ROLES.map(() => 0);
+  function draw(counts) {
+    const items = ROLES.map((r, i) => ({ label: r.label, value: counts[i], color: r.color, key: r.key }));
+    Charts.donut(chartEl, { items, size: 116, centerTitle: 'ענו', valueLabel: 'ענו' });
+  }
   function renderChart() {
     Promise.all(ROLES.map(fetchRoleTotal)).then(counts => {
-      const items = ROLES.map((r, i) => ({ label: r.label, value: counts[i], color: r.color, key: r.key }));
-      Charts.donut(chartEl, { items, size: 116, centerTitle: 'ענו', valueLabel: 'ענו' });
+      lastCounts = counts;
+      draw(counts);
     });
   }
 
   if (localStorage.getItem(STORAGE_KEY)) {
     promptEl.style.display = 'none';
   } else {
-    ROLES.forEach(r => {
+    ROLES.forEach((r, i) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = r.label;
       b.addEventListener('click', () => {
         localStorage.setItem(STORAGE_KEY, r.key);
         promptEl.style.display = 'none';
-        fetch(upUrl(r.counter)).catch(() => {}).finally(renderChart);
+        // עדכון מיידי בלחיצה: לא מחכים לקריאת רשת חוזרת, כי ה-GET של CounterAPI
+        // מטמון בקצה ולפעמים מחזיר עדיין את הערך הישן מיד אחרי ה-up (עד רענון עמוד).
+        lastCounts[i] += 1;
+        draw(lastCounts);
+        fetch(upUrl(r.counter)).catch(() => {});
       });
       btnsEl.appendChild(b);
     });

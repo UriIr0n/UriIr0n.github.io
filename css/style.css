@@ -213,7 +213,6 @@ section.block { max-width: 1120px; margin: 0 auto; padding: 64px 28px; }
 .proj-card:hover .open .arr { transform: translateX(-4px); }
 
 /* ---------- תהליך עבודה ---------- */
-.process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
 .process-step {
   background: var(--surface); border: 1px solid var(--hairline);
   border-radius: var(--radius); padding: 20px;
@@ -221,6 +220,33 @@ section.block { max-width: 1120px; margin: 0 auto; padding: 64px 28px; }
 .process-step .num { font-size: 13px; font-weight: 800; color: var(--s1); }
 .process-step h3 { font-size: 15.5px; margin: 8px 0 6px; }
 .process-step p { font-size: 13px; color: var(--ink-2); }
+
+/* ---------- קרוסלה (כרטיסים גוללים) ---------- */
+.carousel { position: relative; }
+.carousel-track {
+  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; padding: 4px 2px 6px;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track > * { scroll-snap-align: start; flex: 0 0 auto; width: min(290px, 80vw); }
+.carousel-btn {
+  position: absolute; top: 40%; transform: translateY(-50%);
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--hairline-2); color: var(--ink);
+  display: grid; place-items: center; font-size: 18px; line-height: 1; z-index: 5;
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.6); transition: 0.15s;
+}
+.carousel-btn:hover { background: var(--surface-2); }
+.carousel-btn:disabled { opacity: 0.28; pointer-events: none; }
+.carousel-btn.prev { inset-inline-start: -8px; }
+.carousel-btn.next { inset-inline-end: -8px; }
+.carousel-dots { display: flex; justify-content: center; gap: 7px; margin-top: 10px; }
+.carousel-dots button {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--hairline-2); border: none; padding: 0; transition: 0.15s;
+}
+.carousel-dots button.on { background: var(--s1); width: 20px; border-radius: 4px; }
+@media (max-width: 760px) { .carousel-btn { display: none; } }
 
 /* ---------- פוטר ---------- */
 footer {

@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=27">
+<link rel="stylesheet" href="css/style.css?v=34">
 </head>
 <body>
 
@@ -68,18 +68,19 @@
     <div class="section-head">
       <div class="kicker">ABOUT</div>
       <h2>נעים להכיר</h2>
+      <p>שמי <span class="hl">אורי עירון</span>, אנליסט BI ומפתח אוטומציות במוסד אקדמי גדול. אני מוביל שם
+        דוחות ודשבורדים תפעוליים בגיוס עובדים, היעדרויות והרשמת סטודנטים, וגם בונה סביבם אוטומציות שחוסכות
+        לי כארבע שעות עבודה ידנית בשבוע. הדשבורד הטוב ביותר הוא זה שעוזר למישהו לקבל
+        <span class="hl">החלטה טובה יותר</span>, לא הדוח המרשים ביותר, ולכן אני מקדיש זמן קבוע ללמידת כלים
+        חדשים כמו <span class="hl">Claude Code</span>, שאיתו נבנה גם האתר הזה.</p>
+      <button type="button" class="btn skills-open-btn" data-open-skills>לצפייה בכל הכלים והטכנולוגיות ↓</button>
     </div>
-    <div class="about-grid">
-      <div class="about-card">
-        <p>שמי <span class="hl">אורי עירון</span>, אנליסט BI במוסד אקדמי גדול. אני מוביל שם
-          <span class="hl">דוחות ודשבורדים תפעוליים</span> בגיוס עובדים, היעדרויות והרשמת סטודנטים:
-          אפיון, בנייה, הצגה ותחזוקה, הכול אצלי. אוטומציה שבניתי מקבלת דוח שמגיע למייל ומעדכנת
-          ישירות את הדשבורד, וחוסכת לי כארבע שעות עבודה ידנית בשבוע.</p>
-        <p>הדשבורד הטוב ביותר הוא זה שעוזר למישהו לקבל <span class="hl">החלטה טובה יותר</span>,
-          לא הדוח המרשים ביותר. אני מקדיש לזה זמן קבוע, כולל למידת כלים חדשים כמו
-          <span class="hl">Claude Code</span>, שאיתו נבנה גם האתר הזה.</p>
+    <dialog class="skills-modal" data-skills-modal>
+      <div class="skills-modal-head">
+        <h3>כלים וטכנולוגיות</h3>
+        <button type="button" class="skills-modal-close" data-close-skills aria-label="סגירה">✕</button>
       </div>
-      <div class="skills-card">
+      <div class="skills-groups">
         <div class="group">
           <h3>ליבת BI</h3>
           <div class="chips">
@@ -120,7 +121,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </dialog>
   </section>
 
   <section class="visitors-live">
@@ -191,9 +192,9 @@
           <p>סקריפט Python מתוזמן קולט את הדוח, מעבד ומעדכן את הדשבורד בלי מגע יד. את התוצר אני מציג למשתמשים ולהנהלה, ומתחזק בקצב קבוע. יש דשבורדים שמתעדכנים פעמיים בחודש.</p></div>
       </div>
       <div class="carousel-controls">
-        <button type="button" class="carousel-btn prev" data-carousel-prev aria-label="שלב קודם">›</button>
+        <button type="button" class="carousel-btn prev" data-carousel-prev aria-label="שלב קודם">‹</button>
         <div class="carousel-dots" data-carousel-dots></div>
-        <button type="button" class="carousel-btn next" data-carousel-next aria-label="שלב הבא">‹</button>
+        <button type="button" class="carousel-btn next" data-carousel-next aria-label="שלב הבא">›</button>
       </div>
     </div>
   </section>
@@ -220,9 +221,9 @@
           <p>כל התרשימים באתר הם SVG שנכתב מאפס ב-JavaScript, בלי ספריות. סלייסרים, חיתוך צולב, Drill-down וטולטיפים, הכול רץ בדפדפן ונגיש לכל אחד בלינק.</p></div>
       </div>
       <div class="carousel-controls">
-        <button type="button" class="carousel-btn prev" data-carousel-prev aria-label="כרטיס קודם">›</button>
+        <button type="button" class="carousel-btn prev" data-carousel-prev aria-label="כרטיס קודם">‹</button>
         <div class="carousel-dots" data-carousel-dots></div>
-        <button type="button" class="carousel-btn next" data-carousel-next aria-label="כרטיס הבא">‹</button>
+        <button type="button" class="carousel-btn next" data-carousel-next aria-label="כרטיס הבא">›</button>
       </div>
     </div>
   </section>
@@ -255,8 +256,9 @@
 <script src="js/dash-claude.js?v=16"></script>
 <script src="js/dash-nasa.js?v=16"></script>
 <script src="js/dash-olympic.js?v=16"></script>
-<script src="js/main.js?v=19"></script>
+<script src="js/carousel.js?v=4"></script>
+<script src="js/main.js?v=22"></script>
 <script src="js/visitors.js?v=24"></script>
-<script src="js/carousel.js?v=2"></script>
+<script src="js/skills-modal.js?v=1"></script>
 </body>
 </html>

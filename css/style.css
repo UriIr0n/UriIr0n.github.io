@@ -307,34 +307,44 @@ footer .links a, footer .links button { color: var(--ink-2); text-decoration: no
 footer .links a:hover, footer .links button:hover { color: var(--ink); }
 /* ---------- ווידג'ט מבקרים חי (אחרי ה-Hero) ---------- */
 .visitors-live {
-  max-width: 820px; margin: 0 auto 8px; padding: 16px 24px;
-  display: flex; align-items: center; justify-content: space-between; gap: 26px; flex-wrap: wrap;
+  max-width: 820px; margin: 0 auto 8px; padding: 22px 26px;
+  display: flex; flex-direction: column; gap: 22px;
   background: linear-gradient(155deg, color-mix(in srgb, var(--s1) 12%, var(--surface)), color-mix(in srgb, var(--s5) 9%, var(--surface)));
-  border: 1px solid color-mix(in srgb, var(--s1) 40%, var(--hairline-2));
+  border: 1px solid color-mix(in srgb, var(--s1) 35%, var(--hairline-2));
   border-radius: var(--radius);
-  box-shadow: 0 18px 40px -22px color-mix(in srgb, var(--s1) 60%, transparent);
+  box-shadow: 0 18px 40px -22px color-mix(in srgb, var(--s1) 55%, transparent);
 }
-.visitors-live-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 0; flex: 1 1 320px; }
+.visitors-live-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.live-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: color-mix(in srgb, var(--s1) 14%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--s1) 35%, transparent);
+  border-radius: 100px; padding: 5px 12px;
+}
 .visitors-live-head .live-dot {
-  width: 9px; height: 9px; border-radius: 50%; background: var(--good);
+  width: 8px; height: 8px; border-radius: 50%; background: var(--good);
   animation: gdPulse 1.8s ease-in-out infinite;
 }
-.visitors-live-head .kicker { color: var(--s1); font-weight: 700; font-size: 12.5px; letter-spacing: 1.5px; }
-.visitors-live-head h2 { font-size: 18px; font-weight: 800; flex-basis: 100%; }
-.visitor-counts {
-  flex-basis: 100%; margin-top: 10px;
-  display: flex; align-items: baseline; gap: 26px; flex-wrap: wrap;
-}
-.visitor-count-big { display: flex; align-items: baseline; gap: 8px; }
-.visitor-count-big b { font-size: 30px; font-weight: 800; color: var(--s1); line-height: 1; }
-.visitor-count-big span { font-size: 12.5px; color: var(--ink-3); display: inline-flex; align-items: center; gap: 4px; }
-.visitor-count-big.returning b { font-size: 30px; color: var(--s2); }
-.visitor-count-big.returning .ret-ic { color: var(--s2); }
+.visitors-live-head .kicker { color: var(--s1); font-weight: 700; font-size: 11.5px; letter-spacing: 1.3px; }
+.visitors-live-head h2 { font-size: 18px; font-weight: 800; }
 .visitors-live-body {
-  display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; text-align: center;
-  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
 }
-.visitor-roles { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.visitor-counts { flex: 0 0 auto; display: flex; gap: 12px; flex-wrap: wrap; }
+.visitor-count-big {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--surface-2); border: 1px solid var(--hairline);
+  border-radius: 12px; padding: 10px 18px; min-width: 130px;
+}
+.visitor-count-big b { font-size: 26px; font-weight: 800; color: var(--s1); line-height: 1; }
+.visitor-count-big span { font-size: 12px; color: var(--ink-3); display: inline-flex; align-items: center; gap: 4px; }
+.visitor-count-big.returning b { color: var(--s2); }
+.visitor-count-big.returning .ret-ic { color: var(--s2); }
+.visitors-live-divider {
+  align-self: stretch; width: 1px; margin: 2px 0;
+  background: linear-gradient(180deg, transparent, var(--hairline-2), transparent);
+}
+.visitor-roles { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1 1 240px; text-align: center; }
 .visitor-roles-prompt { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .visitor-roles-label { font-size: 14px; color: var(--ink); font-weight: 600; }
 .visitor-roles-prompt .seg { justify-content: center; }
@@ -349,7 +359,12 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
 }
 .visitor-roles-chart { max-width: 300px; width: 100%; }
 .visitor-roles-chart .chart-empty { padding: 4px 0; font-size: 12px; }
-@media (max-width: 700px) { .visitors-live { padding: 20px; } .visitors-live-body { gap: 22px; } }
+@media (max-width: 700px) {
+  .visitors-live { padding: 20px; }
+  .visitors-live-body { flex-direction: column; align-items: stretch; gap: 20px; }
+  .visitor-counts { justify-content: center; }
+  .visitors-live-divider { width: auto; height: 1px; margin: 0; background: linear-gradient(90deg, transparent, var(--hairline-2), transparent); }
+}
 
 /* ============================================================
    עמוד דשבורד

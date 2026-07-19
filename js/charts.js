@@ -39,6 +39,32 @@ const Charts = (() => {
     t.style.left = x + 'px'; t.style.top = y + 'px';
   }
   function hideTip() { if (tipEl) tipEl.style.opacity = 0; }
+  // אותו טולטיפ, אבל ממוקם לפי אלמנט ולא לפי סמן. משמש בניווט מקלדת.
+  function showTipNear(html, node) {
+    const b = node.getBoundingClientRect();
+    showTip(html, { clientX: b.left + b.width / 2, clientY: b.top + b.height / 2 });
+  }
+
+  /* ---------- הנגשת אלמנט SVG לחיץ למקלדת ----------
+     כל פלח/מוט שאפשר ללחוץ עליו חייב להיות גם ב-Tab order, עם שם קריא
+     ועם הפעלה ב-Enter/Space. בלי זה כל החיתוך הצולב באתר הוא עכבר-בלבד. */
+  function focusable(node, label, activate, tipHTML) {
+    node.setAttribute('tabindex', '0');
+    node.setAttribute('role', 'button');
+    node.setAttribute('aria-label', label);
+    node.addEventListener('keydown', ev => {
+      if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') {
+        ev.preventDefault();
+        hideTip();
+        activate();
+      }
+    });
+    node.addEventListener('focus', () => {
+      node.classList.add('kb-focus');
+      if (tipHTML) showTipNear(tipHTML(), node);
+    });
+    node.addEventListener('blur', () => { node.classList.remove('kb-focus'); hideTip(); });
+  }
   const tipRow = (color, label, val) =>
     `<div class="row"><span class="sw" style="background:${color}"></span>${label}: <b>${val}</b></div>`;
 
@@ -126,9 +152,13 @@ const Charts = (() => {
       txt(g, x - 6, y + bh / 2 + 4, valueFmt(it.value), { fill: INK.p, 'font-size': 11, 'text-anchor': 'end', 'font-weight': 600 });
       // אזור hover מלא-שורה
       const hit = el('rect', { x: 0, y: top + i * rowH, width: W, height: rowH, fill: 'transparent' }, g);
-      hit.addEventListener('mousemove', ev => showTip(`<b>${it.label}</b>${tipRow(it.color, opts.valueLabel || 'ערך', valueFmt(it.value))}${it.extraTip || ''}`, ev));
+      const body = () => `<b>${it.label}</b>${tipRow(it.color, opts.valueLabel || 'ערך', valueFmt(it.value))}${it.extraTip || ''}`;
+      hit.addEventListener('mousemove', ev => showTip(body(), ev));
       hit.addEventListener('mouseleave', hideTip);
-      if (onClick) hit.addEventListener('click', () => { hideTip(); onClick(it); });
+      if (onClick) {
+        hit.addEventListener('click', () => { hideTip(); onClick(it); });
+        focusable(hit, `${it.label}: ${valueFmt(it.value)}. סינון`, () => onClick(it), body);
+      }
     });
   }
 
@@ -189,12 +219,14 @@ const Charts = (() => {
       }
 
       const hit = el('rect', { x: bandX, y: top, width: band, height: plotH, fill: 'transparent' }, g);
-      hit.addEventListener('mousemove', ev => {
-        const rows = series.map(s => tipRow(s.color, s.name, valueFmt(s.values[ci] || 0))).join('');
-        showTip(`<b>${cat}</b>${rows}`, ev);
-      });
+      const body = () => `<b>${cat}</b>${series.map(s => tipRow(s.color, s.name, valueFmt(s.values[ci] || 0))).join('')}`;
+      hit.addEventListener('mousemove', ev => showTip(body(), ev));
       hit.addEventListener('mouseleave', hideTip);
-      if (onClick) hit.addEventListener('click', () => { hideTip(); onClick({ key, label: cat, index: ci }); });
+      if (onClick) {
+        hit.addEventListener('click', () => { hideTip(); onClick({ key, label: cat, index: ci }); });
+        const read = series.map(s => `${s.name} ${valueFmt(s.values[ci] || 0)}`).join(', ');
+        focusable(hit, `${cat}: ${read}. סינון`, () => onClick({ key, label: cat, index: ci }), body);
+      }
     });
   }
 
@@ -231,10 +263,13 @@ const Charts = (() => {
       const seg = el('path', { d, fill: it.color, stroke: INK.surface, 'stroke-width': 2, class: onClick ? 'bar-hit' : '' }, svg);
       seg.style.opacity = dim ? 0.3 : 1;
       seg.style.transition = 'opacity .15s';
-      seg.addEventListener('mousemove', ev =>
-        showTip(`<b>${it.label}</b>${tipRow(it.color, opts.valueLabel || 'כמות', valueFmt(it.value))}${tipRow(it.color, 'אחוז', pctF(it.value / total * 100, 1))}`, ev));
+      const body = () => `<b>${it.label}</b>${tipRow(it.color, opts.valueLabel || 'כמות', valueFmt(it.value))}${tipRow(it.color, 'אחוז', pctF(it.value / total * 100, 1))}`;
+      seg.addEventListener('mousemove', ev => showTip(body(), ev));
       seg.addEventListener('mouseleave', hideTip);
-      if (onClick) seg.addEventListener('click', () => { hideTip(); onClick(it); });
+      if (onClick) {
+        seg.addEventListener('click', () => { hideTip(); onClick(it); });
+        focusable(seg, `${it.label}: ${valueFmt(it.value)}, ${pctF(it.value / total * 100, 1)}. סינון`, () => onClick(it), body);
+      }
       a0 = a1;
     });
     txt(svg, cx, cy - 4, valueFmt(opts.centerValue != null ? opts.centerValue : total), { fill: INK.p, 'font-size': 24, 'font-weight': 800, 'text-anchor': 'middle' });
@@ -251,7 +286,14 @@ const Charts = (() => {
         <span style="color:var(--ink-3);font-size:11px;min-width:38px;text-align:left">${pctF(it.value / total * 100, 1)}</span>
       </div>`;
     }).join('');
-    if (onClick) lg.querySelectorAll('[data-k]').forEach((row, i) => row.addEventListener('click', () => onClick(items[i])));
+    if (onClick) lg.querySelectorAll('[data-k]').forEach((row, i) => {
+      row.addEventListener('click', () => onClick(items[i]));
+      row.setAttribute('tabindex', '0');
+      row.setAttribute('role', 'button');
+      row.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') { ev.preventDefault(); onClick(items[i]); }
+      });
+    });
     wrap.appendChild(lg);
   }
 
@@ -378,18 +420,30 @@ const Charts = (() => {
           return String(va).localeCompare(String(vb), 'he') * sortDir;
         });
       }
-      box.innerHTML = `<div class="viz-table-wrap" style="max-height:${maxHeight}px"><table class="viz-table">
-        <thead><tr>${cols.map(c => `<th data-k="${c.key}">${c.label}${sortKey === c.key ? ` <span class="si">${sortDir < 0 ? '▼' : '▲'}</span>` : ''}</th>`).join('')}</tr></thead>
+      box.innerHTML = `<div class="viz-table-scroll"><div class="viz-table-wrap" style="max-height:${maxHeight}px"><table class="viz-table">
+        <thead><tr>${cols.map(c => `<th data-k="${c.key}" tabindex="0" role="button" aria-sort="${sortKey === c.key ? (sortDir < 0 ? 'descending' : 'ascending') : 'none'}" aria-label="${c.label}, מיון">${c.label}${sortKey === c.key ? ` <span class="si">${sortDir < 0 ? '▼' : '▲'}</span>` : ''}</th>`).join('')}</tr></thead>
         <tbody>${sorted.map(r => `<tr>${cols.map(c => {
           const v = r[c.key];
           if (c.html) return `<td>${c.html(v, r)}</td>`;
           return `<td class="${c.num ? 'num' : ''}">${c.fmt ? c.fmt(v, r) : v}</td>`;
-        }).join('')}</tr>`).join('')}</tbody></table></div>`;
-      box.querySelectorAll('th').forEach(th => th.addEventListener('click', () => {
-        const k = th.dataset.k;
+        }).join('')}</tr>`).join('')}</tbody></table></div></div><div class="viz-table-hint">← אפשר לגלול את הטבלה לצדדים</div>`;
+      const sortBy = k => {
         if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = -1; }
         render();
-      }));
+      };
+      box.querySelectorAll('th').forEach(th => {
+        th.addEventListener('click', () => sortBy(th.dataset.k));
+        th.addEventListener('keydown', ev => {
+          if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') { ev.preventDefault(); sortBy(th.dataset.k); }
+        });
+      });
+      // הפס המתמוסס ושורת העזר מופיעים רק כשהטבלה באמת רחבה מהמיכל
+      const scroller = box.querySelector('.viz-table-scroll');
+      const wrap = box.querySelector('.viz-table-wrap');
+      // סף של 24px: פס גלילה אנכי לבדו מייצר הפרש קטן שאינו גלישה אמיתית
+      const syncOverflow = () => scroller.classList.toggle('is-overflowing', wrap.scrollWidth > wrap.clientWidth + 24);
+      syncOverflow();
+      if (window.ResizeObserver) new ResizeObserver(syncOverflow).observe(wrap);
     }
     render();
   }

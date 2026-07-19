@@ -112,8 +112,17 @@
   const banner = document.getElementById('welcome-back');
   if (isReturning && banner) {
     banner.hidden = false;
+    // נסגרת לבד אחרי 5 שניות כדי שלא תדרוש פעולה מהמבקר. מי שמרחף מעליה
+    // או ניגש אליה במקלדת מקבל עוד זמן.
+    let dismissTimer = setTimeout(() => { banner.hidden = true; }, 5000);
+    const hold = () => clearTimeout(dismissTimer);
+    const resume = () => { hold(); dismissTimer = setTimeout(() => { banner.hidden = true; }, 2500); };
+    banner.addEventListener('mouseenter', hold);
+    banner.addEventListener('mouseleave', resume);
+    banner.addEventListener('focusin', hold);
+    banner.addEventListener('focusout', resume);
     document.getElementById('welcome-back-close')
-      ?.addEventListener('click', () => { banner.hidden = true; });
+      ?.addEventListener('click', () => { clearTimeout(dismissTimer); banner.hidden = true; });
   }
 
   // מונה החוזרים - אייקון SVG נקי בלי רקע (בסגנון קו, כמו שאר האתר)

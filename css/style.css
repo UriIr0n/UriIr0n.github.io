@@ -12,13 +12,14 @@
   --s1: #3987e5;
   --s2: #199e70;
   --s3: #c98500;
-  --s4: #008300;
+  /* s4/critical הובהרו כדי לעבור 4.5:1 מול הרקע (היו 3.93 ו-4.05) */
+  --s4: #12b312;
   --s5: #9085e9;
   --s6: #e66767;
   --s7: #d55181;
   --s8: #d95926;
   --good: #0ca30c;
-  --critical: #d03b3b;
+  --critical: #e05555;
   --radius: 14px;
   --radius-s: 10px;
   --font: "Heebo", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
@@ -88,7 +89,10 @@ button { font-family: inherit; cursor: pointer; }
 .welcome-back .wb-text { font-weight: 700; color: var(--ink); font-size: 15px; }
 .welcome-back .wb-close {
   margin-inline-start: auto; background: none; border: none;
-  color: var(--ink-3); font-size: 15px; line-height: 1; padding: 4px 7px; border-radius: 6px;
+  color: var(--ink-3); font-size: 15px; line-height: 1; border-radius: 6px;
+  /* שטח לחיצה 44px למגע, בלי להגדיל את ה-✕ עצמו */
+  width: 44px; height: 44px; display: grid; place-items: center; flex: 0 0 44px;
+  margin-block: -8px;
 }
 .welcome-back .wb-close:hover { color: var(--ink); background: var(--surface-2); }
 @keyframes wbIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
@@ -109,14 +113,18 @@ button { font-family: inherit; cursor: pointer; }
   pointer-events: none;
 }
 .hero > * { position: relative; }
+.hero-eyebrow {
+  margin-bottom: 16px; color: var(--ink-2); font-size: 15px; font-weight: 600;
+  letter-spacing: 0.2px; scroll-margin-top: 80px;
+}
 .hero h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.12; font-weight: 800; letter-spacing: -0.5px; }
 .hero h1 .accent {
   background: linear-gradient(105deg, #6da7ec, #9085e9 55%, #d55181);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .hero .sub {
-  margin: 20px auto 0; max-width: 640px;
-  color: var(--ink-2); font-size: clamp(15px, 2vw, 18px);
+  margin: 20px auto 0; max-width: 58ch;
+  color: var(--ink-2); font-size: clamp(16px, 2vw, 18px);
 }
 .hero .cta { margin-top: 34px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .btn {
@@ -140,7 +148,8 @@ button { font-family: inherit; cursor: pointer; }
 .data-note b { color: var(--ink); }
 
 /* ---------- סקשנים ---------- */
-section.block { max-width: 1120px; margin: 0 auto; padding: 64px 28px; }
+section.block { max-width: 1120px; margin: 0 auto; padding: 92px 28px; }
+@media (max-width: 700px) { section.block { padding: 60px 22px; } }
 
 /* חוצץ עדין בין המקטעים: קו שנמוג לשני הצדדים, לא border קשיח מקצה לקצה.
    ה-hero פותח את העמוד ולכן לא מקבל קו מעליו. */
@@ -157,7 +166,8 @@ section.block { max-width: 1120px; margin: 0 auto; padding: 64px 28px; }
 .section-head { margin-bottom: 34px; }
 .section-head .kicker { color: var(--s1); font-weight: 700; font-size: 13px; letter-spacing: 1px; }
 .section-head h2 { font-size: clamp(24px, 3.4vw, 34px); font-weight: 800; margin-top: 6px; }
-.section-head p { color: var(--ink-2); margin-top: 10px; max-width: 640px; }
+/* 58ch: מעל ~75 תווים לשורה הקריאות בעברית יורדת */
+.section-head p { color: var(--ink-2); margin-top: 10px; max-width: 58ch; }
 
 /* ---------- אודות + כישורים ---------- */
 .section-head .hl { color: var(--ink); font-weight: 600; }
@@ -499,6 +509,41 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
 
 /* טבלה */
 .viz-table-wrap { overflow: auto; max-height: 340px; border-radius: 8px; }
+/* סימון שהטבלה נגללת לצדדים: פס מתמוסס בקצה + שורת עזר, רק כשבאמת יש גלישה */
+.viz-table-scroll { position: relative; }
+.viz-table-scroll::after {
+  content: ''; position: absolute; inset-block: 0; inset-inline-start: 0; width: 46px;
+  background: linear-gradient(to right, var(--surface), transparent);
+  pointer-events: none; opacity: 0; transition: opacity 0.2s;
+}
+[dir="rtl"] .viz-table-scroll::after { background: linear-gradient(to left, var(--surface), transparent); }
+.viz-table-scroll.is-overflowing::after { opacity: 1; }
+.viz-table-hint {
+  display: none; margin-top: 6px; font-size: 11.5px; color: var(--ink-3);
+}
+.viz-table-scroll.is-overflowing + .viz-table-hint { display: block; }
+
+.contact-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.contact-actions .btn { font-size: 15px; }
+
+/* טבעת פוקוס על אלמנטי SVG לחיצים (פלחי דונאט, מוטות, רצועות hit) */
+svg [role="button"]:focus { outline: none; }
+svg [role="button"]:focus-visible {
+  outline: 2px solid var(--s1); outline-offset: 1px;
+}
+.viz-table th:focus-visible { outline: 2px solid var(--s1); outline-offset: -2px; }
+.legend .lg[role="button"]:focus-visible, [data-k][role="button"]:focus-visible {
+  outline: 2px solid var(--s1); outline-offset: 2px; border-radius: 6px;
+}
+
+/* דילוג לתוכן: מוסתר עד שמגיעים אליו ב-Tab */
+.skip-link {
+  position: absolute; inset-inline-start: 50%; transform: translate(50%, -140%);
+  z-index: 100; background: var(--s1); color: #fff; text-decoration: none;
+  padding: 10px 18px; border-radius: 0 0 10px 10px; font-size: 14px; font-weight: 600;
+  transition: transform 0.15s;
+}
+.skip-link:focus { transform: translate(50%, 0); }
 table.viz-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 table.viz-table th {
   position: sticky; top: 0; background: var(--surface-2); color: var(--ink-2);

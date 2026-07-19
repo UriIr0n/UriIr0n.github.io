@@ -12,9 +12,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=43">
+<link rel="stylesheet" href="css/style.css?v=44">
 </head>
 <body>
+
+<a class="skip-link" href="#main">דילוג לתוכן</a>
 
 <header class="topnav">
   <div class="brand">אורי<span> עירון</span> · BI</div>
@@ -22,18 +24,12 @@
     <a href="#/" data-nav>ראשי</a>
     <a href="#/#projects" data-nav>פרויקטים</a>
     <a href="#/#about" data-nav>אודות</a>
-    <div class="contact-menu">
-      <button type="button" class="contact-toggle" data-contact-toggle aria-haspopup="true" aria-expanded="false">צור קשר</button>
-      <div class="contact-options" data-contact-options hidden>
-        <a href="mailto:uriiron20@gmail.com" data-copy-email>✉ שליחת מייל</a>
-        <button type="button" data-copy-phone>📞 העתקת מספר טלפון</button>
-      </div>
-    </div>
+    <a href="#/#contact" data-nav>צור קשר</a>
   </nav>
 </header>
 
 <!-- ===================== עמוד הבית ===================== -->
-<div class="page active" id="page-home">
+<div class="page active" id="page-home" role="main">
 
   <div class="welcome-back" id="welcome-back" hidden>
     <span class="wb-emoji" aria-hidden="true">👋</span>
@@ -45,6 +41,7 @@
     <div class="ghost-dash" aria-hidden="true">
       <svg id="gd-svg" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice"></svg>
     </div>
+    <p class="hero-eyebrow" id="main">אורי עירון · אנליסט BI ומפתח אוטומציות</p>
     <h1>דאטה זה רק חצי מהעבודה.<br><span class="accent">החצי השני הוא הסיפור.</span></h1>
     <p class="sub">
       אני בונה ב-Power BI כלי עבודה תפעוליים: דשבורדים שמנהלים פותחים כל יום כדי להחליט מה הלאה.
@@ -118,27 +115,6 @@
     </dialog>
   </section>
 
-  <section class="visitors-live">
-    <div class="visitors-live-head">
-      <span class="live-badge"><span class="live-dot"></span><span class="kicker">LIVE</span></span>
-      <h2>מי נכנס לאתר?</h2>
-    </div>
-    <div class="visitors-live-body">
-      <div class="visitor-counts">
-        <div class="visitor-count-big" id="visitor-count"></div>
-        <div class="visitor-count-big returning" id="visitor-returning-count"></div>
-      </div>
-      <div class="visitors-live-divider" aria-hidden="true"></div>
-      <div class="visitor-roles">
-        <div class="visitor-roles-prompt" id="visitor-roles-prompt">
-          <span class="visitor-roles-label">רוצים להיות חלק מהגרף? תבחרו:</span>
-          <div class="seg" id="visitor-roles-btns"></div>
-        </div>
-        <div class="visitor-roles-chart" id="visitor-roles-chart"></div>
-      </div>
-    </div>
-  </section>
-
   <div class="data-note">
     <span class="ic">🔒</span>
     <div><b>הערה חשובה על הנתונים:</b> כדי לשמור על פרטיות הארגון ואבטחת המידע, יצרתי לכל דשבורד
@@ -189,27 +165,57 @@
   <section class="block" id="ai">
     <div class="section-head">
       <div class="kicker">AI-POWERED WORKFLOW</div>
-      <h2>האתר הזה? נבנה עם Claude Code 🤖</h2>
-      <p>אני מאמין שאנליסט BI מודרני חייב לעבוד עם AI, לא לפחד ממנו. הכלים מתחלפים בקצב מסחרר,
-        ולכן החוזקה האמיתית היא לא כלי מסוים אלא <b>היכולת ללמוד כלי חדש מהר ולרתום אותו לעבודה</b>.
-        האתר הזה הוא הדגמה חיה לזה.</p>
+      <h2>איך אני עובד עם AI</h2>
+      <p>הכלים מתחלפים מהר. מה שנשאר זה היכולת ללמוד כלי חדש ולהכניס אותו לעבודה תוך ימים,
+        ולדעת מתי התוצאה שלו מספיק טובה ומתי לא. את האפיון, את הלוגיקה העסקית ואת ההחלטות
+        מה בכלל שווה להציג אני עושה בעצמי. ה-AI מקצר לי את הדרך משם.</p>
     </div>
     <div class="carousel" data-carousel>
       <div class="carousel-track" data-carousel-track>
-        <div class="process-step"><div class="num">🧠</div><h3>למידה מתמדת בעידן ה-AI</h3>
-          <p>מה שהיה חדשנות לפני חצי שנה הוא סטנדרט היום. אני בוחן כלים חדשים באופן קבוע, מנסה אותם על בעיות אמיתיות מהעבודה, ומאמץ את מה שמוכיח את עצמו. ככה נולדו האוטומציות, חיבור ה-MCP וגם האתר הזה.</p></div>
-        <div class="process-step"><div class="num">⚙️</div><h3>חילוץ מבנה מקובצי PBIX</h3>
-          <p>Claude Code קרא את קובצי ה-PBIX שלי בפורמט PBIR (Power BI Enhanced Report Format), חילץ מהם את העמודים, הוויזואלים והמדדים, ומהם נבנו השחזורים שבאתר, אחד לאחד.</p></div>
         <div class="process-step"><div class="num">🔌</div><h3>חיבור Claude ל-Power BI (MCP)</h3>
           <p>בעבודה השוטפת אני מחבר את Claude ישירות למודל הסמנטי של Power BI דרך MCP, לכתיבת מדדי DAX, בדיקות עקביות ותיעוד אוטומטי של המודל.</p></div>
         <div class="process-step"><div class="num">🛡️</div><h3>נתוני דמה במקום נתוני אמת</h3>
           <p>כל דאטה באתר נוצר סינתטית בקוד, עם "סיפור" מכוון בכל דשבורד, כדי להציג את היכולות בלי לחשוף ולו שורת נתונים אחת של הארגון.</p></div>
-        <div class="process-step"><div class="num">📈</div><h3>מנוע תרשימים בקוד ונילה</h3>
-          <p>כל התרשימים באתר הם SVG שנכתב מאפס ב-JavaScript, בלי ספריות. סלייסרים, חיתוך צולב, Drill-down וטולטיפים, הכול רץ בדפדפן ונגיש לכל אחד בלינק.</p></div>
+        <div class="process-step"><div class="num">🧠</div><h3>לומד כלי חדש כשהוא מוכיח את עצמו</h3>
+          <p>אני בוחן כלים חדשים על בעיות אמיתיות מהעבודה, ומאמץ רק את מה שמחזיק. ככה נכנסו האוטומציות בפייתון, חיבור ה-MCP, וגם האתר הזה שנבנה עם Claude Code.</p></div>
       </div>
     </div>
   </section>
 
+  <section class="visitors-live">
+    <div class="visitors-live-head">
+      <span class="live-badge"><span class="live-dot"></span><span class="kicker">LIVE</span></span>
+      <h2>מי נכנס לאתר?</h2>
+    </div>
+    <div class="visitors-live-body">
+      <div class="visitor-counts">
+        <div class="visitor-count-big" id="visitor-count"></div>
+        <div class="visitor-count-big returning" id="visitor-returning-count"></div>
+      </div>
+      <div class="visitors-live-divider" aria-hidden="true"></div>
+      <div class="visitor-roles">
+        <div class="visitor-roles-prompt" id="visitor-roles-prompt">
+          <span class="visitor-roles-label">רוצים להיות חלק מהגרף? תבחרו:</span>
+          <div class="seg" id="visitor-roles-btns"></div>
+        </div>
+        <div class="visitor-roles-chart" id="visitor-roles-chart"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="contact">
+    <div class="section-head">
+      <div class="kicker">CONTACT</div>
+      <h2>מדברים?</h2>
+      <p>אם הדשבורדים כאן עשו לכם חשק לראות מה אני יכול לבנות אצלכם, אשמח לשיחה.
+        הכי מהיר במייל או בלינקדאין, ואני עונה בדרך כלל באותו יום.</p>
+    </div>
+    <div class="contact-actions">
+      <a class="btn primary" href="mailto:uriiron20@gmail.com" data-copy-email>✉ uriiron20@gmail.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
+      <button type="button" class="btn" data-copy-phone>📞 052-624-6347</button>
+    </div>
+  </section>
 
 </div>
 
@@ -230,17 +236,17 @@
   כל הנתונים באתר הם נתוני דמה שנוצרו לשמירה על פרטיות הארגון. © אורי עירון</div>
 </footer>
 
-<script src="js/charts.js?v=16"></script>
+<script src="js/charts.js?v=18"></script>
 <script src="js/shell.js?v=16"></script>
-<script src="js/data.js?v=16"></script>
+<script src="js/data.js?v=17"></script>
 <script src="js/dash-recruit.js?v=16"></script>
 <script src="js/dash-hogwarts.js?v=16"></script>
 <script src="js/dash-claude.js?v=16"></script>
 <script src="js/dash-nasa.js?v=16"></script>
 <script src="js/dash-olympic.js?v=16"></script>
 <script src="js/carousel.js?v=7"></script>
-<script src="js/main.js?v=22"></script>
-<script src="js/visitors.js?v=24"></script>
+<script src="js/main.js?v=23"></script>
+<script src="js/visitors.js?v=25"></script>
 <script src="js/skills-modal.js?v=1"></script>
 </body>
 </html>

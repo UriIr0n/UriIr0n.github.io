@@ -66,7 +66,7 @@
     { key: 'auto', label: 'אוטומציה מקצה לקצה' },
     { key: 'compare', label: 'השוואה תקופתית' },
     { key: 'rls', label: 'RLS והרשאות' },
-    { key: 'interact', label: 'Drill-down וחיתוך צולב' },
+    { key: 'interact', label: 'Drill-down' },
   ];
   const grid = document.getElementById('projects-grid');
   let capFilter = null;

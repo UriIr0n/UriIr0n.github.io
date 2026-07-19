@@ -1,97 +1,101 @@
-// קרוסלת כרטיסים בסגנון "קאברפלואו": כרטיס מרכזי בפוקוס, שכנים גלויים בצדדים
-// עם הטיה, הקטנה ושקיפות לפי מרחק מהמרכז. מבוסס על מיקום אמיתי בעמוד (לא על
-// כיוון RTL/LTR של scrollLeft), כדי שהניווט לא "ייתקע". ללא ספריות חיצוניות.
-// window.Carousel.init(root) חשוף כדי שגם תוכן שנבנה דינמית (כמו כרטיסי הפרויקטים,
-// שמצוירים מחדש בכל שינוי סינון) יוכל להשתמש באותה קרוסלה.
+// קרוסלה אינסופית בכיוון אחד: הכרטיסים נפרסים לכל רוחב הסקשן וזזים ברצף,
+// בלי "כרטיס מרכזי" ובלי צד ריק. הפריטים משוכפלים עד שהם מכסים לפחות פעמיים
+// את רוחב התצוגה, כך שהתנועה נראית רציפה, וה-offset מתאפס מודולו רוחב הרצף.
+// המערכת מבוססת transform בלבד (לא scrollLeft), ולכן היא לא "נתקעת" ב-RTL.
+// window.Carousel.init(root) חשוף כדי שגם תוכן שנבנה דינמית יוכל להשתמש בה.
 window.Carousel = (function () {
+  const SPEED = 26; // פיקסלים בשנייה
+
   function setupCarousel(root) {
     const track = root.querySelector('[data-carousel-track]');
-    const items = Array.from(track.children);
-    const dotsWrap = root.querySelector('[data-carousel-dots]');
-    const prevBtn = root.querySelector('[data-carousel-prev]');
-    const nextBtn = root.querySelector('[data-carousel-next]');
-    let current = 0;
+    const originals = Array.from(track.children);
+    if (!originals.length) return;
 
-    function offsetsFromCenter() {
-      const trackRect = track.getBoundingClientRect();
-      const centerX = trackRect.left + trackRect.width / 2;
-      return items.map((item) => {
-        const r = item.getBoundingClientRect();
-        return r.width ? (r.left + r.width / 2 - centerX) / r.width : 0;
-      });
+    // ניקוי שאריות מאתחול קודם (הכרטיסים מצוירים מחדש בכל סינון)
+    track.querySelectorAll('[data-carousel-clone]').forEach((n) => n.remove());
+
+    // אין פקדים: הקרוסלה זזה מעצמה בכיוון אחד. אם נשארו פקדים ישנים בדף, מסירים.
+    root.querySelector('[data-carousel-controls]')?.remove();
+
+    let offset = 0;      // כמה הרצף הוזז (px, תמיד גדל)
+    let seqWidth = 0;    // רוחב רצף מקורי אחד כולל הרווחים
+    let paused = false;
+    let dragging = false;
+
+    function gapPx() {
+      const g = parseFloat(getComputedStyle(track).columnGap || '0');
+      return Number.isFinite(g) ? g : 0;
     }
 
-    function buildDots() {
-      dotsWrap.innerHTML = '';
-      items.forEach((_, i) => {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.setAttribute('aria-label', `כרטיס ${i + 1} מתוך ${items.length}`);
-        dot.addEventListener('click', () => goTo(i));
-        dotsWrap.appendChild(dot);
-      });
+    function measure() {
+      const gap = gapPx();
+      seqWidth = originals.reduce((sum, el) => sum + el.getBoundingClientRect().width + gap, 0);
     }
 
-    function updateUI() {
-      Array.from(dotsWrap.children).forEach((d, idx) => d.classList.toggle('on', idx === current));
-      if (prevBtn) prevBtn.disabled = current === 0;
-      if (nextBtn) nextBtn.disabled = current === items.length - 1;
+    // הסקשנים מוסתרים בזמן טעינה, ולכן רוחב ה-root יכול לצאת 0 באתחול.
+    // נופלים חזרה לרוחב החלון כדי שתמיד ייווצרו מספיק שכפולים.
+    function viewportWidth() {
+      return Math.max(root.getBoundingClientRect().width, window.innerWidth || 0);
     }
 
-    function goTo(i) {
-      current = Math.max(0, Math.min(items.length - 1, i));
-      items[current].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-      updateUI();
-    }
-
-    function applyTilt(offsets) {
-      offsets.forEach((offset, i) => {
-        const dist = Math.min(Math.abs(offset), 1.6);
-        const tilt = Math.max(-14, Math.min(14, offset * 14));
-        items[i].style.setProperty('--dist', dist.toFixed(3));
-        items[i].style.setProperty('--tilt', tilt.toFixed(2));
-      });
-    }
-
-    let tickingTilt = false;
-    function requestTilt() {
-      if (tickingTilt) return;
-      tickingTilt = true;
-      requestAnimationFrame(() => { applyTilt(offsetsFromCenter()); tickingTilt = false; });
-    }
-
-    let scrollTimer;
-    track.addEventListener('scroll', () => {
-      requestTilt();
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const offsets = offsetsFromCenter();
-        let bestIdx = 0, bestAbs = Infinity;
-        offsets.forEach((o, i) => {
-          const a = Math.abs(o);
-          if (a < bestAbs) { bestAbs = a; bestIdx = i; }
+    function fill() {
+      track.querySelectorAll('[data-carousel-clone]').forEach((n) => n.remove());
+      measure();
+      if (!seqWidth) return;
+      const needed = Math.ceil((viewportWidth() * 2) / seqWidth) + 1;
+      for (let c = 0; c < needed; c++) {
+        originals.forEach((el) => {
+          const clone = el.cloneNode(true);
+          clone.setAttribute('data-carousel-clone', '');
+          clone.setAttribute('aria-hidden', 'true');
+          clone.querySelectorAll('a, button, input').forEach((f) => f.setAttribute('tabindex', '-1'));
+          track.appendChild(clone);
         });
-        current = bestIdx;
-        updateUI();
-      }, 120);
-    }, { passive: true });
+      }
+    }
 
-    prevBtn?.addEventListener('click', () => goTo(current - 1));
-    nextBtn?.addEventListener('click', () => goTo(current + 1));
+    function render() {
+      track.style.transform = `translate3d(${offset.toFixed(2)}px, 0, 0)`;
+    }
 
-    // גרירה בעכבר בדסקטופ; במגע נשארת הגלילה הטבעית של המערכת
-    let dragging = false, startX = 0, startScroll = 0;
+    function advance(px) {
+      if (!seqWidth) return;
+      offset += px;
+      // מודולו: כשהרצף הראשון יצא מהמסך מחזירים אחורה בדיוק רוחב רצף אחד
+      while (offset >= seqWidth) offset -= seqWidth;
+      while (offset < 0) offset += seqWidth;
+      render();
+    }
+
+    let last = 0;
+    function tick(now) {
+      if (last) {
+        const dt = Math.min(now - last, 60) / 1000;
+        if (!paused && !dragging) advance(SPEED * dt);
+      }
+      last = now;
+      requestAnimationFrame(tick);
+    }
+
+    root.addEventListener('mouseenter', () => { paused = true; });
+    root.addEventListener('mouseleave', () => { paused = false; });
+
+    // גרירה בעכבר, גם היא רק קדימה (גרירה אחורה לא מוגבלת ויזואלית כי הרצף אינסופי)
+    let startX = 0, startOffset = 0;
     track.addEventListener('pointerdown', (e) => {
       if (e.pointerType !== 'mouse') return;
       dragging = true;
       track.classList.add('dragging');
       startX = e.clientX;
-      startScroll = track.scrollLeft;
+      startOffset = offset;
       track.setPointerCapture(e.pointerId);
     });
     track.addEventListener('pointermove', (e) => {
       if (!dragging) return;
-      track.scrollLeft = startScroll - (e.clientX - startX);
+      offset = startOffset + (e.clientX - startX);
+      while (offset >= seqWidth) offset -= seqWidth;
+      while (offset < 0) offset += seqWidth;
+      render();
     });
     function endDrag() {
       if (!dragging) return;
@@ -102,11 +106,25 @@ window.Carousel = (function () {
     track.addEventListener('pointercancel', endDrag);
     track.addEventListener('pointerleave', endDrag);
 
-    window.addEventListener('resize', requestTilt);
+    let resizeTimer;
+    function rebuild() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => { offset = 0; fill(); render(); }, 150);
+    }
+    window.addEventListener('resize', rebuild);
 
-    buildDots();
-    updateUI();
-    requestTilt();
+    // כשהסקשן נחשף לראשונה (או משנה רוחב) מודדים מחדש ומשכפלים לפי הרוחב האמיתי
+    if (window.ResizeObserver) {
+      let lastW = 0;
+      new ResizeObserver(() => {
+        const w = Math.round(root.getBoundingClientRect().width);
+        if (w && Math.abs(w - lastW) > 2) { lastW = w; rebuild(); }
+      }).observe(root);
+    }
+
+    fill();
+    render();
+    requestAnimationFrame(tick);
   }
 
   document.querySelectorAll('[data-carousel]').forEach(setupCarousel);

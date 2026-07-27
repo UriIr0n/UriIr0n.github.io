@@ -87,6 +87,7 @@ const DashOlympic = (() => {
         value: gset.filter(a => a.gender === g.key).length,
       })).filter(x => x.value), size: 150, centerTitle: 'ספורטאים', valueLabel: 'ספורטאים',
       selectedKey: state.gender,
+      emptyHint: 'אין נתונים בחיתוך הנוכחי · נסו לנקות חיתוך אחד',
       onClick: it => toggle('gender', it.key),
     });
 
@@ -118,6 +119,7 @@ const DashOlympic = (() => {
         value: sset.filter(a => a.sport === s.key).length,
       })).filter(x => x.value), centerTitle: 'ספורטאים', valueLabel: 'ספורטאים',
       selectedKey: state.sport,
+      emptyHint: 'אין נתונים בחיתוך הנוכחי · נסו לנקות חיתוך אחד',
       onClick: it => toggle('sport', it.key),
     });
 

@@ -119,8 +119,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 .hero h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.12; font-weight: 800; letter-spacing: -0.5px; }
 .hero h1 .accent {
-  background: linear-gradient(105deg, #6da7ec, #9085e9 55%, #d55181);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  /* היה גרדיאנט על טקסט - הוחלף בהדגשה דרך צבע מלא ומשקל, כמו שאר האתר */
+  color: var(--s5); font-weight: 800;
 }
 .hero .sub {
   margin: 20px auto 0; max-width: 58ch;
@@ -134,8 +134,10 @@ button { font-family: inherit; cursor: pointer; }
   text-decoration: none; transition: 0.15s;
 }
 .btn:hover { background: var(--surface-2); transform: translateY(-1px); }
-.btn.primary { background: var(--s1); border-color: transparent; }
-.btn.primary:hover { background: #5598e7; }
+/* s1 המקורי מול טקסט לבן היה 3.6:1, וה-hover הבהיר עוד יותר ירד ל-3:1 - שניהם מתחת ל-AA.
+   מכהים את שניהם, עם ה-hover כהה מעט יותר מהבסיס (התכהות בלחיצה/הובר, לא הבהרה) */
+.btn.primary { background: color-mix(in srgb, var(--s1) 82%, black); border-color: transparent; }
+.btn.primary:hover { background: color-mix(in srgb, var(--s1) 70%, black); }
 
 /* ---------- כרטיס אזהרת נתונים ---------- */
 .data-note {
@@ -237,7 +239,8 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
 }
 .proj-card:hover .emoji { transform: scale(1.08) rotate(-4deg); }
 .proj-card h3 { font-size: 18px; font-weight: 700; margin-top: 3px; letter-spacing: -0.1px; }
-.proj-card .theme { font-size: 11.5px; color: var(--accent, var(--s1)); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+/* היה text-transform:uppercase על משפט שלם (33-34 תווים) - פוגע בקריאות, במיוחד בעברית/שמות מותג מעורבים */
+.proj-card .theme { font-size: 11.5px; color: var(--accent, var(--s1)); font-weight: 700; letter-spacing: 0.2px; }
 .proj-card .orig { font-size: 11.5px; color: var(--ink-3); display: flex; align-items: center; gap: 6px; }
 .proj-card .orig::before { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--ink-3); flex: none; }
 .proj-card .desc { color: var(--ink-2); font-size: 14px; line-height: 1.7; flex: 1; }
@@ -262,6 +265,86 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
 }
 .proj-card .open .arr { transition: transform 0.18s; display: inline-block; }
 .proj-card:hover .open .arr { transform: translateX(-4px); }
+
+/* ---------- שירותים ---------- */
+.services-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
+}
+.service-card {
+  position: relative; background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius); padding: 26px 24px; color: var(--ink);
+  display: flex; flex-direction: column; gap: 14px;
+  transition: transform 0.25s cubic-bezier(.2,.8,.2,1), border-color 0.25s, box-shadow 0.25s;
+  box-shadow: 0 14px 32px -26px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+.service-card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent, var(--s1)), transparent 85%);
+}
+.service-card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--accent, var(--s1)) 45%, var(--hairline-2));
+  box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.85);
+}
+.service-card .head { display: flex; align-items: center; gap: 14px; }
+.service-card .emoji {
+  font-size: 22px; width: 46px; height: 46px; flex: 0 0 46px;
+  display: grid; place-items: center; border-radius: 50%;
+  background: color-mix(in srgb, var(--accent, var(--s1)) 16%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent, var(--s1)) 30%, transparent) inset;
+  color: var(--accent, var(--s1));
+}
+.service-card h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.1px; }
+.service-card .desc { color: var(--ink-2); font-size: 14px; line-height: 1.7; }
+.service-card .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.service-card .tags span {
+  font-size: 11px; color: var(--ink-2); background: var(--surface-2);
+  border: 1px solid var(--hairline); padding: 5px 10px; border-radius: 100px;
+}
+.service-card .proof-link {
+  margin-top: auto; color: var(--accent, var(--s1)); font-size: 13px; font-weight: 700; text-decoration: none;
+}
+.service-card .proof-link:hover { text-decoration: underline; }
+
+/* גרסה מצומצמת לתצוגה המקדימה בעמוד הבית - כותרת ומשפט אחד, בלי תגיות */
+.service-card.mini { padding: 20px 22px; gap: 8px; }
+.service-card.mini .desc { font-size: 13.5px; }
+
+/* ---------- הסמכות ---------- */
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.cert-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius-s); padding: 16px 18px;
+  text-decoration: none; color: inherit; transition: border-color 0.2s, background 0.2s;
+}
+a.cert-card:hover { border-color: var(--hairline-2); background: var(--surface-2); }
+.cert-card .ic { font-size: 24px; line-height: 1; flex: 0 0 auto; }
+.cert-card .name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.cert-card .issuer { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+/* כרטיס ממתין לתוכן אמיתי - לא בודים תעודה, מסמנים חזותית שזה בדרך */
+.cert-card.pending { border-style: dashed; border-color: var(--hairline-2); background: transparent; }
+.cert-card.pending .name { color: var(--ink-2); }
+
+/* ---------- תצוגה מקדימה של פרויקטים/שירותים בעמוד הבית ---------- */
+.teaser-more { margin-top: 24px; text-align: center; }
+.section-more-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--s1); font-size: 14px; font-weight: 700; text-decoration: none;
+  padding: 12px 22px; border-radius: 999px;
+  background: color-mix(in srgb, var(--s1) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--s1) 30%, transparent);
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.section-more-link:hover {
+  background: color-mix(in srgb, var(--s1) 22%, transparent);
+  border-color: color-mix(in srgb, var(--s1) 55%, transparent);
+  transform: translateY(-2px);
+}
+
+/* ---------- עמוד הפרויקטים המלא ---------- */
+.projects-page .projects-intro { color: var(--ink-2); font-size: 14px; line-height: 1.7; max-width: 72ch; margin: 4px 0 20px; }
 
 /* ---------- תהליך עבודה ---------- */
 .process-step {
@@ -399,13 +482,15 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
   font-weight: 700; font-size: 14.5px; color: var(--ink);
 }
 .about-proj summary::-webkit-details-marker { display: none; }
-.about-proj summary .tw { margin-inline-start: auto; transition: transform 0.2s; color: var(--ink-3); }
+/* התווית חייבת לכווץ/לעטוף בעצמה, אחרת ה-flex גולש מהקופסה ברוחבים צרים */
+.about-proj summary .label { flex: 1; min-width: 0; }
+.about-proj summary .tw { margin-inline-start: auto; transition: transform 0.2s; color: var(--ink-3); flex: 0 0 auto; }
 .about-proj[open] summary .tw { transform: rotate(180deg); }
 .about-proj .body {
   padding: 4px 20px 20px;
   display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px;
 }
-.about-proj .col h4 { font-size: 13px; color: var(--accent, var(--s1)); margin-bottom: 6px; }
+.about-proj .col h3 { font-size: 13px; color: var(--accent, var(--s1)); margin-bottom: 6px; }
 .about-proj .col p, .about-proj .col li { font-size: 13px; color: var(--ink-2); }
 .about-proj .col ul { padding-inline-start: 18px; }
 .about-proj .impact {
@@ -477,7 +562,8 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
 .tile .t-sub { font-size: 11.5px; color: var(--ink-3); }
 .tile .t-actions { margin-inline-start: auto; display: flex; gap: 4px; }
 .tile .t-actions button {
-  background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink-3);
+  /* ink-3 על surface-2 היה 4.4:1 - מתחת ל-AA. ink-2 עובר */
+  background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink-2);
   font-size: 11px; padding: 3px 9px; border-radius: 6px;
 }
 .tile .t-actions button.on { color: var(--ink); border-color: var(--hairline-2); background: var(--grid); }
@@ -539,7 +625,9 @@ svg [role="button"]:focus-visible {
 /* דילוג לתוכן: מוסתר עד שמגיעים אליו ב-Tab */
 .skip-link {
   position: absolute; inset-inline-start: 50%; transform: translate(50%, -140%);
-  z-index: 100; background: var(--s1); color: #fff; text-decoration: none;
+  z-index: 100;
+  /* s1 המקורי מול טקסט לבן נותן רק 3.6:1 - מכהים ל-8:1+ כדי לעבור WCAG AA */
+  background: color-mix(in srgb, var(--s1) 60%, black); color: #fff; text-decoration: none;
   padding: 10px 18px; border-radius: 0 0 10px 10px; font-size: 14px; font-weight: 600;
   transition: transform 0.15s;
 }
@@ -672,12 +760,15 @@ table.viz-table td.num { font-weight: 600; color: var(--ink); }
 
 /* מגע נוח במובייל */
 @media (max-width: 700px) {
-  .seg button { padding: 10px 14px; font-size: 13.5px; }
+  /* היה 10px/13.5px, יוצא ~41px - מתחת ל-44px. מעלים כדי לעבור את הרף */
+  .seg button { padding: 13px 14px; font-size: 13.5px; }
   .dash-tabs button { padding: 12px 18px; }
   .tile .t-actions button { padding: 8px 12px; font-size: 12px; }
   .slicer select { padding: 10px 12px; }
   .topnav { padding: 10px 14px; gap: 8px; }
   .topnav nav a { padding: 8px 8px; font-size: 13px; }
+  /* היחיד ששכחנו בסבב הראשון: קישור טקסט קטן בלי padding כלל */
+  .slicer-bar .clear-f { padding: 13px 4px; }
 }
 
 /* כרטיס הסיפור (התובנה) */
@@ -690,6 +781,12 @@ table.viz-table td.num { font-weight: 600; color: var(--ink); }
 }
 .story-card .ic { font-size: 17px; line-height: 1.4; }
 .story-card b { color: var(--ink); }
+
+/* נגישות: מוסתר חזותית אבל נשאר לקורא מסך (משמש לתיקון היררכיית כותרות) */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
 
 /* נגישות: פוקוס מקלדת */
 :focus-visible {

@@ -117,6 +117,7 @@ const DashRecruit = (() => {
     C.donut($('rc-donut'), {
       items: byReason, centerTitle: 'משרות', valueLabel: 'משרות',
       selectedKey: state.reasonSel,
+      emptyHint: 'אין נתונים בחיתוך הנוכחי · נסו לנקות חיתוך אחד',
       onClick: it => { state.reasonSel = state.reasonSel === it.key ? null : it.key; render(); },
     });
 
@@ -157,7 +158,7 @@ const DashRecruit = (() => {
     });
 
     const worst = gaps[0];
-    ui.setStory(`ב-NovaTech פתוחות כרגע <b>${openNow} משרות</b>, ${C.pctF(openNow / D.headcount * 100, 1)} מהמצבה. הפער הכי כואב: <b>${worst.label}</b> עם ${C.pctF(worst.value, 1)} תקנים חסרים. נסו ללחוץ על פלח בדונאט או על מוט בגרף, הכול מסתנן יחד, בדיוק כמו ב-Power BI.`);
+    ui.setStory(`ב-NovaTech פתוחות כרגע <b>${openNow} משרות</b>, ${C.pctF(openNow / D.headcount * 100, 1)} מהמצבה. נסו ללחוץ על פלח בדונאט או על מוט בגרף המחלקות, שני התרשימים ו-KPI-ים למעלה מסתננים יחד, בדיוק כמו ב-Power BI. הפער התקני החמור בארגון (נתון תקן קבוע, לא תלוי בסינון למעלה): <b>${worst.label}</b> עם ${C.pctF(worst.value, 1)} תקנים חסרים.`);
   }
 
   /* ================= טאב 2: גיל משרות ================= */

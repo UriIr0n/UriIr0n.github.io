@@ -119,7 +119,7 @@ const Charts = (() => {
      ===================================================== */
   function hbars(box, opts) {
     const { items, onClick, selectedKey, valueFmt = fmt, labelWidth = 118, rowH = 30, legend } = opts;
-    if (!items.length) { box.innerHTML = '<div class="chart-empty">אין נתונים לתצוגה בחיתוך הנוכחי</div>'; return; }
+    if (!items.length) { box.innerHTML = '<div class="chart-empty">אין נתונים בחיתוך הנוכחי · נסו לנקות חיתוך אחד</div>'; return; }
     const W = measure(box);
     const top = 6, bottom = 6;
     const H = top + items.length * rowH + bottom;
@@ -146,8 +146,9 @@ const Charts = (() => {
       const g = el('g', { class: onClick ? 'bar-hit' : '' }, svg);
       g.style.opacity = dim ? 0.3 : 1;
       el('path', { d: barPath(x, y, bw, bh, 4, 'left'), fill: it.color }, g);
-      // תווית קטגוריה מימין
-      txt(g, plotR + 8, y + bh / 2 + 4, truncate(it.label, 17), { fill: INK.s, 'font-size': 11.5 });
+      // תווית קטגוריה מימין - title מוסיף את הטקסט המלא גם כשמקוצר
+      const labelNode = txt(g, plotR + 8, y + bh / 2 + 4, truncate(it.label, 17), { fill: INK.s, 'font-size': 11.5 });
+      el('title', {}, labelNode).textContent = it.label;
       // ערך בקצה המוט
       txt(g, x - 6, y + bh / 2 + 4, valueFmt(it.value), { fill: INK.p, 'font-size': 11, 'text-anchor': 'end', 'font-weight': 600 });
       // אזור hover מלא-שורה
@@ -158,6 +159,9 @@ const Charts = (() => {
       if (onClick) {
         hit.addEventListener('click', () => { hideTip(); onClick(it); });
         focusable(hit, `${it.label}: ${valueFmt(it.value)}. סינון`, () => onClick(it), body);
+      } else {
+        // בלי onClick אין מסננים, אבל עדיין רוצים שהקשה במגע תחשוף את התווית המלאה
+        hit.addEventListener('click', ev => showTip(body(), ev));
       }
     });
   }
@@ -167,9 +171,12 @@ const Charts = (() => {
      categories:[], series:[{name,color,values:[]}]
      ===================================================== */
   function columns(box, opts) {
-    const { categories, series, height = 250, valueFmt = fmt, showValues = false, onClick, selectedKey, rotateLabels = false } = opts;
+    const { categories, series, height = 250, valueFmt = fmt, showValues = false, onClick, selectedKey } = opts;
     if (!categories.length || !series.length) { box.innerHTML = '<div class="chart-empty">אין נתונים לתצוגה</div>'; return; }
     const W = measure(box);
+    // בפס צר מדי לתווית מלאה - מסובבים במקום לקצץ באמצע מילה (בעיה חמורה במובייל)
+    const bandEstimate = (W - 8 - 40) / categories.length;
+    const rotateLabels = opts.rotateLabels || bandEstimate < 46;
     const top = 14, bottom = rotateLabels ? 44 : 26, left = 8, right = 40;
     const H = height;
     const plotW = W - left - right, plotH = H - top - bottom;
@@ -210,13 +217,15 @@ const Charts = (() => {
           txt(g, x + bw / 2, y - 4, valueFmt(v), { fill: INK.s, 'font-size': 10, 'text-anchor': 'middle' });
       });
 
-      // תווית קטגוריה
+      // תווית קטגוריה - כותרת SVG native מוסיפה את הטקסט המלא בהובר גם כשמקוצר
       const lx = bandX + band / 2;
+      let labelNode;
       if (rotateLabels) {
-        txt(svg, lx, H - bottom + 14, truncate(cat, 14), { fill: INK.m, 'font-size': 10.5, 'text-anchor': 'end', transform: `rotate(-32 ${lx} ${H - bottom + 14})` });
+        labelNode = txt(svg, lx, H - bottom + 14, truncate(cat, 14), { fill: INK.m, 'font-size': 10.5, 'text-anchor': 'end', transform: `rotate(-32 ${lx} ${H - bottom + 14})` });
       } else {
-        txt(svg, lx, H - bottom + 17, truncate(cat, Math.max(4, Math.floor(band / 7))), { fill: INK.m, 'font-size': 10.5, 'text-anchor': 'middle' });
+        labelNode = txt(svg, lx, H - bottom + 17, truncate(cat, Math.max(6, Math.floor(band / 6))), { fill: INK.m, 'font-size': 10.5, 'text-anchor': 'middle' });
       }
+      el('title', {}, labelNode).textContent = cat;
 
       const hit = el('rect', { x: bandX, y: top, width: band, height: plotH, fill: 'transparent' }, g);
       const body = () => `<b>${cat}</b>${series.map(s => tipRow(s.color, s.name, valueFmt(s.values[ci] || 0))).join('')}`;
@@ -226,6 +235,9 @@ const Charts = (() => {
         hit.addEventListener('click', () => { hideTip(); onClick({ key, label: cat, index: ci }); });
         const read = series.map(s => `${s.name} ${valueFmt(s.values[ci] || 0)}`).join(', ');
         focusable(hit, `${cat}: ${read}. סינון`, () => onClick({ key, label: cat, index: ci }), body);
+      } else {
+        // בלי onClick: עדיין מאפשרים הקשת מגע לחשיפת התווית המלאה של קטגוריה מקוצרת
+        hit.addEventListener('click', ev => showTip(body(), ev));
       }
     });
   }
@@ -237,7 +249,7 @@ const Charts = (() => {
   function donut(box, opts) {
     const { items, centerTitle = '', onClick, selectedKey, valueFmt = fmt, size = 190 } = opts;
     const total = items.reduce((a, b) => a + b.value, 0);
-    if (!total) { box.innerHTML = '<div class="chart-empty">אין נתונים לתצוגה</div>'; return; }
+    if (!total) { box.innerHTML = `<div class="chart-empty">${opts.emptyHint || 'אין נתונים לתצוגה'}</div>`; return; }
     box.innerHTML = '';
     const wrap = document.createElement('div');
     wrap.style.cssText = 'display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:center';
@@ -385,7 +397,8 @@ const Charts = (() => {
     rows.forEach((row, ri) => {
       const total = keys.reduce((a, k) => a + (row.parts[k.key] || 0), 0);
       const y = top + ri * rowH + 6, bh = rowH - 12;
-      txt(svg, plotR + 8, y + bh / 2 + 4, truncate(row.label, 16), { fill: INK.s, 'font-size': 11.5 });
+      const rowLabelNode = txt(svg, plotR + 8, y + bh / 2 + 4, truncate(row.label, 16), { fill: INK.s, 'font-size': 11.5 });
+      el('title', {}, rowLabelNode).textContent = row.label;
       if (!total) return;
       let xEnd = plotR; // RTL: מתחילים מימין
       keys.forEach(k => {

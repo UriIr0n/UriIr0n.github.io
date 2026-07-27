@@ -9,6 +9,8 @@
   const el = document.getElementById('visitor-count');
   if (!el) return;
 
+  el.innerHTML = `<b>···</b><span>👁 מבקרים באתר</span>`;
+
   const alreadyCounted = localStorage.getItem(STORAGE_KEY) === '1';
   // הכתובת ל"קריאה בלבד" חייבת סלאש בסוף - אחרת השרת מפנה (301) לכתובת עם סלאש,
   // וההפניה הזו לא נושאת כותרות CORS ונחסמת בדפדפן.
@@ -20,9 +22,11 @@
       if (!alreadyCounted) localStorage.setItem(STORAGE_KEY, '1');
       if (typeof data.count === 'number') {
         el.innerHTML = `<b>${data.count.toLocaleString('he-IL')}</b><span>👁 מבקרים באתר</span>`;
+      } else {
+        el.innerHTML = `<b>—</b><span>👁 מבקרים באתר (לא זמין כרגע)</span>`;
       }
     })
-    .catch(() => {}); // כשל שקט - לא חוסם את האתר
+    .catch(() => { el.innerHTML = `<b>—</b><span>👁 מבקרים באתר (לא זמין כרגע)</span>`; });
 })();
 
 /* =====================================================================
@@ -33,6 +37,7 @@
   const NS = 'uriiron-portfolio';
   const STORAGE_KEY = 'uriiron_portfolio_role';
   const ROLES = [
+    { key: 'client',    label: 'מתעניין/ת בשירות', counter: 'role-client',    color: '#199e70' },
     { key: 'recruiter', label: 'מגייס/ת',       counter: 'role-recruiter', mergeCounters: ['role-employer'], color: '#3987e5' },
     { key: 'bi',        label: 'קולגה',          counter: 'role-bi',        color: '#9085e9' },
     { key: 'friend',    label: 'חבר/מכר/סקרן',  counter: 'role-friend',    color: '#e66767' },
@@ -128,9 +133,12 @@
   // מונה החוזרים - אייקון SVG נקי בלי רקע (בסגנון קו, כמו שאר האתר)
   const RET_ICON = '<svg class="ret-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>';
   const countEl = document.getElementById('visitor-returning-count');
+  if (countEl) countEl.innerHTML = `<b>···</b><span>${RET_ICON} חזרו לבקר שוב</span>`;
   const render = n => {
-    if (countEl && typeof n === 'number')
-      countEl.innerHTML = `<b>${n.toLocaleString('he-IL')}</b><span>${RET_ICON} חזרו לבקר שוב</span>`;
+    if (!countEl) return;
+    countEl.innerHTML = typeof n === 'number'
+      ? `<b>${n.toLocaleString('he-IL')}</b><span>${RET_ICON} חזרו לבקר שוב</span>`
+      : `<b>—</b><span>${RET_ICON} חזרו לבקר שוב (לא זמין כרגע)</span>`;
   };
 
   const firstReturn = isReturning && localStorage.getItem(RET_COUNTED_KEY) !== '1';
@@ -143,5 +151,5 @@
       if (firstReturn) localStorage.setItem(RET_COUNTED_KEY, '1');
       render(d.count);
     })
-    .catch(() => {}); // כשל שקט
+    .catch(() => render(null));
 })();

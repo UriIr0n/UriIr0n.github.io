@@ -71,9 +71,8 @@
   const grid = document.getElementById('projects-grid');
   let capFilter = null;
 
-  function renderProjects() {
-    const shown = PROJECTS.filter(p => !capFilter || CAPS[p.id].includes(capFilter));
-    grid.innerHTML = shown.map(p => `
+  function cardHTML(p) {
+    return `
     <a class="proj-card" style="--accent:${p.accent}" href="#/${p.id}" aria-label="פתיחת דשבורד ${p.title}">
       <div class="head">
         <span class="emoji" aria-hidden="true">${p.emoji}</span>
@@ -83,7 +82,12 @@
       <p class="desc">${p.desc}</p>
       <div class="tags">${p.tags.map(t => `<span>${t}</span>`).join('')}</div>
       <span class="open">כניסה לדשבורד האינטראקטיבי <span class="arr">←</span></span>
-    </a>`).join('');
+    </a>`;
+  }
+
+  function renderProjects() {
+    const shown = PROJECTS.filter(p => !capFilter || CAPS[p.id].includes(capFilter));
+    grid.innerHTML = shown.map(cardHTML).join('');
 
     const slicerEl = document.getElementById('projects-slicer');
     if (slicerEl) Charts.seg(slicerEl, {
@@ -97,6 +101,13 @@
   }
   renderProjects();
 
+  // תצוגה מקדימה בעמוד הבית: שלושה פרויקטים מגוונים, בלי סלייסר - הרשימה המלאה עברה לעמוד הפרויקטים
+  const TEASER_IDS = ['recruit', 'claude', 'olympic'];
+  const teaserGrid = document.getElementById('projects-teaser-grid');
+  if (teaserGrid) {
+    teaserGrid.innerHTML = TEASER_IDS.map(id => PROJECTS.find(p => p.id === id)).map(cardHTML).join('');
+  }
+
   /* ---------- ניתוב ---------- */
   let active = null;   // הדשבורד הפעיל
   let onHome = true;   // האם המסך הנוכחי הוא עמוד הבית
@@ -109,11 +120,18 @@
     if (onHome) homeScroll = window.scrollY;
 
     const h = location.hash.replace(/^#\/?/, '');
-    const [page, anchor] = h.split('#');
-    const target = DASHBOARDS[page] ? page : 'home';
+    const [rawPage, anchor] = h.split('#');
+    // תמיכה בקישור עמוק לטאב ספציפי בתוך דשבורד: #/recruit:age
+    const [page, tabKey] = rawPage.split(':');
+    const STATIC_PAGES = ['projects', 'services', 'about']; // עמודי תוכן סטטיים, לא דשבורדים אינטראקטיביים
+    const isDash = !!DASHBOARDS[page];
+    const isStatic = STATIC_PAGES.includes(page);
+    const target = isDash || isStatic ? page : 'home';
 
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + (target === 'home' ? 'home' : target)).classList.add('active');
+    document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.removeAttribute('role'); });
+    const pageEl = document.getElementById('page-' + target);
+    pageEl.classList.add('active');
+    pageEl.setAttribute('role', 'main');
 
     if (target === 'home') {
       active = null;
@@ -126,10 +144,22 @@
         requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, y)));
       }
     } else {
-      active = target;
       onHome = false;
       window.scrollTo({ top: 0 });
-      DASHBOARDS[target]();
+      if (isDash) {
+        active = target;
+        if (tabKey) Shell.setPendingTab(tabKey);
+        DASHBOARDS[target]();
+      } else {
+        active = null; // עמוד סטטי - אין צורך ברינדור מחדש בשינוי גודל
+        // דף "אודות" מכיל קרוסלה. carousel.js מאתחל אותה פעם אחת בטעינת הסקריפט,
+        // לפני ש-route() בכלל רץ - אם הדף מוסתר באותו רגע (display:none), הרוחב
+        // הנמדד יוצא שגוי. מאתחלים מחדש בכל כניסה לעמוד, כשהוא כבר גלוי בוודאות.
+        if (target === 'about' && window.Carousel) {
+          const el = document.querySelector('#page-about [data-carousel]');
+          if (el) requestAnimationFrame(() => Carousel.init(el));
+        }
+      }
     }
   }
   window.addEventListener('hashchange', route);
@@ -187,6 +217,10 @@
     }
     document.querySelectorAll('[data-copy-email]').forEach(a => {
       a.addEventListener('click', e => {
+        // קליק עם מקש מצב (Ctrl/Cmd/Shift) או עכבר אמצעי מבקש התנהגות דפדפן רגילה
+        // (פתיחה בלשונית/חלון חדשים) - לא חוסמים אותו, כדי שלא לשלול שליטה ממי שמבקש
+        // את זה בפירוש. רק קליק רגיל מקבל את חוויית ה-Gmail המהירה.
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
         // קודם מעתיקים את הכתובת ללוח (בזמן שיש עדיין פוקוס), כגיבוי
         copy(EMAIL).then(

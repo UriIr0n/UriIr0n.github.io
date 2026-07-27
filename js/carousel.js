@@ -7,8 +7,15 @@ window.Carousel = (function () {
   const SPEED = 26; // פיקסלים בשנייה
 
   function setupCarousel(root) {
+    // קריאה חוזרת על אותו root (למשל דף שהיה מוסתר בטעינה ונחשף אחר-כך) חייבת
+    // לפרק את המופע הקודם קודם: שני לולאות rAF/ResizeObserver על אותו track
+    // "נלחמות" זו בזו על ה-transform, וזה מה שגרם לספירת שכפולים שגויה.
+    if (root.__carouselCleanup) root.__carouselCleanup();
+
     const track = root.querySelector('[data-carousel-track]');
-    const originals = Array.from(track.children);
+    // מסננים שכפולים ישנים כבר בזמן הלכידה - לא רק מוחקים אותם אחר-כך - כדי
+    // שה"מקוריים" לעולם לא יכללו אלמנט שכבר הוסר מה-DOM (רוחב 0 קבוע).
+    const originals = Array.from(track.children).filter((n) => !n.hasAttribute('data-carousel-clone'));
     if (!originals.length) return;
 
     // ניקוי שאריות מאתחול קודם (הכרטיסים מצוירים מחדש בכל סינון)
@@ -21,6 +28,7 @@ window.Carousel = (function () {
     let seqWidth = 0;    // רוחב רצף מקורי אחד כולל הרווחים
     let paused = false;
     let dragging = false;
+    let stopped = false; // מופע שפורק - לולאת ה-rAF שלו מפסיקה להתקדם
 
     function gapPx() {
       const g = parseFloat(getComputedStyle(track).columnGap || '0');
@@ -69,6 +77,7 @@ window.Carousel = (function () {
 
     let last = 0;
     function tick(now) {
+      if (stopped) return;
       if (last) {
         const dt = Math.min(now - last, 60) / 1000;
         if (!paused && !dragging) advance(SPEED * dt);
@@ -108,19 +117,29 @@ window.Carousel = (function () {
 
     let resizeTimer;
     function rebuild() {
+      if (stopped) return;
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => { offset = 0; fill(); render(); }, 150);
+      resizeTimer = setTimeout(() => { if (!stopped) { offset = 0; fill(); render(); } }, 150);
     }
     window.addEventListener('resize', rebuild);
 
     // כשהסקשן נחשף לראשונה (או משנה רוחב) מודדים מחדש ומשכפלים לפי הרוחב האמיתי
+    let observer = null;
     if (window.ResizeObserver) {
       let lastW = 0;
-      new ResizeObserver(() => {
+      observer = new ResizeObserver(() => {
         const w = Math.round(root.getBoundingClientRect().width);
         if (w && Math.abs(w - lastW) > 2) { lastW = w; rebuild(); }
-      }).observe(root);
+      });
+      observer.observe(root);
     }
+
+    root.__carouselCleanup = () => {
+      stopped = true;
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', rebuild);
+      observer?.disconnect();
+    };
 
     fill();
     render();

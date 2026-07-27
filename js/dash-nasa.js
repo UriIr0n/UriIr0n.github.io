@@ -67,7 +67,7 @@ const DashNasa = (() => {
       </div>
       <div class="tiles">
         <div class="tile col-12"><div class="t-head"><h3 id="na-tree-title"></h3><span class="t-sub">מסלול ← דרגה · במקור שלוש שכבות Bookmarks</span></div>
-          <div class="org-tree" id="na-tree"></div></div>
+          <div class="org-tree" id="na-tree" role="tree" aria-label="עץ הרכב הסוכנות: מסלול ודרגה"></div></div>
         <div class="tile col-4"><div class="t-head"><h3>מגדר לפי מסלול</h3></div><div id="na-gender"></div></div>
         <div class="tile col-4"><div class="t-head"><h3>קביעות בסוכנות</h3></div><div id="na-tenure"></div></div>
         <div class="tile col-4"><div class="t-head"><h3>קבלני חוץ</h3><span class="t-sub">במקור: מרצים מן החוץ · לפי דרגה</span></div><div id="na-guests"></div></div>
@@ -105,18 +105,18 @@ const DashNasa = (() => {
     });
 
     $('na-tree').innerHTML = `
-      <div class="org-root"><b>${fmtV(grand)}</b><span>${vw.label} · סה"כ הסוכנות</span></div>
-      <div class="org-connector"></div>
+      <div class="org-root" role="treeitem" aria-label="${vw.label} · סה&quot;כ הסוכנות: ${fmtV(grand)}"><b>${fmtV(grand)}</b><span>${vw.label} · סה"כ הסוכנות</span></div>
+      <div class="org-connector" aria-hidden="true"></div>
       <div class="org-branches">
         ${trackData.map(({ tr, ranks, total }) => `
-          <div class="org-branch">
+          <div class="org-branch" role="group" aria-label="מסלול ${tr.name}: ${fmtV(total)}">
             <div class="org-track" style="border-top:3px solid ${tr.color}">
               <span class="tn">${tr.name}</span>
               <b>${fmtV(total)}</b>
               <span class="tp">${C.pctF(grand ? total / grand * 100 : 0, 1)} מהסוכנות · במקור: ${tr.orig}</span>
             </div>
-            <div class="org-ranks">
-              ${ranks.map(r => `<div class="org-rank" style="border-inline-start:3px solid ${tr.color}">
+            <div class="org-ranks" role="group">
+              ${ranks.map(r => `<div class="org-rank" role="treeitem" aria-label="${r.rank}: ${fmtV(r.val)}, ${C.pctF(total ? r.val / total * 100 : 0, 0)} ממסלול ${tr.name}" style="border-inline-start:3px solid ${tr.color}">
                 <span class="rn">${r.rank}</span><b>${fmtV(r.val)}</b>
                 <span class="rp">${C.pctF(total ? r.val / total * 100 : 0, 0)}</span>
               </div>`).join('')}

@@ -91,7 +91,7 @@ Palette character: near-black neutrals carry the whole surface; the accent set e
 ### Secondary — the chart palette (also does UI duty)
 - **Emerald** (`#199e70` / `--s2`): positive/success states, second chart series
 - **Amber** (`#c98500` / `--s3`): warning/attention states, third chart series
-- **Violet** (`#9085e9` / `--s5`): fourth chart series, the hero's single non-gradient emphasis color
+- **Violet** (`#9085e9` / `--s5`): fourth chart series, used only inside dashboard charts/project accents — never as hero or headline emphasis (see Named Rules)
 - **Coral** (`#e66767` / `--s6`), **Pink** (`#d55181` / `--s7`), **Burnt Orange** (`#d95926` / `--s8`): remaining chart series, used when a dashboard needs more than 3 categories
 
 ### Neutral
@@ -106,6 +106,8 @@ Palette character: near-black neutrals carry the whole surface; the accent set e
 ### Named Rules
 **The Chart-Palette-Is-The-Brand Rule.** Every color on the site is one of the 8 tokens above. No section, button, or badge introduces a new hue — if a new category needs a color, it's assigned from this set, not invented.
 
+**The One-Accent-Outside-Charts Rule.** Anything that isn't literally a chart series or a per-project theme color (hero emphasis, kickers, links, CTAs, live badges) uses `--s1` blue only. Violet/coral/pink/orange/amber never appear as text emphasis or UI chrome outside a chart or a dashboard's own accent — reserving them for data avoids the site reading as "purple-accented AI site" at a glance, which a second UI-level accent color reliably does regardless of where it's borrowed from.
+
 ## Typography
 
 **Display/Body Font:** Heebo (400/500/600/700/800), with Segoe UI / system-ui / Helvetica Neue / Arial as fallbacks.
@@ -117,7 +119,7 @@ Palette character: near-black neutrals carry the whole surface; the accent set e
 - **Headline** (800, `clamp(24px,3.4vw,34px)`): section H2s
 - **Title** (700, 18–19px): card/tile H3s
 - **Body** (400, 16px, 1.55 line-height, max 58ch measure): paragraph copy
-- **Label** (600–700, 11.5–13px, 0.2–1.3px tracking, often uppercase kicker): section eyebrows, chart captions, status badges
+- **Label** (600–700, 11.5–13px, 0.2–1.3px tracking, uppercase): chart captions, status badges, and the one named kicker below — never a generic section eyebrow
 
 ## Layout
 
@@ -152,6 +154,13 @@ Two-step radius scale: 14px (`--radius`, cards/panels/modals) and 10px (`--radiu
 - **Background:** `--surface`, hover moves to `--surface-2`
 - **Border:** 1px hairline, hairline-2 on hover
 - **Shadow:** card rest → card hover on interactive cards only; static tiles stay flat
+- **Service cards specifically:** no top/side accent stripe and no circular icon tile — the icon sits inline at heading size (19px, no background) directly before the `<h3>`. The 5 dashboard project cards keep their own top accent stripe + circular icon, since that pattern does real work there (color-coding 5 distinct dashboard "worlds"); don't extend that treatment to service cards, which don't have per-item themes to encode.
+
+### Section Headers
+- Default: an `<h2>` alone carries the section, no label above it. The uppercase "kicker" is reserved for exactly one place — the `LIVE` badge on the visitors widget, where it names data that is genuinely real-time. It is not a generic section-eyebrow grammar; don't add it back above SERVICES/PROJECTS/CONTACT/CERTIFICATIONS/HOW-I-WORK or any future section.
+
+### Process Steps
+- The "how I work" carousel markers stay `01`–`09` numerals, not emoji — Uri's explicit call: no emoji anywhere in this carousel. This is one of the legitimate uses of numbered steps per the unique-web-design-avoidance skill (the sequence is a real chronological workflow the reader needs, not decoration), so plain numerals are the right choice here, not a compromise.
 
 ### Navigation
 - Sticky top bar, `rgba(page,.82)` + 12px backdrop-blur, hairline bottom border. Links are `--ink-2` at rest, `--ink` + `--surface-2` pill on hover/active. Mobile collapses padding, not structure (no hamburger menu currently).
@@ -171,3 +180,5 @@ A recurring callout (💡 icon + prose) under every dashboard's charts that narr
 - **Don't** introduce a second typeface — Heebo's weight range carries the whole hierarchy.
 - **Don't** use `--ink-3` on `--surface-2` — that pairing fails contrast; use `--ink-2` there instead.
 - **Don't** add gradient text, decorative left-borders, or icon-in-rounded-square tiles as generic ornament — every existing visual device on this site earns its place by doing real data/status work first.
+- **Don't** use a second UI accent color outside `--s1` for hero text, kickers, links, or CTAs — even a chart-palette color reads as "purple/violet AI site" the moment it lands on headline text (see the One-Accent-Outside-Charts rule above).
+- **Don't** stamp a kicker/eyebrow above every section as boilerplate — it's earned once, by the live badge, not applied as grammar.

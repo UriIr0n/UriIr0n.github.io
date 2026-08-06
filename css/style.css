@@ -106,9 +106,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 .hero::before {
   content: ""; position: absolute; inset: -140px 0 0;
+  /* רק s1/s2 - סגול (s5) אסור ליד ה-hero לפי כלל One-Accent-Outside-Charts ב-DESIGN.md */
   background:
     radial-gradient(560px 300px at 68% 8%, rgba(57, 135, 229, 0.16), transparent 70%),
-    radial-gradient(480px 280px at 30% 22%, rgba(144, 133, 233, 0.12), transparent 70%),
     radial-gradient(420px 260px at 52% 60%, rgba(25, 158, 112, 0.07), transparent 70%);
   pointer-events: none;
 }
@@ -119,8 +119,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 .hero h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.12; font-weight: 800; letter-spacing: -0.5px; }
 .hero h1 .accent {
-  /* היה גרדיאנט על טקסט - הוחלף בהדגשה דרך צבע מלא ומשקל, כמו שאר האתר */
-  color: var(--s5); font-weight: 800;
+  /* צבע ההדגשה זהה לאקסנט האחד של האתר (כפתורים/קישורים/live) - לא צבע שלישי מהפלטה */
+  color: var(--s1); font-weight: 800;
 }
 .hero .sub {
   margin: 20px auto 0; max-width: 58ch;
@@ -166,8 +166,7 @@ section.block { max-width: 1120px; margin: 0 auto; padding: 92px 28px; }
 /* לווידג'ט המבקרים יש מסגרת מעוגלת משלו, ולכן הקו מורם מעליה */
 #page-home > section.visitors-live::before { top: -30px; }
 .section-head { margin-bottom: 34px; }
-.section-head .kicker { color: var(--s1); font-weight: 700; font-size: 13px; letter-spacing: 1px; }
-.section-head h2 { font-size: clamp(24px, 3.4vw, 34px); font-weight: 800; margin-top: 6px; }
+.section-head h2 { font-size: clamp(24px, 3.4vw, 34px); font-weight: 800; }
 /* 58ch: מעל ~75 תווים לשורה הקריאות בעברית יורדת */
 .section-head p { color: var(--ink-2); margin-top: 10px; max-width: 58ch; }
 
@@ -276,23 +275,17 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
   display: flex; flex-direction: column; gap: 14px;
   transition: transform 0.25s cubic-bezier(.2,.8,.2,1), border-color 0.25s, box-shadow 0.25s;
   box-shadow: 0 14px 32px -26px rgba(0, 0, 0, 0.7);
-  overflow: hidden;
-}
-.service-card::before {
-  content: ""; position: absolute; inset: 0 0 auto 0; height: 3px;
-  background: linear-gradient(90deg, var(--accent, var(--s1)), transparent 85%);
 }
 .service-card:hover {
   transform: translateY(-6px);
   border-color: color-mix(in srgb, var(--accent, var(--s1)) 45%, var(--hairline-2));
   box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.85);
 }
-.service-card .head { display: flex; align-items: center; gap: 14px; }
+.service-card .head { display: flex; align-items: center; gap: 9px; }
+/* אייקון בגודל הכותרת עצמה, בלי מסגרת עיגול - לא tile נפרד */
 .service-card .emoji {
-  font-size: 22px; width: 46px; height: 46px; flex: 0 0 46px;
-  display: grid; place-items: center; border-radius: 50%;
-  background: color-mix(in srgb, var(--accent, var(--s1)) 16%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent, var(--s1)) 30%, transparent) inset;
+  width: 19px; height: 19px; flex: 0 0 19px;
+  display: grid; place-items: center;
   color: var(--accent, var(--s1));
 }
 .service-card h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.1px; }

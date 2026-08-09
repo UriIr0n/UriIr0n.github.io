@@ -22,6 +22,7 @@
   --critical: #e05555;
   --radius: 14px;
   --radius-s: 10px;
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
   --font: "Heebo", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -50,16 +51,20 @@ button { font-family: inherit; cursor: pointer; }
 .topnav nav { display: flex; gap: 4px; margin-inline-start: auto; }
 .topnav nav a {
   text-decoration: none; color: var(--ink-2); font-size: 14px;
-  padding: 7px 12px; border-radius: 8px; transition: 0.15s;
+  padding: 7px 12px; border-radius: 8px;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.1s ease-out;
 }
 .topnav nav a:hover { color: var(--ink); background: var(--surface-2); }
+.topnav nav a:active { transform: scale(0.96); }
 .contact-menu { position: relative; }
 .contact-toggle {
   background: none; border: none; font: inherit;
   text-decoration: none; color: var(--ink-2); font-size: 14px;
-  padding: 7px 12px; border-radius: 8px; transition: 0.15s;
+  padding: 7px 12px; border-radius: 8px;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.1s ease-out;
 }
 .contact-toggle:hover, .contact-toggle[aria-expanded="true"] { color: var(--ink); background: var(--surface-2); }
+.contact-toggle:active { transform: scale(0.96); }
 .contact-options {
   position: absolute; top: calc(100% + 6px); inset-inline-end: 0;
   display: flex; flex-direction: column; min-width: 200px;
@@ -131,9 +136,12 @@ button { font-family: inherit; cursor: pointer; }
   display: inline-flex; align-items: center; gap: 8px;
   padding: 11px 22px; border-radius: 10px; font-size: 15px; font-weight: 600;
   border: 1px solid var(--hairline-2); background: var(--surface); color: var(--ink);
-  text-decoration: none; transition: 0.15s;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.12s var(--ease-out);
 }
 .btn:hover { background: var(--surface-2); transform: translateY(-1px); }
+.btn:active { transform: scale(0.97); }
+.btn:hover:active { transform: translateY(-1px) scale(0.97); }
 /* s1 המקורי מול טקסט לבן היה 3.6:1, וה-hover הבהיר עוד יותר ירד ל-3:1 - שניהם מתחת ל-AA.
    מכהים את שניהם, עם ה-hover כהה מעט יותר מהבסיס (התכהות בלחיצה/הובר, לא הבהרה) */
 .btn.primary { background: color-mix(in srgb, var(--s1) 82%, black); border-color: transparent; }
@@ -193,9 +201,11 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
 .skills-modal-close {
   width: 32px; height: 32px; border-radius: 50%; flex: 0 0 auto;
   background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink-2);
-  font-size: 14px; display: grid; place-items: center; transition: 0.15s;
+  font-size: 14px; display: grid; place-items: center;
+  transition: color 0.15s ease, border-color 0.15s ease, transform 0.1s ease-out;
 }
 .skills-modal-close:hover { color: var(--ink); border-color: var(--hairline-2); }
+.skills-modal-close:active { transform: scale(0.9); }
 .skills-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 24px 28px; }
 .skills-groups h3 { font-size: 15px; margin-bottom: 14px; color: var(--ink); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -217,7 +227,15 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
   transition: transform 0.25s cubic-bezier(.2,.8,.2,1), border-color 0.25s, box-shadow 0.25s, background 0.25s;
   box-shadow: 0 14px 32px -26px rgba(0, 0, 0, 0.7);
   overflow: hidden;
+  animation: cardIn 320ms var(--ease-out) both;
 }
+@keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.proj-card:nth-child(1) { animation-delay: 0ms; }
+.proj-card:nth-child(2) { animation-delay: 40ms; }
+.proj-card:nth-child(3) { animation-delay: 80ms; }
+.proj-card:nth-child(4) { animation-delay: 120ms; }
+.proj-card:nth-child(5) { animation-delay: 160ms; }
+.proj-card:nth-child(n+6) { animation-delay: 200ms; }
 .proj-card::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: 3px;
   background: linear-gradient(90deg, var(--accent, var(--s1)), transparent 85%);
@@ -275,7 +293,14 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
   display: flex; flex-direction: column; gap: 14px;
   transition: transform 0.25s cubic-bezier(.2,.8,.2,1), border-color 0.25s, box-shadow 0.25s;
   box-shadow: 0 14px 32px -26px rgba(0, 0, 0, 0.7);
+  animation: cardIn 320ms var(--ease-out) both;
 }
+.service-card:nth-child(1) { animation-delay: 0ms; }
+.service-card:nth-child(2) { animation-delay: 40ms; }
+.service-card:nth-child(3) { animation-delay: 80ms; }
+.service-card:nth-child(4) { animation-delay: 120ms; }
+.service-card:nth-child(5) { animation-delay: 160ms; }
+.service-card:nth-child(n+6) { animation-delay: 200ms; }
 .service-card:hover {
   transform: translateY(-6px);
   border-color: color-mix(in srgb, var(--accent, var(--s1)) 45%, var(--hairline-2));
@@ -440,7 +465,12 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
    עמוד דשבורד
    ============================================================ */
 .page { display: none; }
-.page.active { display: block; }
+.page.active {
+  display: block;
+  opacity: 1;
+  transition: opacity 200ms var(--ease-out), display 200ms allow-discrete;
+  @starting-style { opacity: 0; }
+}
 
 .dash-wrap { max-width: 1240px; margin: 0 auto; padding: 22px 20px 80px; }
 
@@ -452,9 +482,11 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--surface); border: 1px solid var(--hairline-2);
   color: var(--ink-2); border-radius: 10px; padding: 8px 15px; font-size: 13.5px;
-  text-decoration: none; transition: 0.15s;
+  text-decoration: none;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.1s ease-out;
 }
 .back-btn:hover { color: var(--ink); background: var(--surface-2); }
+.back-btn:active { transform: scale(0.96); }
 .dash-head .title-box h1 { font-size: clamp(19px, 3vw, 26px); font-weight: 800; }
 .dash-head .title-box .sub { font-size: 13px; color: var(--ink-3); }
 .dash-head .badge {
@@ -499,9 +531,11 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
 .dash-tabs button {
   background: var(--surface); border: 1px solid var(--hairline);
   color: var(--ink-2); font-size: 13.5px; font-weight: 600;
-  padding: 9px 18px; border-radius: 10px; transition: 0.15s;
+  padding: 9px 18px; border-radius: 10px;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease, transform 0.1s ease-out;
 }
 .dash-tabs button:hover { color: var(--ink); }
+.dash-tabs button:active { transform: scale(0.96); }
 .dash-tabs button.active {
   background: color-mix(in srgb, var(--accent, var(--s1)) 16%, var(--surface));
   border-color: color-mix(in srgb, var(--accent, var(--s1)) 55%, transparent);

@@ -1,0 +1,1145 @@
+<title>טוקנים בשליטה</title>
+
+<style>
+  :root{
+    direction: rtl;
+    --ground:#E7EBE6;
+    --ground-2:#DDE3DB;
+    --surface:#F7F9F5;
+    --ink:#101D19;
+    --ink-2:#41544D;
+    --ink-3:#6E8078;
+    --line:rgba(16,29,25,.14);
+    --line-2:rgba(16,29,25,.28);
+    --brass:#8F6414;
+    --brass-soft:rgba(168,118,27,.14);
+    --teal:#0E7A63;
+    --teal-soft:rgba(14,122,99,.12);
+    --amber:#B96D14;
+    --bitters:#A93520;
+    --bitters-soft:rgba(169,53,32,.10);
+    --shadow:0 1px 0 rgba(16,29,25,.05);
+
+    --sans:"Heebo","Assistant","Rubik","Segoe UI","Arial Hebrew","Noto Sans Hebrew",system-ui,-apple-system,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+
+    --r:6px;
+    --pad:clamp(16px,4vw,30px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0C1714;
+      --ground-2:#101E1A;
+      --surface:#142320;
+      --ink:#E7EEE9;
+      --ink-2:#A6B9B1;
+      --ink-3:#7B8F87;
+      --line:rgba(231,238,233,.15);
+      --line-2:rgba(231,238,233,.30);
+      --brass:#E2B451;
+      --brass-soft:rgba(226,180,81,.14);
+      --teal:#37B79B;
+      --teal-soft:rgba(55,183,155,.14);
+      --amber:#DFA042;
+      --bitters:#E4715C;
+      --bitters-soft:rgba(228,113,92,.14);
+      --shadow:none;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0C1714;
+    --ground-2:#101E1A;
+    --surface:#142320;
+    --ink:#E7EEE9;
+    --ink-2:#A6B9B1;
+    --ink-3:#7B8F87;
+    --line:rgba(231,238,233,.15);
+    --line-2:rgba(231,238,233,.30);
+    --brass:#E2B451;
+    --brass-soft:rgba(226,180,81,.14);
+    --teal:#37B79B;
+    --teal-soft:rgba(55,183,155,.14);
+    --amber:#DFA042;
+    --bitters:#E4715C;
+    --bitters-soft:rgba(228,113,92,.14);
+    --shadow:none;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ground);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:0 var(--pad) 90px;}
+
+  /* ---------- type ---------- */
+  h1,h2,h3{text-wrap:balance;margin:0;line-height:1.15;letter-spacing:-.5px;font-weight:800;}
+  h1{font-size:clamp(2.2rem,7vw,3.9rem);}
+  h2{font-size:clamp(1.5rem,4vw,2.15rem);}
+  h3{font-size:clamp(1.1rem,2.6vw,1.3rem);letter-spacing:-.2px;}
+  p{margin:0;}
+  .lead{font-size:clamp(1.05rem,2.4vw,1.22rem);color:var(--ink-2);line-height:1.65;max-width:62ch;}
+  .prose{max-width:65ch;display:flex;flex-direction:column;gap:14px;color:var(--ink-2);}
+  .prose strong{color:var(--ink);font-weight:700;}
+  .ptext{max-width:65ch;color:var(--ink-2);}
+  .ptext strong{color:var(--ink);font-weight:700;}
+  b,strong{font-weight:700;}
+  code,kbd{font-family:var(--mono);direction:ltr;unicode-bidi:embed;}
+  .cmd{
+    font-family:var(--mono);font-size:.87em;direction:ltr;unicode-bidi:embed;
+    display:inline-block;padding:1px 6px;border:1px solid var(--line-2);border-radius:4px;
+    background:var(--brass-soft);color:var(--ink);white-space:nowrap;
+  }
+  .lbl{
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:600;
+  }
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:embed;}
+  .tag.ltr{direction:ltr;unicode-bidi:embed;}
+  .nb{white-space:nowrap;}
+  .lt{direction:ltr;unicode-bidi:embed;white-space:nowrap;}
+
+  /* ---------- section shell ---------- */
+  section{padding-top:clamp(52px,8vw,86px);scroll-margin-top:20px;}
+  .head{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;}
+  .head .lbl{display:flex;align-items:center;gap:10px;}
+  .head .lbl::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  /* ---------- panels (instrument look) ---------- */
+  .panel{
+    position:relative;border:1px solid var(--line-2);border-radius:var(--r);
+    background:var(--surface);padding:clamp(18px,3.4vw,26px);box-shadow:var(--shadow);
+  }
+  .panel > .tag{
+    position:absolute;top:-9px;inset-inline-start:18px;background:var(--surface);
+    padding:0 8px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-3);font-weight:600;
+  }
+  .grid{display:grid;gap:14px;}
+  @media(min-width:720px){ .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:repeat(3,1fr);} }
+
+  /* ---------- hero ---------- */
+  .hero{padding-top:clamp(46px,9vw,84px);display:grid;gap:clamp(26px,5vw,48px);align-items:center;}
+  @media(min-width:800px){ .hero{grid-template-columns:1.35fr .65fr;} }
+  .hero-copy{display:flex;flex-direction:column;gap:18px;}
+  .kicker{
+    font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--brass);font-weight:700;
+  }
+  .glass-wrap{display:flex;justify-content:center;}
+  .glass{width:min(210px,60vw);height:auto;}
+  .glass .liquid{transform-origin:center bottom;}
+  .cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);text-align:center;margin-top:10px;letter-spacing:.04em;}
+
+  /* ---------- quick nav ---------- */
+  .nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:34px;padding-top:22px;border-top:1px solid var(--line);}
+  .nav a{
+    font-family:var(--mono);font-size:12.5px;text-decoration:none;color:var(--ink-2);
+    border:1px solid var(--line);border-radius:999px;padding:5px 13px;transition:.15s;
+  }
+  .nav a:hover,.nav a:focus-visible{border-color:var(--brass);color:var(--ink);background:var(--brass-soft);}
+
+  /* ---------- meter ---------- */
+  .meter-track{
+    position:relative;height:16px;border-radius:3px;overflow:hidden;
+    background:var(--ground-2);border:1px solid var(--line);
+  }
+  .meter-fill{height:100%;width:0;transition:width .18s ease-out,background .3s;}
+  .zones{display:flex;justify-content:space-between;margin-top:7px;}
+  .zones span{font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;background:transparent;
+    margin:16px 0 0;cursor:grab;
+  }
+  input[type=range]:active{cursor:grabbing;}
+  input[type=range]::-webkit-slider-runnable-track{height:4px;background:var(--line-2);border-radius:2px;}
+  input[type=range]::-moz-range-track{height:4px;background:var(--line-2);border-radius:2px;}
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:22px;height:22px;margin-top:-9px;border-radius:50%;
+    background:var(--surface);border:2px solid var(--ink);box-shadow:var(--shadow);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;background:var(--surface);border:2px solid var(--ink);
+  }
+  input[type=range]:focus-visible{outline:2px solid var(--brass);outline-offset:6px;border-radius:4px;}
+  .readout{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+  .readout .big{font-family:var(--mono);font-size:clamp(2rem,6vw,2.8rem);font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+  .verdict{
+    margin-top:20px;border-inline-start:3px solid var(--zone,var(--teal));padding:12px 16px;
+    background:var(--ground-2);border-radius:var(--r) 0 0 var(--r);
+  }
+  .verdict h3{margin-bottom:5px;color:var(--zone,var(--teal));}
+  .verdict p{color:var(--ink-2);font-size:15.5px;}
+
+  /* ---------- window sim ---------- */
+  .win-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px;}
+  .win-controls label{font-size:15px;color:var(--ink-2);}
+  input[type=time]{
+    font-family:var(--mono);font-size:15px;padding:7px 10px;border-radius:var(--r);
+    border:1px solid var(--line-2);background:var(--ground-2);color:var(--ink);
+  }
+  input[type=time]:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+  .btn{
+    font-family:var(--mono);font-size:13px;font-weight:600;padding:8px 15px;border-radius:var(--r);
+    border:1px solid var(--line-2);background:var(--surface);color:var(--ink);cursor:pointer;transition:.15s;
+  }
+  .btn:hover{border-color:var(--brass);background:var(--brass-soft);}
+  .btn:active{transform:translateY(1px);}
+  .btn:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+  .timeline{position:relative;height:46px;margin:8px 0 6px;}
+  .tl-track{position:absolute;inset:14px 0 auto;height:18px;border:1px solid var(--line-2);border-radius:3px;background:var(--ground-2);overflow:hidden;}
+  .tl-used{height:100%;width:0;background:var(--brass);opacity:.45;transition:width .3s;}
+  .tl-now{position:absolute;top:6px;width:2px;height:34px;background:var(--ink);transition:right .3s;}
+  .tl-now::after{
+    content:"עכשיו";position:absolute;top:-16px;right:50%;transform:translateX(50%);
+    font-family:var(--mono);font-size:10px;color:var(--ink);white-space:nowrap;letter-spacing:.06em;
+  }
+  .tl-ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+
+  /* ---------- cards ---------- */
+  .card{
+    border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+    padding:18px 18px 20px;display:flex;flex-direction:column;gap:9px;
+  }
+  .card h3{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+  .card p{font-size:15.5px;color:var(--ink-2);}
+  .card .when{font-family:var(--mono);font-size:12px;color:var(--ink-3);padding-top:9px;border-top:1px dashed var(--line);margin-top:auto;}
+
+  /* ---------- steps ---------- */
+  ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0;counter-reset:s;}
+  ol.steps li{
+    counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:16px;
+    padding:20px 0;border-bottom:1px solid var(--line);
+  }
+  ol.steps li:last-child{border-bottom:0;padding-bottom:0;}
+  ol.steps li::before{
+    content:counter(s);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--brass);
+    width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--brass);border-radius:50%;
+  }
+  ol.steps .body{display:flex;flex-direction:column;gap:10px;min-width:0;}
+
+  /* ---------- code block ---------- */
+  .code{
+    position:relative;border:1px solid var(--line-2);border-radius:var(--r);
+    background:var(--ground-2);overflow:hidden;
+  }
+  .code-bar{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:7px 10px 7px 8px;border-bottom:1px solid var(--line);background:var(--surface);
+  }
+  .code-bar .lbl{font-size:10.5px;}
+  .code pre{
+    margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13px;
+    line-height:1.75;white-space:pre;color:var(--ink);
+  }
+  .code pre.he{white-space:pre-wrap;direction:rtl;font-family:var(--sans);font-size:14.5px;line-height:1.7;}
+  .copy{
+    font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;padding:5px 11px;
+    border:1px solid var(--line-2);border-radius:4px;background:var(--ground-2);color:var(--ink-2);
+    cursor:pointer;transition:.15s;flex:none;
+  }
+  .copy:hover{border-color:var(--brass);color:var(--ink);background:var(--brass-soft);}
+  .copy:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+  .copy.done{border-color:var(--teal);color:var(--teal);background:var(--teal-soft);}
+
+  /* ---------- toggle (waste vs save) ---------- */
+  .switch{display:inline-flex;border:1px solid var(--line-2);border-radius:999px;padding:3px;gap:3px;background:var(--ground-2);}
+  .switch button{
+    font-family:var(--mono);font-size:12.5px;font-weight:600;padding:7px 16px;border-radius:999px;
+    border:0;background:transparent;color:var(--ink-3);cursor:pointer;transition:.15s;
+  }
+  .switch button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);}
+  .switch button:focus-visible{outline:2px solid var(--brass);outline-offset:2px;}
+
+  /* ---------- checklist ---------- */
+  .checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;}
+  .checks li{border-bottom:1px solid var(--line);}
+  .checks li:last-child{border-bottom:0;}
+  .checks button{
+    width:100%;display:grid;grid-template-columns:24px 1fr;gap:14px;align-items:start;text-align:start;
+    background:transparent;border:0;padding:15px 4px;cursor:pointer;color:inherit;font:inherit;
+  }
+  .checks button:focus-visible{outline:2px solid var(--brass);outline-offset:-2px;border-radius:4px;}
+  .box{
+    width:22px;height:22px;border:1.5px solid var(--line-2);border-radius:4px;display:grid;place-items:center;
+    margin-top:2px;transition:.15s;
+  }
+  .box svg{width:13px;height:13px;opacity:0;transition:.15s;}
+  .checks button[aria-pressed="true"] .box{background:var(--teal);border-color:var(--teal);}
+  .checks button[aria-pressed="true"] .box svg{opacity:1;}
+  .checks button[aria-pressed="true"] .ctext strong{text-decoration:line-through;text-decoration-color:var(--ink-3);color:var(--ink-3);}
+  .ctext{display:flex;flex-direction:column;gap:4px;}
+  .ctext strong{font-weight:700;font-size:16px;}
+  .ctext span{font-size:15px;color:var(--ink-2);}
+  .tally{
+    display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:13px;color:var(--ink-2);
+  }
+  .tally-track{display:block;flex:1;height:5px;border-radius:3px;background:var(--ground-2);overflow:hidden;}
+  .tally-fill{display:block;height:100%;width:0;background:var(--teal);transition:width .25s;}
+
+  /* ---------- faq ---------- */
+  details{border-bottom:1px solid var(--line);}
+  details summary{
+    cursor:pointer;padding:16px 0;font-weight:700;font-size:16.5px;list-style:none;
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+  }
+  details summary::-webkit-details-marker{display:none;}
+  details summary::after{content:"+";font-family:var(--mono);font-size:20px;color:var(--brass);flex:none;transition:.2s;}
+  details[open] summary::after{transform:rotate(45deg);}
+  details summary:focus-visible{outline:2px solid var(--brass);outline-offset:-2px;border-radius:4px;}
+  details .ans{padding:0 0 18px;color:var(--ink-2);font-size:15.5px;display:flex;flex-direction:column;gap:10px;max-width:65ch;}
+
+  /* ---------- misc ---------- */
+  .pill{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    padding:3px 8px;border-radius:3px;flex:none;
+  }
+  .p-good{background:var(--teal-soft);color:var(--teal);}
+  .p-bad{background:var(--bitters-soft);color:var(--bitters);}
+  .p-warn{background:var(--brass-soft);color:var(--brass);}
+  .note{
+    border:1px dashed var(--line-2);border-radius:var(--r);padding:14px 16px;background:transparent;
+    font-size:15px;color:var(--ink-2);
+  }
+  .note b{color:var(--ink);}
+  .tree{direction:ltr;text-align:left;}
+  footer{
+    margin-top:clamp(56px,9vw,90px);padding-top:26px;border-top:1px solid var(--line);
+    display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;
+    font-family:var(--mono);font-size:12px;color:var(--ink-3);
+  }
+  .toast{
+    position:fixed;bottom:22px;inset-inline-start:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--ground);font-family:var(--mono);font-size:13px;
+    padding:9px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  }
+</style>
+
+<div class="wrap" dir="rtl">
+
+  <!-- ======== HERO ======== -->
+  <header class="hero">
+    <div class="hero-copy">
+      <span class="kicker">מדריך לטל · Claude Code</span>
+      <h1>הטוקנים נגמרים.<br>השאלה היא מתי.</h1>
+      <p class="lead">
+        אתה בונה אתר מכירות למארזי קוקטייל, והכל זורם — עד שבאמצע היום קלוד אומר לך
+        "הגעת למגבלה". זה לא באג, וזה לא כי עבדת יותר מדי. זה כי כל שיחה מתמלאת,
+        ואף אחד לא לימד אותך לרוקן אותה בזמן. המדריך הזה עושה בדיוק את זה, בעשר דקות.
+      </p>
+    </div>
+    <div>
+      <div class="glass-wrap">
+        <svg class="glass" viewBox="0 0 120 160" role="img" aria-label="כוס שמתמלאת עד הסוף — משל לקונטקסט של השיחה">
+          <defs>
+            <clipPath id="gclip">
+              <path d="M26 20 h68 l-8 116 a10 10 0 0 1 -10 9 h-32 a10 10 0 0 1 -10 -9 z"/>
+            </clipPath>
+            <linearGradient id="ggrad" x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0%"   style="stop-color:var(--teal)"/>
+              <stop offset="55%"  style="stop-color:var(--amber)"/>
+              <stop offset="100%" style="stop-color:var(--bitters)"/>
+            </linearGradient>
+          </defs>
+          <g clip-path="url(#gclip)">
+            <rect class="liquid" x="20" y="8" width="80" height="140" fill="url(#ggrad)"/>
+          </g>
+          <path d="M26 20 h68 l-8 116 a10 10 0 0 1 -10 9 h-32 a10 10 0 0 1 -10 -9 z"
+                style="fill:none;stroke:var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+          <line x1="30" y1="55"  x2="42" y2="55"  style="stroke:var(--ink)" stroke-width="1.5" opacity=".45"/>
+          <line x1="31" y1="88"  x2="43" y2="88"  style="stroke:var(--ink)" stroke-width="1.5" opacity=".45"/>
+          <line x1="33" y1="121" x2="45" y2="121" style="stroke:var(--ink)" stroke-width="1.5" opacity=".45"/>
+        </svg>
+      </div>
+      <p class="cap">כל שיחה מתמלאת. תמיד.</p>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="ניווט מהיר">
+    <a href="#basics">איך זה עובד</a>
+    <a href="#meter">מד הקונטקסט</a>
+    <a href="#window">חלון 5 השעות</a>
+    <a href="#handoff">Handoff</a>
+    <a href="#commands">הפקודות</a>
+    <a href="#habits">10 הרגלים</a>
+    <a href="#prompts">לפני ואחרי</a>
+    <a href="#faq">שאלות</a>
+  </nav>
+
+  <!-- ======== BASICS ======== -->
+  <section id="basics">
+    <div class="head">
+      <span class="lbl">הבסיס</span>
+      <h2>למה בכלל נגמרים לך הטוקנים</h2>
+    </div>
+
+    <div class="prose">
+      <p>
+        טוקן זה פיסת טקסט — בערך מילה קצרה. קלוד קורא טוקנים וכותב טוקנים,
+        ובמסלול שלך יש כמות מוגבלת שלהם. עד כאן פשוט.
+      </p>
+      <p>
+        <strong>החלק שאף אחד לא אומר לך: אתה משלם על כל השיחה מחדש, בכל הודעה.</strong>
+        קלוד הוא לא בן אדם שזוכר — בכל פעם שאתה שולח הודעה, כל ההיסטוריה של השיחה
+        נשלחת אליו שוב מההתחלה. כל קובץ שהוא פתח, כל שגיאה שהדבקת, כל תשובה ארוכה שהוא כתב.
+      </p>
+    </div>
+
+    <div class="panel" style="margin-top:24px">
+      <span class="tag">המשמעות בפועל</span>
+      <div class="grid g3" style="margin-top:6px">
+        <div class="card" style="border:0;background:transparent;padding:0">
+          <h3>הודעה 1</h3>
+          <p>קלוד קורא את ההודעה שלך. זול.</p>
+        </div>
+        <div class="card" style="border:0;background:transparent;padding:0">
+          <h3>הודעה 20</h3>
+          <p>קלוד קורא את 19 ההודעות הקודמות <em>ואז</em> את שלך. יקר פי כמה.</p>
+        </div>
+        <div class="card" style="border:0;background:transparent;padding:0">
+          <h3>הודעה 60</h3>
+          <p>רוב הטוקנים הולכים על היסטוריה שכבר לא רלוונטית לך.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:18px">
+      <b>המסקנה היחידה שחשוב לזכור:</b> שיחה ארוכה היא לא רק איטית ומבלבלת — היא גם
+      זו ששורפת לך את המכסה. חיסכון בטוקנים = לשמור על שיחות קצרות.
+    </div>
+  </section>
+
+  <!-- ======== CONTEXT METER ======== -->
+  <section id="meter">
+    <div class="head">
+      <span class="lbl">כלי אינטראקטיבי</span>
+      <h2>מד הקונטקסט — מתי לעצור</h2>
+      <p class="lead">
+        "קונטקסט" זה כמה מהזיכרון של השיחה כבר תפוס. תריץ <span class="cmd">/context</span>
+        ותראה אחוז. גרור את הסליידר לאחוז שאתה רואה — ותקבל בדיוק מה לעשות.
+      </p>
+    </div>
+
+    <div class="panel">
+      <span class="tag ltr">/context</span>
+      <div class="readout">
+        <span class="big" id="pctOut">35%</span>
+        <span class="lbl">מהקונטקסט תפוס</span>
+      </div>
+      <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+      <div class="zones">
+        <span>0% · ריק</span><span>50%</span><span>75%</span><span>100% · מלא</span>
+      </div>
+      <input type="range" id="ctxRange" min="0" max="100" value="35" step="1"
+             aria-label="אחוז הקונטקסט התפוס">
+
+      <div class="verdict" id="verdict">
+        <h3 id="vTitle">אזור ירוק — תמשיך לעבוד</h3>
+        <p id="vText">הכל בסדר. תמשיך על אותה משימה בלי לחשוב על זה.</p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:18px">
+      <b>כלל אצבע אם אתה לא רוצה לזכור כלום:</b> ברגע שסיימת נושא — עגלת קניות, עמוד מוצר,
+      תיקון באג — תעשה handoff <span class="nb">ו־<span class="cmd">/clear</span></span>. לא משנה מה האחוז.
+    </div>
+  </section>
+
+  <!-- ======== 5H WINDOW ======== -->
+  <section id="window">
+    <div class="head">
+      <span class="lbl">מכסות</span>
+      <h2>חלון 5 השעות (והתקרה השבועית)</h2>
+      <p class="lead">
+        המכסה שלך לא מתאפסת בחצות. היא עובדת בחלונות של 5 שעות שמתחילים
+        <strong>מההודעה הראשונה שלך</strong>. תבחר מתי שלחת את ההודעה הראשונה היום:
+      </p>
+    </div>
+
+    <div class="panel">
+      <span class="tag">מחשבון חלון</span>
+      <div class="win-controls">
+        <label for="startTime">שלחתי את ההודעה הראשונה ב־</label>
+        <input type="time" id="startTime">
+        <button class="btn" id="nowBtn" type="button">עכשיו</button>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-track"><div class="tl-used" id="tlUsed"></div></div>
+        <div class="tl-now" id="tlNow"></div>
+      </div>
+      <div class="tl-ends">
+        <span id="tlStart">—</span>
+        <span id="tlEnd">—</span>
+      </div>
+
+      <div class="verdict" id="winVerdict" style="--zone:var(--brass)">
+        <h3 id="wTitle">—</h3>
+        <p id="wText">—</p>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:16px">
+      <div class="card">
+        <h3>החלון מתגלגל</h3>
+        <p>הוא מתחיל מההודעה הראשונה ורץ 5 שעות ברצף — גם אם הלכת לאכול צהריים באמצע.
+           הפסקה לא עוצרת את השעון.</p>
+        <span class="when">אחרי 5 שעות: הודעה חדשה פותחת חלון חדש</span>
+      </div>
+      <div class="card">
+        <h3>יש גם תקרה שבועית</h3>
+        <p>מעל חלונות ה־5 שעות יש מכסה שבועית שמתאפסת פעם בשבוע. אפשר לגמור אותה
+           גם אם כל חלון בנפרד היה בסדר.</p>
+        <span class="when">כלומר: שלושה ימי מרתון ← שבת בלי קלוד</span>
+      </div>
+      <div class="card">
+        <h3>המודל משנה</h3>
+        <p>Opus הוא החזק והיקר, Sonnet מהיר וזול בהרבה. לתיקוני CSS ולטקסטים
+           באתר — Sonnet יספיק לך בקלות.</p>
+        <span class="when">מחליפים עם <span class="cmd">/model</span></span>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:18px">
+      <b>המספרים המדויקים משתנים לפי מסלול ולפי עומס.</b> אל תנחש — תריץ
+      <span class="cmd">/usage</span> ותראה בדיוק כמה נשאר לך בחלון ובשבוע. זו הפקודה
+      הכי שווה שתלמד היום.
+    </div>
+  </section>
+
+  <!-- ======== HANDOFF ======== -->
+  <section id="handoff">
+    <div class="head">
+      <span class="lbl">הטקס החשוב</span>
+      <h2>Handoff — להעביר משמרת לעצמך</h2>
+      <p class="lead">
+        Handoff זה קובץ קצר שקלוד כותב לפני שאתה מנקה את השיחה, ובו כל מה שצריך
+        כדי להמשיך. אתה מוחק שיחה בת 60 הודעות ומחליף אותה בעמוד אחד. זה כל הסוד.
+      </p>
+    </div>
+
+    <ol class="steps">
+      <li>
+        <div class="body">
+          <h3>תזהה שהגיע הזמן</h3>
+          <p class="ptext">
+            סיימת משימה, או <span class="cmd">/context</span> עבר 70%, או שאתה מרגיש
+            שקלוד התחיל לשכוח דברים שסיכמתם. כל אחד מהשלושה מספיק.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="body">
+          <h3>תבקש את ה־handoff</h3>
+          <p class="ptext">העתק את זה כמו שהוא ושלח לקלוד:</p>
+          <div class="code">
+            <div class="code-bar">
+              <span class="lbl">ההודעה שאתה שולח</span>
+              <button class="copy" type="button" data-copy="#hoPrompt">העתק</button>
+            </div>
+            <pre class="he" id="hoPrompt">לפני שאני מנקה את השיחה — תכתוב לי קובץ handoff.
+שמור אותו ב־docs/handoff/ בשם לפי התאריך והנושא, למשל 2026-08-15-cart.md
+ותכלול בו:
+1. על מה עבדנו ומה המטרה
+2. מה כבר נעשה — אילו קבצים שונו ולמה
+3. מה נשאר לעשות, לפי סדר עדיפות
+4. החלטות שקיבלנו שאסור לשנות
+5. איך מריצים ובודקים את האתר
+6. באגים פתוחים או דברים שנתקעו
+
+תכתוב את זה כך שסשן חדש בלי שום היסטוריה יוכל להמשיך מהנקודה הזאת.</pre>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="body">
+          <h3>תוודא שהקובץ נשמר — ותעשה commit</h3>
+          <p class="ptext">
+            הקובץ נשמר בתוך <strong>הריפו שלך בגיטהאב</strong>, לא בזיכרון של קלוד.
+            זו בדיוק הנקודה: השיחה נעלמת, הקובץ נשאר. תדחוף אותו לגיטהאב ותהיה רגוע.
+          </p>
+          <div class="code">
+            <div class="code-bar"><span class="lbl">איפה זה יושב אצלך</span></div>
+            <pre class="tree">cocktail-site/
+├── CLAUDE.md
+├── index.html
+├── css/
+└── docs/
+    └── handoff/
+        ├── 2026-08-12-setup.md
+        ├── 2026-08-14-product-page.md
+        └── 2026-08-15-cart.md</pre>
+          </div>
+          <p class="ptext" style="font-size:15px">
+            <strong>CLAUDE.md</strong> — הזיכרון הקבוע, נקרא אוטומטית בכל שיחה.
+            <br>
+            <strong>docs/handoff/2026-08-15-cart.md</strong> — האחרון בתיקייה. זה מה שקוראים בפתיחת שיחה חדשה.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="body">
+          <h3>נקה</h3>
+          <p class="ptext">
+            <span class="cmd">/clear</span> — וזהו. השיחה מתאפסת לגמרי, הקונטקסט חוזר לאפס,
+            והמכסה שלך מפסיקה לדמם על היסטוריה ישנה.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="body">
+          <h3>תפתח את המשמרת הבאה</h3>
+          <p class="ptext">ההודעה הראשונה בשיחה החדשה:</p>
+          <div class="code">
+            <div class="code-bar">
+              <span class="lbl">פתיחת שיחה חדשה</span>
+              <button class="copy" type="button" data-copy="#resPrompt">העתק</button>
+            </div>
+            <pre class="he" id="resPrompt">קרא את docs/handoff/2026-08-15-cart.md ואת CLAUDE.md,
+ותמשיך מהסעיף "מה נשאר לעשות".
+אל תקרא קבצים אחרים עד שתצטרך אותם בפועל.</pre>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="grid g2" style="margin-top:26px">
+      <div class="panel">
+        <span class="tag ltr">CLAUDE.md</span>
+        <h3 style="margin-bottom:8px">הזיכרון הקבוע</h3>
+        <p style="color:var(--ink-2);font-size:15.5px">
+          קובץ אחד בשורש הפרויקט שקלוד קורא <strong>אוטומטית</strong> בכל שיחה חדשה.
+          שם כותבים דברים שלא משתנים: שהאתר מוכר מארזי קוקטייל, שהוא בעברית ו־RTL,
+          מה צבעי המותג, איך מריצים אותו. כל שורה שם חוסכת לך הסבר חוזר בכל שיחה.
+        </p>
+        <p style="color:var(--ink-2);font-size:15.5px;margin-top:10px">
+          בפעם הראשונה: תריץ <span class="cmd">/init</span> וקלוד יכתוב לך טיוטה לבד.
+        </p>
+      </div>
+      <div class="panel">
+        <span class="tag ltr">docs/handoff/*.md</span>
+        <h3 style="margin-bottom:8px">הזיכרון הזמני</h3>
+        <p style="color:var(--ink-2);font-size:15.5px">
+          קובץ לכל משמרת עבודה. מתאר מצב רגעי: מה באמצע, מה נשבר, מה הצעד הבא.
+          אחרי שסיימת את הפיצ'ר — הקובץ כבר לא רלוונטי, אבל אל תמחק. זה יומן
+          הפרויקט שלך, ובעוד חודש תודה לעצמך.
+        </p>
+        <p style="color:var(--ink-2);font-size:15.5px;margin-top:10px">
+          קורא רק את האחרון. לא את כולם — זה מייקר.
+        </p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:18px">
+      <b>למה קובץ בריפו ולא סתם להסתמך על קלוד שיזכור?</b> כי הוא לא זוכר.
+      כל שיחה חדשה מתחילה מאפס מוחלט. הקובץ ב־git הוא הדבר היחיד שעובר בין שיחות —
+      והוא גם מגובה, גם משותף, וגם אפשר לפתוח אותו מכל מחשב.
+    </div>
+  </section>
+
+  <!-- ======== COMMANDS ======== -->
+  <section id="commands">
+    <div class="head">
+      <span class="lbl">ארגז הכלים</span>
+      <h2>חמש פקודות, וזה כל מה שצריך</h2>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3><span class="cmd">/usage</span><span class="pill p-warn">תבדוק כל בוקר</span></h3>
+        <p>מראה כמה נשאר לך בחלון 5 השעות ובמכסה השבועית. במקום לנחש —
+           תסתכל, ותדע אם היום מתאים לפיצ'ר גדול או לתיקונים קטנים.</p>
+        <span class="when">30 שניות שחוסכות יום עבודה</span>
+      </div>
+      <div class="card">
+        <h3><span class="cmd">/context</span><span class="pill p-warn">כשמתחיל להיות ארוך</span></h3>
+        <p>מראה כמה מהשיחה הנוכחית כבר תפוס, ומה תופס. אם רואים שם קבצים ענקיים
+           שקלוד קרא לפני שעה ולא צריך יותר — זה הסימן.</p>
+        <span class="when">מעל 70% ← זמן ל־handoff</span>
+      </div>
+      <div class="card">
+        <h3><span class="cmd">/clear</span><span class="pill p-good">החבר הכי טוב שלך</span></h3>
+        <p>מוחק את כל השיחה ומתחיל מאפס. הכי חסכוני שיש. הקבצים שלך לא נפגעים —
+           רק ההיסטוריה של הצ'אט. אל תפחד ממנו.</p>
+        <span class="when">אחרי כל handoff, ובין כל שתי משימות</span>
+      </div>
+      <div class="card">
+        <h3><span class="cmd">/compact</span><span class="pill p-warn">בזהירות</span></h3>
+        <p>מסכם את השיחה ומקצר אותה, במקום למחוק. שימושי כשאתה באמצע משהו ולא רוצה
+           לאבד הקשר — אבל הסיכום עצמו עולה טוקנים, אז זה לא קסם.</p>
+        <span class="when">כשאתה חייב להמשיך באותו נושא</span>
+      </div>
+      <div class="card">
+        <h3><span class="cmd">/model</span><span class="pill p-good">חיסכון מיידי</span></h3>
+        <p>מחליף מודל. עבודה כבדה ומורכבת — המודל החזק. שינוי צבע, תיקון טקסט,
+           הוספת כפתור — המהיר. רוב מה שאתה עושה באתר הוא מהסוג השני.</p>
+        <span class="when">הרגל שמאריך לך את השבוע</span>
+      </div>
+      <div class="card">
+        <h3><span class="cmd">/init</span><span class="pill p-good">פעם אחת</span></h3>
+        <p>סורק את הפרויקט וכותב לך <strong>CLAUDE.md</strong> ראשוני. תריץ פעם אחת,
+           תערוך את מה שלא מדויק, ותשכח מזה.</p>
+        <span class="when">היום, לפני כל דבר אחר</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== HABITS ======== -->
+  <section id="habits">
+    <div class="head">
+      <span class="lbl">צ'קליסט</span>
+      <h2>עשרה הרגלים שמכפילים לך את המכסה</h2>
+      <p class="lead">תסמן מה שכבר עשית. תחזור לכאן בעוד שבוע.</p>
+    </div>
+
+    <div class="panel">
+      <span class="tag ltr">habits</span>
+      <ul class="checks" id="checkList">
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>תגיד לו באיזה קובץ לגעת</strong><span>"תשנה את הצבע של הכפתור ב־css/style.css" במקום "תשנה את העיצוב". בלי זה הוא קורא חצי מהפרויקט כדי למצוא לבד.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>משימה אחת לכל שיחה</strong><span>סיימת את עמוד המוצר? handoff ו־<span class="lt">/clear</span>. אל תמשיך משם לעגלת הקניות באותה שיחה.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>תגיד מה המטרה בהודעה הראשונה</strong><span>"אני רוצה שהמבקר יוכל לבחור מארז ולהוסיף לעגלה" — ואז הוא מתכנן פעם אחת, במקום לנחש ולתקן חמש פעמים.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>אל תבקש "תבדוק את כל האתר"</strong><span>זה גורר קריאה של עשרות קבצים בבת אחת ומנפח את הקונטקסט מיד. תבקש בדיקה של עמוד אחד.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>תדביק 5 שורות שגיאה, לא 200</strong><span>השורה עם ה־Error ושתיים־שלוש סביבה. שאר הלוג הוא טוקנים שנשלחים מחדש בכל הודעה עד סוף השיחה.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>תבקש "בלי הסברים"</strong><span>כשאתה כבר יודע מה אתה רוצה: "תעשה את זה, בלי להסביר לי". תשובה ארוכה עולה כמו קובץ שלם.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>תרכז את התיקונים</strong><span>במקום חמישה סבבים של "עוד קצת שמאלה" — תסתכל, תרשום שלושה דברים, ותשלח אותם ביחד.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>תמונות רק כשהן באמת עוזרות</strong><span>סקרינשוט הוא הרבה טוקנים. אם אפשר לתאר במילים ("הכפתור בעגלה נחתך בנייד") — תתאר.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>עדכן CLAUDE.md כשמשהו מתקבע</strong><span>החלטת שכל המחירים כוללים מע"מ? שורה אחת ב־CLAUDE.md, ולא תסביר את זה שוב אף פעם.</span></span></button></li>
+
+        <li><button type="button" aria-pressed="false"><span class="box" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5l3.5 3.5 7.5-8"/></svg></span><span class="ctext"><strong>commit אחרי כל צעד שעובד</strong><span>לא חיסכון ישיר, אבל: כשמשהו נשבר אתה חוזר אחורה בשנייה במקום לבזבז שיחה שלמה על "תחזיר לי את מה שהיה".</span></span></button></li>
+      </ul>
+
+      <div class="tally">
+        <span id="tallyText" class="num" style="display:inline-block">0 / 10</span>
+        <span class="tally-track"><span class="tally-fill" id="tallyFill"></span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== PROMPTS ======== -->
+  <section id="prompts">
+    <div class="head">
+      <span class="lbl">השוואה</span>
+      <h2>אותה בקשה, פי חמישה טוקנים</h2>
+      <p class="lead">שתי דרכים לבקש בדיוק את אותו דבר באתר הקוקטיילים שלך.</p>
+    </div>
+
+    <div class="switch" role="group" aria-label="בחירת סגנון בקשה" style="margin-bottom:16px">
+      <button type="button" id="tabBad" aria-pressed="true">בזבזני</button>
+      <button type="button" id="tabGood" aria-pressed="false">חסכוני</button>
+    </div>
+
+    <div class="panel" id="promptPanel">
+      <span class="tag" id="pTag">כך רוב האנשים כותבים</span>
+      <div class="code" style="margin-top:6px">
+        <div class="code-bar">
+          <span class="lbl" id="pLbl">ההודעה</span>
+          <button class="copy" type="button" data-copy="#pText">העתק</button>
+        </div>
+        <pre class="he" id="pText">משהו לא נראה טוב בעגלה, תבדוק את האתר ותתקן</pre>
+      </div>
+      <div class="prose" style="margin-top:16px;max-width:none">
+        <p id="pWhy">קלוד לא יודע מה זה "לא נראה טוב", לא יודע איפה העגלה, ולא יודע במה לגעת.
+        הוא יקרא הרבה קבצים כדי להבין, ינחש תיקון, אתה תגיד "לא זה", והמעגל יתחיל מחדש.
+        שלושה סבבים כאלה, וחצי מהחלון שלך נגמר.</p>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:18px">
+      <b>הכלל:</b> כל דקה שאתה משקיע בניסוח הבקשה חוסכת לך שלוש הודעות של תיקונים.
+      וכל הודעה שנחסכת היא גם ההיסטוריה שלה שלא נשלחת מחדש בכל הודעה אחריה.
+    </div>
+  </section>
+
+  <!-- ======== FAQ ======== -->
+  <section id="faq">
+    <div class="head">
+      <span class="lbl">שאלות</span>
+      <h2>מה שבטוח תשאל</h2>
+    </div>
+
+    <div>
+      <details>
+        <summary>אם אני עושה <span class="lt">/clear</span> — לא איבדתי את כל העבודה?</summary>
+        <div class="ans">
+          <p>לא. <span class="cmd">/clear</span> מוחק רק את הצ'אט. כל הקבצים שקלוד כתב
+          יושבים אצלך בתיקייה ובגיטהאב, בדיוק כמו שהיו. מה שהולך זה הזיכרון של השיחה —
+          ובשביל זה בדיוק כתבת handoff לפני.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>כמה זמן זה "ככה וככה זמן"? מתי בדיוק לעשות handoff?</summary>
+        <div class="ans">
+          <p>אין טיימר. שלושה סימנים, וכל אחד מספיק לבד:</p>
+          <p><strong>1.</strong> סיימת משימה שלמה שעובדת.<br>
+             <strong>2.</strong> <span class="cmd">/context</span> עבר 70%.<br>
+             <strong>3.</strong> קלוד התחיל לחזור על עצמו, לשכוח משהו שסיכמתם, או לתקן דברים
+             שכבר תוקנו — זה הסימן הכי ברור שהשיחה עמוסה מדי.</p>
+          <p>בפועל, אצל רוב האנשים זה יוצא בערך פעם בשעה־שעה וחצי של עבודה רצופה.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>מה ההבדל בין <span class="lt">/clear</span> ל־<span class="lt">/compact</span>? מתי כל אחד?</summary>
+        <div class="ans">
+          <p><span class="cmd">/clear</span> מוחק הכל ומתחיל מאפס — הכי חסכוני, ומתאים
+          כשסיימת נושא. <span class="cmd">/compact</span> מסכם את השיחה במקום למחוק —
+          שומר על ההקשר, אבל הסיכום עצמו עולה טוקנים והוא לא מושלם.</p>
+          <p>ההמלצה: <strong class="nb"><span class="lt">handoff + /clear</span></strong> כברירת מחדל.
+          <span class="cmd">/compact</span> רק כשאתה באמצע משהו עדין ואתה חייב להמשיך עכשיו.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>גמרתי את המכסה באמצע היום. מה עכשיו?</summary>
+        <div class="ans">
+          <p>קודם <span class="cmd">/usage</span> — תראה מתי החלון מתאפס. אם זו התקרה
+          השבועית, בדוק אם אתה יכול לעבור למודל קל יותר עם <span class="cmd">/model</span>.</p>
+          <p>ובזמן ההמתנה: זה בדיוק הזמן לכתוב את ה־handoff, לעדכן את CLAUDE.md,
+          ולבדוק ידנית שמה שנבנה באמת עובד. עבודה שלא צורכת טוקנים בכלל.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>הקובץ handoff נשמר אצלי או אצל קלוד?</summary>
+        <div class="ans">
+          <p>אצלך. זה קובץ <code>.md</code> רגיל בתיקיית הפרויקט שלך, ואחרי
+          <code>git push</code> הוא גם בגיטהאב. קלוד לא שומר כלום בין שיחות —
+          כל שיחה חדשה מתחילה מאפס מוחלט. זו בדיוק הסיבה שהקובץ קיים.</p>
+          <p>המקום המומלץ: <code>docs/handoff/</code> בשורש הפרויקט, שם קובץ
+          <code>YYYY-MM-DD-נושא.md</code> כדי שהאחרון תמיד יהיה למטה ברשימה.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>שתי שיחות במקביל — זה מבזבז יותר?</summary>
+        <div class="ans">
+          <p>כן, ובגדול. שתי שיחות פתוחות = שתי היסטוריות שנשלחות מחדש בכל הודעה,
+          ושתיהן אוכלות מאותה מכסה. עדיף שיחה אחת ממוקדת בכל רגע.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>יש דרך לדעת כמה טוקנים בזבזתי על משהו מסוים?</summary>
+        <div class="ans">
+          <p><span class="cmd">/context</span> מראה לך את הפילוח — מה תופס את הקונטקסט
+          כרגע. אם אתה רואה שם קובץ ענק או פלט של פקודה מלפני שעתיים,
+          זה מה ששילמת עליו בכל הודעה מאז. וזה הרמז הכי טוב שלך למה לא לעשות בפעם הבאה.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ======== CLOSE ======== -->
+  <section id="close">
+    <div class="panel" style="border-color:var(--brass)">
+      <span class="tag" style="color:var(--brass)">אם תזכור רק שורה אחת</span>
+      <h2 style="margin:6px 0 12px">
+        משימה אחת → handoff → <span class="lt" style="font-family:var(--mono);font-size:.8em">/clear</span> → הלאה.
+      </h2>
+      <p style="color:var(--ink-2);max-width:60ch">
+        זהו. כל השאר במדריך הזה הוא שיפורים בשוליים. ההרגל הזה לבדו ייקח אותך
+        מ"נגמרו לי הטוקנים בצהריים" ל"לא שמתי לב שיש מגבלה".
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <span>נכתב לטל · אתר מארזי הקוקטייל</span>
+    <span class="lt">Claude Code · /usage /context /clear</span>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">הועתק</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- hero glass fill ---------- */
+  var liquid = document.querySelector('.liquid');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (liquid) {
+    if (reduce) {
+      liquid.setAttribute('y', '22');
+      liquid.setAttribute('height', '126');
+    } else {
+      var t0 = null, DUR = 2200;
+      var step = function(ts){
+        if (t0 === null) t0 = ts;
+        var p = Math.min((ts - t0) / DUR, 1);
+        var e = 1 - Math.pow(1 - p, 3);
+        var h = 126 * e;
+        liquid.setAttribute('y', String(148 - h));
+        liquid.setAttribute('height', String(h));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+  }
+
+  /* ---------- context meter ---------- */
+  var range   = document.getElementById('ctxRange');
+  var fill    = document.getElementById('meterFill');
+  var pctOut  = document.getElementById('pctOut');
+  var verdict = document.getElementById('verdict');
+  var vTitle  = document.getElementById('vTitle');
+  var vText   = document.getElementById('vText');
+
+  var ZONES = [
+    { max: 50,  color: 'var(--teal)',
+      title: 'אזור ירוק — תמשיך לעבוד',
+      text:  'הכל בסדר. תמשיך על אותה משימה בלי לחשוב על זה. אין שום סיבה לנקות עכשיו.' },
+    { max: 70,  color: 'var(--amber)',
+      title: 'אזור צהוב — תסיים את מה שהתחלת',
+      text:  'עדיין עובד טוב, אבל אל תפתח עכשיו נושא חדש. תסגור את המשימה הנוכחית ואז תעשה handoff.' },
+    { max: 85,  color: 'var(--bitters)',
+      title: 'אזור אדום — handoff עכשיו',
+      text:  'כל הודעה מכאן והלאה יקרה. בקש handoff, ודא שהקובץ נשמר, ותריץ ‎/clear‎. גם אם אתה באמצע.' },
+    { max: 101, color: 'var(--bitters)',
+      title: 'קריטי — עצור',
+      text:  'קלוד כבר מתחיל לשכוח דברים מתחילת השיחה, ואתה משלם על היסטוריה ענקית. handoff ו-‎/clear‎, מיד.' }
+  ];
+
+  function zoneFor(v){
+    for (var i = 0; i < ZONES.length; i++) if (v < ZONES[i].max) return ZONES[i];
+    return ZONES[ZONES.length - 1];
+  }
+  function renderMeter(){
+    var v = Number(range.value);
+    var z = zoneFor(v);
+    fill.style.width = v + '%';
+    fill.style.background = z.color;
+    pctOut.textContent = v + '%';
+    pctOut.style.color = z.color;
+    verdict.style.setProperty('--zone', z.color);
+    vTitle.textContent = z.title;
+    vText.textContent  = z.text;
+  }
+  if (range) { range.addEventListener('input', renderMeter); renderMeter(); }
+
+  /* ---------- 5-hour window ---------- */
+  var timeIn  = document.getElementById('startTime');
+  var nowBtn  = document.getElementById('nowBtn');
+  var tlUsed  = document.getElementById('tlUsed');
+  var tlNow   = document.getElementById('tlNow');
+  var tlStart = document.getElementById('tlStart');
+  var tlEnd   = document.getElementById('tlEnd');
+  var wTitle  = document.getElementById('wTitle');
+  var wText   = document.getElementById('wText');
+  var winV    = document.getElementById('winVerdict');
+  var WIN_MS  = 5 * 60 * 60 * 1000;
+
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function hhmm(d){ return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+
+  function setDefaultTime(hoursAgo){
+    var d = new Date(Date.now() - (hoursAgo || 0) * 3600000);
+    timeIn.value = hhmm(d);
+  }
+
+  function renderWindow(){
+    if (!timeIn || !timeIn.value) return;
+    var parts = timeIn.value.split(':');
+    var now   = new Date();
+    var start = new Date(now.getFullYear(), now.getMonth(), now.getDate(),
+                         Number(parts[0]), Number(parts[1]), 0, 0);
+    // a start time later than now is read as yesterday evening
+    if (start.getTime() > now.getTime()) start = new Date(start.getTime() - 86400000);
+
+    var end     = new Date(start.getTime() + WIN_MS);
+    var elapsed = now.getTime() - start.getTime();
+    var pct     = Math.max(0, Math.min(elapsed / WIN_MS, 1)) * 100;
+
+    tlStart.textContent = 'תחילת החלון · ' + hhmm(start);
+    tlEnd.textContent   = 'איפוס · ' + hhmm(end);
+    tlUsed.style.width  = pct + '%';
+    tlNow.style.right   = pct + '%';
+
+    if (elapsed >= WIN_MS) {
+      winV.style.setProperty('--zone', 'var(--teal)');
+      wTitle.textContent = 'החלון הזה כבר נסגר';
+      wText.textContent  = 'עברו יותר מ־5 שעות מההודעה הראשונה, אז המכסה של החלון ההוא כבר מאחוריך. ההודעה הבאה שתשלח פותחת חלון חדש לגמרי — וזה הרגע הכי טוב להתחיל משימה גדולה.';
+    } else {
+      var left = WIN_MS - elapsed;
+      var h = Math.floor(left / 3600000);
+      var m = Math.floor((left % 3600000) / 60000);
+      var leftTxt = (h > 0 ? h + ' שעות ו־' : '') + m + ' דקות';
+      if (left < 45 * 60000) {
+        winV.style.setProperty('--zone', 'var(--bitters)');
+        wTitle.textContent = 'נשארו ' + leftTxt + ' — סוף החלון';
+        wText.textContent  = 'אל תתחיל עכשיו פיצ\'ר חדש. תסגור את מה שפתוח, תכתוב handoff, ותחזור אחרי ' + hhmm(end) + ' עם חלון נקי.';
+      } else if (elapsed > WIN_MS * 0.6) {
+        winV.style.setProperty('--zone', 'var(--amber)');
+        wTitle.textContent = 'נשארו ' + leftTxt + ' בחלון';
+        wText.textContent  = 'עברת את רוב החלון. משימות קטנות בלבד מכאן, ותכנן להיות בנקודת עצירה נוחה עד ' + hhmm(end) + '.';
+      } else {
+        winV.style.setProperty('--zone', 'var(--teal)');
+        wTitle.textContent = 'נשארו ' + leftTxt + ' בחלון';
+        wText.textContent  = 'זה הזמן לעבודה הכבדה. החלון מתאפס ב־' + hhmm(end) + ', ומה שנשאר פתוח באותו רגע פשוט ימשיך בחלון הבא.';
+      }
+    }
+  }
+
+  if (timeIn) {
+    setDefaultTime(2);
+    renderWindow();
+    timeIn.addEventListener('input', renderWindow);
+    nowBtn.addEventListener('click', function(){ setDefaultTime(0); renderWindow(); });
+    setInterval(renderWindow, 30000);
+  }
+
+  /* ---------- checklist ---------- */
+  var list      = document.getElementById('checkList');
+  var tallyText = document.getElementById('tallyText');
+  var tallyFill = document.getElementById('tallyFill');
+
+  function store(key, val){
+    try { window.localStorage.setItem(key, val); } catch (e) { /* sandboxed */ }
+  }
+  function load(key){
+    try { return window.localStorage.getItem(key); } catch (e) { return null; }
+  }
+
+  if (list) {
+    var btns  = Array.prototype.slice.call(list.querySelectorAll('button'));
+    var saved = load('tal-habits');
+    if (saved) {
+      saved.split('').forEach(function(c, i){
+        if (c === '1' && btns[i]) btns[i].setAttribute('aria-pressed', 'true');
+      });
+    }
+    var tally = function(){
+      var on = btns.filter(function(b){ return b.getAttribute('aria-pressed') === 'true'; }).length;
+      tallyText.textContent = on + ' / ' + btns.length;
+      tallyFill.style.width = (on / btns.length * 100) + '%';
+      store('tal-habits', btns.map(function(b){
+        return b.getAttribute('aria-pressed') === 'true' ? '1' : '0';
+      }).join(''));
+    };
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+        tally();
+      });
+    });
+    tally();
+  }
+
+  /* ---------- prompt toggle ---------- */
+  var tabBad  = document.getElementById('tabBad');
+  var tabGood = document.getElementById('tabGood');
+  var pTag    = document.getElementById('pTag');
+  var pText   = document.getElementById('pText');
+  var pWhy    = document.getElementById('pWhy');
+  var panel   = document.getElementById('promptPanel');
+
+  var BAD = {
+    tag: 'כך רוב האנשים כותבים',
+    text: 'משהו לא נראה טוב בעגלה, תבדוק את האתר ותתקן',
+    why: 'קלוד לא יודע מה זה "לא נראה טוב", לא יודע איפה העגלה, ולא יודע במה לגעת. הוא יקרא הרבה קבצים כדי להבין, ינחש תיקון, אתה תגיד "לא זה", והמעגל יתחיל מחדש. שלושה סבבים כאלה, וחצי מהחלון שלך נגמר.',
+    color: 'var(--bitters)'
+  };
+  var GOOD = {
+    tag: 'כך משתלם לכתוב',
+    text: 'בעמוד העגלה (cart.html + css/cart.css), בנייד ברוחב 390px:\nכפתור "המשך לתשלום" יוצא מחוץ למסך והמחיר הכולל נחתך.\nתתקן רק את שני אלה, בלי לגעת בעיצוב הדסקטופ.\nתעשה את זה ותגיד לי בשורה אחת מה שינית.',
+    why: 'הוא יודע איזה קובץ, איזו רזולוציה, מה בדיוק שבור, ומה אסור לו לגעת בו. סבב אחד, שתי הודעות, וזה סגור — במקום שיחה של עשרים הודעות שכולן נשלחות מחדש בכל פעם.',
+    color: 'var(--teal)'
+  };
+
+  function showPrompt(which){
+    var d = which === 'good' ? GOOD : BAD;
+    pTag.textContent  = d.tag;
+    pText.textContent = d.text;
+    pWhy.textContent  = d.why;
+    pTag.style.color  = d.color;
+    panel.style.borderColor = d.color;
+    tabBad.setAttribute('aria-pressed',  which === 'good' ? 'false' : 'true');
+    tabGood.setAttribute('aria-pressed', which === 'good' ? 'true'  : 'false');
+  }
+  if (tabBad) {
+    tabBad.addEventListener('click',  function(){ showPrompt('bad'); });
+    tabGood.addEventListener('click', function(){ showPrompt('good'); });
+    showPrompt('bad');
+  }
+
+  /* ---------- copy buttons ---------- */
+  var toast = document.getElementById('toast');
+  var toastTimer;
+  function flash(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 1600);
+  }
+  function legacyCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('.copy'), function(btn){
+    btn.addEventListener('click', function(){
+      var el = document.querySelector(btn.getAttribute('data-copy'));
+      if (!el) return;
+      var text = el.textContent;
+      var done = function(){
+        btn.textContent = 'הועתק ✓';
+        btn.classList.add('done');
+        flash('הועתק — תדביק בקלוד');
+        setTimeout(function(){ btn.textContent = 'העתק'; btn.classList.remove('done'); }, 2200);
+      };
+      var fail = function(){
+        var r = document.createRange();
+        r.selectNodeContents(el);
+        var s = window.getSelection();
+        s.removeAllRanges();
+        s.addRange(r);
+        flash('הטקסט מסומן — Ctrl+C להעתקה');
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function(){
+          if (legacyCopy(text)) done(); else fail();
+        });
+      } else {
+        if (legacyCopy(text)) done(); else fail();
+      }
+    });
+  });
+
+  /* ---------- smooth nav ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('.nav a'), function(a){
+    a.addEventListener('click', function(ev){
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      ev.preventDefault();
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>

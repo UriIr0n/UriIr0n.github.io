@@ -45,10 +45,39 @@ const Shell = (() => {
           ${cfg.tabs.map(t => `<button role="tab" data-tab="${t.key}" class="${t.key === initialKey ? 'active' : ''}">${t.label}</button>`).join('')}
         </div>` : ''}
 
+        <div class="dash-hint" data-dash-hint hidden>
+          <span class="ic" aria-hidden="true">👆</span>
+          <span class="tx">הדשבורד הזה חי: לחצו על עמודה, פלח או שורה בטבלה והכל מסתנן יחד.</span>
+          <button type="button" class="hint-close" data-hint-close aria-label="הבנתי, סגירת ההסבר">✕</button>
+        </div>
+
         <div class="story-card" id="story-${cfg.key}"></div>
 
         ${cfg.tabs.map(t => `<div class="dash-view ${t.key === initialKey ? 'active' : ''}" data-view="${t.key}"></div>`).join('')}
       </div>`;
+
+    // רמז אינטראקטיביות: בלי זה רוב המבקרים לא מנחשים שאפשר ללחוץ על הגרפים,
+    // וזה בדיוק ההבדל בין "יש לו גרפים" ל"הוא בנה כלי עבודה". מוצג פעם אחת
+    // למכשיר, ונעלם ברגע שהמבקר באמת סינן משהו.
+    const HINT_KEY = 'uriiron_dash_hint_seen';
+    const hint = root.querySelector('[data-dash-hint]');
+    if (hint) {
+      let seen = false;
+      try { seen = localStorage.getItem(HINT_KEY) === '1'; } catch (e) {}
+      if (!seen) {
+        hint.hidden = false;
+        const dismiss = () => {
+          if (hint.hidden) return;
+          hint.hidden = true;
+          try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
+        };
+        root.querySelector('[data-hint-close]').addEventListener('click', dismiss);
+        // כל סינון אמיתי סוגר את הרמז: לחיצה על מוט/פלח, על סלייסר או על טאב
+        root.addEventListener('click', ev => {
+          if (ev.target.closest('.bar-hit, .seg button, .slicer select, [data-tab]')) dismiss();
+        }, true);
+      }
+    }
 
     const views = {};
     cfg.tabs.forEach(t => views[t.key] = root.querySelector(`[data-view="${t.key}"]`));

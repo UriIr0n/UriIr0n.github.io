@@ -1,155 +1,196 @@
 /* =====================================================================
-   visitors.js - מונה מבקרים ייחודי למכשיר (לא לפי כניסה)
-   מסתמך על CounterAPI (api.counterapi.dev) + דגל ב-localStorage
-   כדי שאותו מכשיר לא ייספר יותר מפעם אחת.
+   visitors.js - מוני המבקרים החיים של האתר
+
+   ספק המונים: Abacus (abacus.jasoncameron.dev) - חינמי, בלי הרשמה
+   ובלי מפתח בקוד, עם CORS פתוח. החלפנו אליו את CounterAPI v1 שהוצא
+   משימוש ומחזיר 410 Gone, ולכן כל המונים באתר הפסיקו לעבוד.
+
+   נקודות קצה:
+     /hit/<ns>/<key>  - מגדיל ב-1 ומחזיר {"value": N}  (יוצר מונה אם אין)
+     /get/<ns>/<key>  - קריאה בלבד, בלי להגדיל
+
+   שתי החלטות שחשוב לשמור עליהן:
+   1. כל מונה נספר פעם אחת למכשיר (דגל ב-localStorage), לא לפי כניסה.
+   2. הערך האחרון שנקרא בהצלחה נשמר בקאש מקומי ומוצג מיד בטעינה. ככה
+      תקלת רשת רגעית לא הופכת את הווידג'ט ל"לא זמין" מול מגייס שצופה.
    ===================================================================== */
 (() => {
-  const API_BASE = 'https://api.counterapi.dev/v1/uriiron-portfolio/site-visits';
-  const STORAGE_KEY = 'uriiron_portfolio_visited';
-  const el = document.getElementById('visitor-count');
-  if (!el) return;
+  'use strict';
 
-  el.innerHTML = `<b>···</b><span>👁 מבקרים באתר</span>`;
+  // Namespace נקי: המונים של v1 אבדו בהוצאה משימוש ואי אפשר לשחזר, והספרות
+  // שנצברו בזמן הבדיקות לא מייצגות מבקרים אמיתיים. מתחילים מאפס.
+  const NS = 'uriiron-portfolio-2026';
+  const BASE = 'https://abacus.jasoncameron.dev';
+  // כל מפתחות ה-localStorage נושאים את שם ה-namespace, כדי שאיפוס מונים
+  // (החלפת NS) יאפס גם את הקאש וגם את דגלי "כבר נספר" של המכשיר.
+  const LS = name => `${NS}_${name}`;
+  const CACHE = key => LS(`count_${key}`);
 
-  const alreadyCounted = localStorage.getItem(STORAGE_KEY) === '1';
-  // הכתובת ל"קריאה בלבד" חייבת סלאש בסוף - אחרת השרת מפנה (301) לכתובת עם סלאש,
-  // וההפניה הזו לא נושאת כותרות CORS ונחסמת בדפדפן.
-  const url = alreadyCounted ? `${API_BASE}/` : `${API_BASE}/up`;
-
-  fetch(url)
-    .then(r => r.json())
-    .then(data => {
-      if (!alreadyCounted) localStorage.setItem(STORAGE_KEY, '1');
-      if (typeof data.count === 'number') {
-        el.innerHTML = `<b>${data.count.toLocaleString('he-IL')}</b><span>👁 מבקרים באתר</span>`;
-      } else {
-        el.innerHTML = `<b>—</b><span>👁 מבקרים באתר (לא זמין כרגע)</span>`;
-      }
-    })
-    .catch(() => { el.innerHTML = `<b>—</b><span>👁 מבקרים באתר (לא זמין כרגע)</span>`; });
-})();
-
-/* =====================================================================
-   שאלון "מי אני" + דונאט התפלגות מבקרים
-   בחירה אחת למכשיר, כל קטגוריה = מונה CounterAPI נפרד באותו namespace.
-   ===================================================================== */
-(() => {
-  const NS = 'uriiron-portfolio';
-  const STORAGE_KEY = 'uriiron_portfolio_role';
-  const ROLES = [
-    { key: 'client',    label: 'מתעניין/ת בשירות', counter: 'role-client',    color: '#199e70' },
-    { key: 'recruiter', label: 'מגייס/ת',       counter: 'role-recruiter', mergeCounters: ['role-employer'], color: '#3987e5' },
-    { key: 'bi',        label: 'קולגה',          counter: 'role-bi',        color: '#9085e9' },
-    { key: 'friend',    label: 'חבר/מכר/סקרן',  counter: 'role-friend',    color: '#e66767' },
-  ];
-
-  const promptEl = document.getElementById('visitor-roles-prompt');
-  const btnsEl = document.getElementById('visitor-roles-btns');
-  const chartEl = document.getElementById('visitor-roles-chart');
-  if (!promptEl || !btnsEl || !chartEl || typeof Charts === 'undefined') return;
-
-  // כמו במונה הראשי: לקריאה בלבד חובה סלאש בסוף כדי לא ליפול בהפניה חסרת CORS.
-  const readUrl = counter => `https://api.counterapi.dev/v1/${NS}/${counter}/`;
-  const upUrl = counter => `https://api.counterapi.dev/v1/${NS}/${counter}/up`;
-
-  function fetchCount(counter) {
-    return fetch(readUrl(counter))
-      .then(r => r.json())
-      .then(d => (typeof d.count === 'number' ? d.count : 0))
-      .catch(() => 0); // מונה שעוד לא נוצר / כשל רשת - מתייחסים כ-0
+  // קריאה מהקאש המקומי - מה שהוצג בפעם האחרונה שהרשת ענתה.
+  function cached(key) {
+    const raw = localStorage.getItem(CACHE(key));
+    const n = raw == null ? NaN : Number(raw);
+    return Number.isFinite(n) ? n : null;
   }
 
-  function fetchRoleTotal(role) {
-    const counters = [role.counter, ...(role.mergeCounters || [])];
-    return Promise.all(counters.map(fetchCount)).then(vals => vals.reduce((a, b) => a + b, 0));
+  // bump=true מגדיל את המונה, אחרת קריאה בלבד. תמיד מחזיר מספר או null.
+  // 404 מהשרת = המונה עדיין לא נוצר, כלומר אפס אמיתי - ולא "לא ידוע". רק
+  // כשל רשת/פורמט נופל חזרה לקאש, ואם גם הוא ריק מוחזר null.
+  function counter(key, bump) {
+    const url = `${BASE}/${bump ? 'hit' : 'get'}/${NS}/${key}`;
+    return fetch(url)
+      .then(r => {
+        if (r.status === 404) return { value: 0 };
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+      })
+      .then(d => {
+        if (typeof d.value !== 'number') throw new Error('bad payload');
+        localStorage.setItem(CACHE(key), String(d.value));
+        return d.value;
+      })
+      .catch(() => cached(key));
   }
 
-  let lastCounts = ROLES.map(() => 0);
-  function draw(counts) {
-    const items = ROLES.map((r, i) => ({ label: r.label, value: counts[i], color: r.color, key: r.key }));
-    Charts.donut(chartEl, { items, size: 116, centerTitle: 'ענו', valueLabel: 'ענו' });
+  const heNum = n => n.toLocaleString('he-IL');
+
+  // מספר נמוך בגופן ענק הוא הוכחה חברתית שלילית: "2 מבקרים" אומר למגייס
+  // שאף אחד לא נכנס לכאן. הבלוק מתחיל מוסתר ב-HTML ונחשף רק כשהמונה הראשי
+  // עובר את הסף, כך שאין הבהוב של "···" שנעלם. עד אז נשארות שאלת התפקיד
+  // והדונאט, שהם החלק המעניין ממילא.
+  const SHOW_FROM = 25;
+  const countsEl = document.getElementById('visitor-counts');
+  function revealIfEnough(n) {
+    if (countsEl && typeof n === 'number' && n >= SHOW_FROM) countsEl.hidden = false;
   }
-  function renderChart() {
-    Promise.all(ROLES.map(fetchRoleTotal)).then(counts => {
-      lastCounts = counts;
-      draw(counts);
+
+  /* ---------------------------------------------------------------
+     1. מונה מבקרים ייחודיים
+     --------------------------------------------------------------- */
+  (() => {
+    const KEY = 'site-visits';
+    const SEEN = LS('visited');
+    const el = document.getElementById('visitor-count');
+    if (!el) return;
+
+    const label = '👁 מבקרים באתר';
+    const render = n => {
+      el.innerHTML = typeof n === 'number'
+        ? `<b>${heNum(n)}</b><span>${label}</span>`
+        : `<b>···</b><span>${label}</span>`;
+    };
+    render(cached(KEY)); // מציגים מיד את הערך המוכר, בלי להמתין לרשת
+
+    const isNew = localStorage.getItem(SEEN) !== '1';
+    counter(KEY, isNew).then(n => {
+      if (isNew) localStorage.setItem(SEEN, '1');
+      render(n);
+      revealIfEnough(n);
     });
-  }
+  })();
 
-  if (localStorage.getItem(STORAGE_KEY)) {
-    promptEl.style.display = 'none';
-  } else {
+  /* ---------------------------------------------------------------
+     2. שאלון "מי אני" + דונאט התפלגות מבקרים
+     בחירה אחת למכשיר, כל קטגוריה = מונה נפרד באותו namespace.
+     --------------------------------------------------------------- */
+  (() => {
+    const ROLE_KEY = LS('role');
+    const ROLES = [
+      { key: 'client',    label: 'מתעניין/ת בשירות', counter: 'role-client',    color: '#199e70' },
+      { key: 'recruiter', label: 'מגייס/ת',          counter: 'role-recruiter', color: '#3987e5' },
+      { key: 'bi',        label: 'קולגה',            counter: 'role-bi',        color: '#9085e9' },
+      { key: 'friend',    label: 'חבר/מכר/סקרן',     counter: 'role-friend',    color: '#e66767' },
+    ];
+
+    const promptEl = document.getElementById('visitor-roles-prompt');
+    const btnsEl = document.getElementById('visitor-roles-btns');
+    const chartEl = document.getElementById('visitor-roles-chart');
+    if (!promptEl || !btnsEl || !chartEl || typeof Charts === 'undefined') return;
+
+    let counts = ROLES.map(r => cached(r.counter) || 0);
+
+    function draw() {
+      Charts.donut(chartEl, {
+        items: ROLES.map((r, i) => ({ label: r.label, value: counts[i], color: r.color, key: r.key })),
+        size: 116,
+        centerTitle: 'ענו',
+        valueLabel: 'ענו',
+        emptyHint: 'תהיו הראשונים שעונים',
+      });
+    }
+
+    draw();
+    Promise.all(ROLES.map(r => counter(r.counter, false)))
+      .then(vals => { counts = vals.map(v => v || 0); draw(); });
+
+    if (localStorage.getItem(ROLE_KEY)) {
+      promptEl.style.display = 'none';
+      return;
+    }
+
     ROLES.forEach((r, i) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = r.label;
       b.addEventListener('click', () => {
-        localStorage.setItem(STORAGE_KEY, r.key);
+        localStorage.setItem(ROLE_KEY, r.key);
         promptEl.style.display = 'none';
-        // עדכון מיידי בלחיצה: לא מחכים לקריאת רשת חוזרת, כי ה-GET של CounterAPI
-        // מטמון בקצה ולפעמים מחזיר עדיין את הערך הישן מיד אחרי ה-up (עד רענון עמוד).
-        lastCounts[i] += 1;
-        draw(lastCounts);
-        fetch(upUrl(r.counter)).catch(() => {});
+        // מציירים מיד את הקול שנוסף, בלי להמתין לתשובת הרשת - הגרף אמור
+        // להגיב ללחיצה מיידית.
+        counts[i] += 1;
+        draw();
+        counter(r.counter, true).then(n => {
+          if (typeof n === 'number') { counts[i] = n; draw(); }
+        });
       });
       btnsEl.appendChild(b);
     });
-  }
+  })();
 
-  renderChart();
-})();
+  /* ---------------------------------------------------------------
+     3. מבקר חוזר - הודעת "שמח לראות אותך שוב" + מונה חוזרים ייחודי
+     מונה נפרד שסופר כל מכשיר פעם אחת בלבד, בכניסה החוזרת הראשונה שלו.
+     --------------------------------------------------------------- */
+  (() => {
+    const KEY = 'returning-visits';
+    const SEEN_KEY = LS('first_seen');        // סומן אחרי הכניסה הראשונה
+    const RET_COUNTED_KEY = LS('returning_counted'); // המכשיר כבר נספר כחוזר
 
-/* =====================================================================
-   מבקר חוזר - הודעת "שמח לראות אותך שוב" + מונה חוזרים ייחודי
-   מונה נפרד ב-CounterAPI שסופר כל מכשיר פעם אחת בלבד, בכניסה החוזרת
-   הראשונה שלו (כל מי שנכנס יותר מפעם אחת).
-   ===================================================================== */
-(() => {
-  const NS = 'uriiron-portfolio';
-  const RET_COUNTER = 'returning-visits';
-  const SEEN_KEY = 'uriiron_portfolio_first_seen';            // סומן אחרי הכניסה הראשונה
-  const RET_COUNTED_KEY = 'uriiron_portfolio_returning_counted'; // המכשיר כבר נספר כחוזר
+    const isReturning = localStorage.getItem(SEEN_KEY) === '1';
+    if (!isReturning) localStorage.setItem(SEEN_KEY, '1'); // כניסה ראשונה - לא מציגים כלום
 
-  const isReturning = localStorage.getItem(SEEN_KEY) === '1';
-  if (!isReturning) localStorage.setItem(SEEN_KEY, '1'); // כניסה ראשונה - לא מציגים כלום
+    const banner = document.getElementById('welcome-back');
+    if (isReturning && banner) {
+      banner.hidden = false;
+      // נסגרת לבד אחרי 5 שניות כדי שלא תדרוש פעולה מהמבקר. מי שמרחף מעליה
+      // או ניגש אליה במקלדת מקבל עוד זמן.
+      let dismissTimer = setTimeout(() => { banner.hidden = true; }, 5000);
+      const hold = () => clearTimeout(dismissTimer);
+      const resume = () => { hold(); dismissTimer = setTimeout(() => { banner.hidden = true; }, 2500); };
+      banner.addEventListener('mouseenter', hold);
+      banner.addEventListener('mouseleave', resume);
+      banner.addEventListener('focusin', hold);
+      banner.addEventListener('focusout', resume);
+      document.getElementById('welcome-back-close')
+        ?.addEventListener('click', () => { clearTimeout(dismissTimer); banner.hidden = true; });
+    }
 
-  // הודעת "שמח לראות אותך שוב"
-  const banner = document.getElementById('welcome-back');
-  if (isReturning && banner) {
-    banner.hidden = false;
-    // נסגרת לבד אחרי 5 שניות כדי שלא תדרוש פעולה מהמבקר. מי שמרחף מעליה
-    // או ניגש אליה במקלדת מקבל עוד זמן.
-    let dismissTimer = setTimeout(() => { banner.hidden = true; }, 5000);
-    const hold = () => clearTimeout(dismissTimer);
-    const resume = () => { hold(); dismissTimer = setTimeout(() => { banner.hidden = true; }, 2500); };
-    banner.addEventListener('mouseenter', hold);
-    banner.addEventListener('mouseleave', resume);
-    banner.addEventListener('focusin', hold);
-    banner.addEventListener('focusout', resume);
-    document.getElementById('welcome-back-close')
-      ?.addEventListener('click', () => { clearTimeout(dismissTimer); banner.hidden = true; });
-  }
+    // אייקון SVG נקי בלי רקע (בסגנון קו, כמו שאר האתר)
+    const ICON = '<svg class="ret-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>';
+    const el = document.getElementById('visitor-returning-count');
+    if (!el) return;
 
-  // מונה החוזרים - אייקון SVG נקי בלי רקע (בסגנון קו, כמו שאר האתר)
-  const RET_ICON = '<svg class="ret-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>';
-  const countEl = document.getElementById('visitor-returning-count');
-  if (countEl) countEl.innerHTML = `<b>···</b><span>${RET_ICON} חזרו לבקר שוב</span>`;
-  const render = n => {
-    if (!countEl) return;
-    countEl.innerHTML = typeof n === 'number'
-      ? `<b>${n.toLocaleString('he-IL')}</b><span>${RET_ICON} חזרו לבקר שוב</span>`
-      : `<b>—</b><span>${RET_ICON} חזרו לבקר שוב (לא זמין כרגע)</span>`;
-  };
+    const render = n => {
+      el.innerHTML = typeof n === 'number'
+        ? `<b>${heNum(n)}</b><span>${ICON} חזרו לבקר שוב</span>`
+        : `<b>···</b><span>${ICON} חזרו לבקר שוב</span>`;
+    };
+    render(cached(KEY));
 
-  const firstReturn = isReturning && localStorage.getItem(RET_COUNTED_KEY) !== '1';
-  const counter = firstReturn ? RET_COUNTER + '/up' : RET_COUNTER + '/';
-  const url = `https://api.counterapi.dev/v1/${NS}/${counter}`;
-
-  fetch(url)
-    .then(r => r.json())
-    .then(d => {
+    const firstReturn = isReturning && localStorage.getItem(RET_COUNTED_KEY) !== '1';
+    counter(KEY, firstReturn).then(n => {
       if (firstReturn) localStorage.setItem(RET_COUNTED_KEY, '1');
-      render(d.count);
-    })
-    .catch(() => render(null));
+      render(n);
+    });
+  })();
 })();

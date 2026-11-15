@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>משוב מחזור · הנדסת תעשייה וניהול</title>
+<meta name="description" content="מבקר האוניברסיטה ביקש חוות דעת על התואר בהנדסת תעשייה וניהול. שלוש דקות, בלי שם ובלי מייל, ובסוף מדד המוכנות שלך לתעשייה.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F6F3EC">
+<meta property="og:title" content="משוב מחזור · הנדסת תעשייה וניהול">
+<meta property="og:description" content="שלוש דקות, בלי שם ובלי מייל. בסוף את/ה מקבל/ת את מדד המוכנות שלך לתעשייה מול המחזור.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23189CAB'/><text x='50' y='50' font-size='58' font-family='sans-serif' font-weight='bold' fill='%2314262E' text-anchor='middle' dominant-baseline='central'>מ</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Secular+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/mishov.css?v=2">
+</head>
+<body>
+
+<a class="skip-link" href="#main">דילוג לתוכן</a>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="mark" href="#top">
+      <span class="mark-glyph" aria-hidden="true">מ</span>
+      <span class="mark-text">משוב מחזור <span>· תעשייה וניהול</span></span>
+    </a>
+    <span class="spacer"></span>
+    <span class="live" id="liveCount" aria-live="polite"></span>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <h1>מבקר האוניברסיטה שואל אם התואר הזה <span class="hl">הכין אותנו לעבודה</span>.</h1>
+    <p class="lede">
+      התשובה צריכה להיות מספר, לא תחושה. מה שתכתוב/י נכנס לדוח שמגיע אליו, ועולה לקיר כאן.
+    </p>
+
+    <div class="hero-cta">
+      <a class="btn primary" href="#survey">אני ממלא/ת</a>
+      <a class="btn ghost" href="#wall">קודם אראה מה כתבו</a>
+    </div>
+
+    <div class="facts">
+      <span>בלי שם, בלי מייל</span>
+      <span>3 דקות</span>
+      <span>שנה ג׳, שנה ד׳, בוגרים</span>
+    </div>
+
+    <div class="goal">
+      <div class="goal-head">
+        <span><b id="gNow">0</b> מתוך <span id="gGoal">80</span> משובים</span>
+        <span id="gLeft"></span>
+      </div>
+      <div class="goal-track"><div class="goal-fill" id="gFill"></div></div>
+    </div>
+  </div>
+
+  <!-- מסילות הפתקים. נבנות ב-wall.js מהמשפטים המאושרים בלבד. -->
+  <div class="rails" id="heroRails" aria-hidden="true"></div>
+</section>
+
+<!-- ================= קיר המשפטים ================= -->
+<section class="section tight" id="wall">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>מה כבר כתבו</h2>
+      <p>משפטים מהמחזור, אחרי אישור. אין לך מה להוסיף? לחיצה על &rlm;"גם לי קרה" נספרת בדיוק כמו משפט.</p>
+    </div>
+    <div class="wall-filters" id="wallFilters" role="group" aria-label="סינון לפי נושא"></div>
+  </div>
+  <div class="wrap">
+    <div class="wall-track" id="wallGrid" tabindex="0" role="region" aria-label="משפטים מהמחזור"></div>
+    <div class="wall-foot">
+      <span id="wallNote"></span>
+      <div class="wall-nav">
+        <button type="button" id="wallPrev" aria-label="הקודם">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <button type="button" id="wallNext" aria-label="הבא">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= למה זה שווה ================= -->
+<section class="section band" id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>למה זה שווה שלוש דקות</h2>
+      <p>משוב סוף קורס נקרא בתוך המחלקה. הפנייה הזו נקראת מחוצה לה.</p>
+    </div>
+    <div class="reasons">
+      <div class="reason feature">
+        <h3>מה נכנס לדוח ומה נופל</h3>
+        <p>למבקר אין מה לעשות עם תחושה. עם התפלגות יש.</p>
+        <div class="swap">
+          <div class="out">היה מתסכל, לא הרגשתי מוכן</div>
+          <div class="in">37 מתוך 47 בוגרים דירגו את הקשר לתעשייה 4 ומעלה</div>
+        </div>
+      </div>
+      <div class="reason">
+        <h3>זה לא נשאר במחלקה</h3>
+        <p>המבקר הוא גורם חיצוני. הוא ביקש את חוות הדעת, והוא זה שמקבל את הדוח.</p>
+      </div>
+      <div class="reason">
+        <h3>גם לך יוצא מזה משהו</h3>
+        <p>בסוף המילוי נפתח מדד המוכנות שלך: איפה את/ה עומד/ת מול המחזור, ומול מה שמשרות באמת מבקשות.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= הטופס ================= -->
+<section class="section" id="survey">
+  <div class="wrap">
+    <div class="section-head narrow" style="margin-inline:auto">
+      <h2>המשוב</h2>
+      <p>שבע שאלות דירוג, שמונה שאלות מוכנות, ומשפט אחד משלך. בלי שדות מזהים.</p>
+    </div>
+
+    <form class="survey" id="surveyForm" novalidate>
+      <div class="survey-progress"><i id="progBar"></i></div>
+      <div class="survey-step-label" id="stepLabel"></div>
+
+      <!-- honeypot: מוסתר מבני אדם. בוט שממלא הכל ייתפס כאן. -->
+      <div class="hp" aria-hidden="true">
+        <label>אתר אינטרנט<input type="text" name="website" id="hpField" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <div id="steps"></div>
+
+      <div class="step-nav">
+        <button type="button" class="btn ghost" id="btnBack">חזרה</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn primary" id="btnNext">הבא</button>
+      </div>
+      <div id="formError"></div>
+    </form>
+
+    <!-- התוצאה האישית, נפתחת אחרי שליחה -->
+    <div class="result" id="result"></div>
+  </div>
+</section>
+
+<!-- ================= דשבורד ================= -->
+<section class="section band rule" id="dash">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>התמונה המצטברת</h2>
+      <p>מתעדכן עם כל משוב. זה בדיוק מה שנכנס לדוח.</p>
+    </div>
+    <details class="fold" id="dashFold">
+      <summary>המספרים עד עכשיו <span class="cue">פתיחה</span></summary>
+      <div class="fold-body"><div id="dashBody"></div></div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="foot-logo"><img src="assets/ariel-logo.jpg" alt="אוניברסיטת אריאל" width="70"></div>
+      <p>
+        <b>יוזמה עצמאית של סטודנטים במחלקה להנדסת תעשייה וניהול.</b>
+        אינה מטעם אוניברסיטת אריאל, המחלקה או מנהלתה. הלוגו מוצג לצורך זיהוי המוסד שאליו מתייחס המשוב בלבד.
+      </p>
+    </div>
+    <p class="legal">
+      <b>איך האנונימיות נשמרת בפועל:</b> טבלת המשפטים אינה מקושרת לטבלת התשובות, ולכן אי אפשר לשייך משפט לדירוגים
+      שלצידו. תאריך נשמר ברזולוציית יום ולא בשעה. לא נאספים מייל, שם, כתובת IP או מזהה דפדפן.
+      המזהה האקראי שנשמר במכשיר שלך משמש אך ורק כדי למנוע חיזוק כפול של אותו משפט.
+      סטטיסטיקה נחשפת רק מעל חמש תשובות בכל פילוח.
+    </p>
+  </div>
+</footer>
+
+<!-- סרגל תחתון קבוע, טלפון בלבד -->
+<div class="dock" id="dock">
+  <div class="meta"><b id="dNow">0</b>מילאו עד עכשיו</div>
+  <a class="btn primary" href="#survey">אני ממלא/ת · 3 דקות</a>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js?v=2"></script>
+<script src="content/gaps.js?v=2"></script>
+<script src="js/charts.js?v=2"></script>
+<script src="js/db.js?v=2"></script>
+<script src="js/wall.js?v=2"></script>
+<script src="js/survey.js?v=2"></script>
+<script src="js/readiness.js?v=2"></script>
+<script src="js/dashboard.js?v=2"></script>
+<script src="js/app.js?v=2"></script>
+</body>
+</html>

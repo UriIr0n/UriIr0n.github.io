@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מודרציה · משוב מחזור</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23189CAB'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/mishov.css?v=1">
+<style>
+  .mod { max-width: 860px; margin-inline: auto; }
+  .mod-q { background: var(--surface); border: 1px solid var(--hairline);
+           border-inline-start: 3px solid var(--s3); border-radius: var(--radius);
+           padding: 20px; margin-bottom: 14px; }
+  .mod-q.approved { border-inline-start-color: var(--good); }
+  .mod-q.rejected { border-inline-start-color: var(--critical); opacity: .55; }
+  .mod-q .body { font-size: 16px; margin-bottom: 14px; }
+  .mod-q .meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+                 font-size: 12.5px; color: var(--ink-3); }
+  .mod-actions { display: flex; gap: 8px; margin-inline-start: auto; }
+  .signin { max-width: 460px; margin: 60px auto; text-align: center; }
+  .signin input { margin: 16px 0; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="mark" href="index.html">
+      <span class="mark-glyph" aria-hidden="true">מ</span>
+      <span class="mark-text">מודרציה <span>· משוב מחזור</span></span>
+    </a>
+    <span class="spacer"></span>
+    <button class="btn ghost sm" id="btnOut" hidden>יציאה</button>
+  </div>
+</header>
+
+<main class="wrap" style="padding-block:40px">
+
+  <div class="signin" id="signin">
+    <h2 style="font-size:24px;margin-bottom:10px">כניסת מודרטור</h2>
+    <p style="color:var(--ink-2);font-size:15px">
+      נשלח קישור כניסה חד־פעמי למייל. רק המייל שמופיע במדיניות ה-RLS בסכימה יקבל גישה.
+    </p>
+    <input type="text" id="email" placeholder="you@example.com" inputmode="email" autocomplete="email">
+    <button class="btn primary" id="btnIn" style="width:100%">שלח קישור כניסה</button>
+    <p class="data-note" id="signinNote"></p>
+  </div>
+
+  <div class="mod" id="mod" hidden>
+    <div class="section-head">
+      <h2>משפטים לאישור</h2>
+      <p>
+        משפט מאושר עולה לקיר הציבורי ולדוח. אל תאשר/י משפט שמזהה אדם ספציפי —
+        שם מרצה, תיאור שמצביע על אדם יחיד, או תפקיד שיש בו מחזיק אחד. אפשר לערוך
+        ניסוח כזה בגיליון לפני האישור, או פשוט לדחות.
+      </p>
+    </div>
+    <div class="wall-filters" id="modFilters"></div>
+    <div id="modList"></div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/config.js?v=1"></script>
+<script src="js/db.js?v=1"></script>
+<script>
+(function () {
+  var C = window.CFG, DB = window.DB;
+  var filter = 'pending';
+
+  function el(id) { return document.getElementById(id); }
+  function toast(m) {
+    var t = el('toast'); t.textContent = m; t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 2400);
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function themeLabel(k) {
+    var t = C.THEMES.filter(function (x) { return x.key === k; })[0];
+    return t ? t.label : 'אחר';
+  }
+  function cohortLabel(k) {
+    var c = C.COHORTS.filter(function (x) { return x.key === k; })[0];
+    return c ? c.label : (k || '—');
+  }
+
+  function show(signedIn) {
+    el('signin').hidden = signedIn;
+    el('mod').hidden = !signedIn;
+    el('btnOut').hidden = !signedIn;
+  }
+
+  function renderFilters() {
+    var opts = [['pending', 'ממתינים'], ['approved', 'מאושרים'], ['rejected', 'נדחו'], ['', 'הכל']];
+    el('modFilters').innerHTML = opts.map(function (o) {
+      return '<button type="button" class="chip' + (filter === o[0] ? ' on' : '') +
+             '" data-f="' + o[0] + '">' + o[1] + '</button>';
+    }).join('');
+    el('modFilters').querySelectorAll('.chip').forEach(function (b) {
+      b.addEventListener('click', function () { filter = b.dataset.f; renderFilters(); load(); });
+    });
+  }
+
+  function load() {
+    el('modList').innerHTML = '<div class="chart-empty">טוען…</div>';
+    DB.allQuotes(filter).then(function (qs) {
+      if (!qs || !qs.length) {
+        el('modList').innerHTML = '<div class="gated">אין משפטים בסטטוס הזה.</div>';
+        return;
+      }
+      el('modList').innerHTML = qs.map(function (q) {
+        return '<div class="mod-q ' + q.status + '" data-id="' + q.id + '">' +
+          '<div class="body">' + esc(q.body) + '</div>' +
+          '<div class="meta">' +
+            '<span class="quote-theme">' + esc(themeLabel(q.theme)) + '</span>' +
+            '<span>' + esc(cohortLabel(q.cohort)) + '</span>' +
+            '<span>' + esc(q.created_on || '') + '</span>' +
+            '<span>' + (q.endorsements || 0) + ' חיזוקים</span>' +
+            '<span class="mod-actions">' +
+              (q.status !== 'approved' ? '<button class="btn primary sm" data-a="approved">אישור</button>' : '') +
+              (q.status !== 'rejected' ? '<button class="btn ghost sm" data-a="rejected">דחייה</button>' : '') +
+            '</span>' +
+          '</div></div>';
+      }).join('');
+
+      el('modList').querySelectorAll('[data-a]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var card = b.closest('.mod-q');
+          var id = Number(card.dataset.id);
+          b.disabled = true;
+          DB.moderate(id, b.dataset.a)
+            .then(function () { toast(b.dataset.a === 'approved' ? 'אושר ועלה לקיר' : 'נדחה'); load(); })
+            .catch(function (e) { b.disabled = false; toast('נכשל: ' + e.message); });
+        });
+      });
+    }).catch(function (e) {
+      el('modList').innerHTML = '<div class="gated">שגיאה בטעינה. ייתכן שהמייל שלך לא מורשה במדיניות ה-RLS.<br><small>' +
+        esc(e.message) + '</small></div>';
+    });
+  }
+
+  el('btnIn').addEventListener('click', function () {
+    var v = el('email').value.trim();
+    if (!v) return;
+    el('btnIn').disabled = true;
+    DB.signIn(v).then(function (ok) {
+      el('btnIn').disabled = false;
+      el('signinNote').textContent = ok
+        ? 'נשלח. פתח/י את הקישור מהמייל באותו דפדפן.'
+        : 'השליחה נכשלה. בדוק/י שהמפתחות מוגדרים ב-config.js.';
+    });
+  });
+
+  el('btnOut').addEventListener('click', function () { DB.signOut(); show(false); });
+
+  if (C.MOCK) {
+    el('signinNote').textContent = 'מצב הדגמה: אין מפתחות ב-config.js, ולכן אין מה לנהל כאן עדיין.';
+  }
+  if (DB.readSessionFromUrl()) { show(true); renderFilters(); load(); } else { show(false); }
+})();
+</script>
+</body>
+</html>

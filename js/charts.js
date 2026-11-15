@@ -123,7 +123,13 @@ const Charts = (() => {
     const W = measure(box);
     const top = 6, bottom = 6;
     const H = top + items.length * rowH + bottom;
-    const plotL = 10, plotR = W - labelWidth - 10;
+    // תווית הערך נכתבת משמאל לקצה המוט (text-anchor=end), ולכן המוט הארוך
+    // ביותר חייב לעצור מספיק רחוק מהקצה כדי שהיא תיכנס. בלי זה היא נחתכת
+    // מחוץ ל-viewBox (ה-SVG הוא overflow:hidden) והמספר מוצג שגוי:
+    // "7.4%" נראה "4%". רוחב התו מוערך לפי font-size 11 במשקל 600.
+    const maxValChars = Math.max(...items.map(i => String(valueFmt(i.value)).length));
+    const plotL = Math.max(10, maxValChars * 6.4 + 12);
+    const plotR = W - labelWidth - 10;
     const plotW = plotR - plotL;
     const max = opts.max || niceMax(Math.max(...items.map(i => i.value)) || 1);
     box.innerHTML = '';

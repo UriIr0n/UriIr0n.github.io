@@ -21,14 +21,23 @@ window.Carousel = (function () {
     // ניקוי שאריות מאתחול קודם (הכרטיסים מצוירים מחדש בכל סינון)
     track.querySelectorAll('[data-carousel-clone]').forEach((n) => n.remove());
 
-    // אין פקדים: הקרוסלה זזה מעצמה בכיוון אחד. אם נשארו פקדים ישנים בדף, מסירים.
+    // אין פקדי חיצים: הקרוסלה זזה מעצמה בכיוון אחד. אם נשארו פקדים ישנים בדף,
+    // מסירים. גם פקד העצירה מוסר כאן, כי setupCarousel יכול לרוץ שוב על אותו
+    // root ואחרת ייערמו כמה כפתורים.
     root.querySelector('[data-carousel-controls]')?.remove();
+    root.querySelector('.carousel-toggle')?.remove();
 
     let offset = 0;      // כמה הרצף הוזז (px, תמיד גדל)
     let seqWidth = 0;    // רוחב רצף מקורי אחד כולל הרווחים
     let paused = false;
     let dragging = false;
     let stopped = false; // מופע שפורק - לולאת ה-rAF שלו מפסיקה להתקדם
+
+    // התנועה כאן רצה על rAF ועל transform, ולכן בלוק ה-prefers-reduced-motion
+    // ב-CSS (שמאפס רק animation/transition-duration) לא נוגע בה בכלל. בודקים
+    // בעצמנו, ומכבדים גם שינוי הגדרה תוך כדי גלישה.
+    const reduceMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let userPaused = reduceMQ.matches;
 
     function gapPx() {
       const g = parseFloat(getComputedStyle(track).columnGap || '0');
@@ -80,7 +89,7 @@ window.Carousel = (function () {
       if (stopped) return;
       if (last) {
         const dt = Math.min(now - last, 60) / 1000;
-        if (!paused && !dragging) advance(SPEED * dt);
+        if (!paused && !userPaused && !dragging) advance(SPEED * dt);
       }
       last = now;
       requestAnimationFrame(tick);
@@ -88,6 +97,26 @@ window.Carousel = (function () {
 
     root.addEventListener('mouseenter', () => { paused = true; });
     root.addEventListener('mouseleave', () => { paused = false; });
+    // במגע ובמקלדת אין hover, ולכן בלי אלה אין שום דרך לעצור כדי לקרוא
+    root.addEventListener('focusin', () => { paused = true; });
+    root.addEventListener('focusout', () => { paused = false; });
+
+    // פקד עצירה גלוי
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'carousel-toggle';
+    const syncToggle = () => {
+      toggle.setAttribute('aria-pressed', String(userPaused));
+      toggle.setAttribute('aria-label', userPaused ? 'הפעלת תנועת הקרוסלה' : 'עצירת תנועת הקרוסלה');
+      toggle.textContent = userPaused ? '▶' : '❚❚';
+    };
+    toggle.addEventListener('click', () => { userPaused = !userPaused; syncToggle(); });
+    syncToggle();
+    root.appendChild(toggle);
+
+    // מי שמדליק "הפחתת תנועה" תוך כדי, עוצר מיד
+    const onReduceChange = (e) => { userPaused = e.matches; syncToggle(); };
+    if (reduceMQ.addEventListener) reduceMQ.addEventListener('change', onReduceChange);
 
     // גרירה בעכבר, גם היא רק קדימה (גרירה אחורה לא מוגבלת ויזואלית כי הרצף אינסופי)
     let startX = 0, startOffset = 0;
@@ -138,6 +167,7 @@ window.Carousel = (function () {
       stopped = true;
       clearTimeout(resizeTimer);
       window.removeEventListener('resize', rebuild);
+      if (reduceMQ.removeEventListener) reduceMQ.removeEventListener('change', onReduceChange);
       observer?.disconnect();
     };
 

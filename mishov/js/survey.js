@@ -44,7 +44,7 @@ window.Survey = (function () {
     var th = C.THEMES, sk = C.SKILLS;
 
     STEPS = [
-      { title: 'קודם כל — מי את/ה', hint: 'שלוש שאלות, בלי שום פרט מזהה.',
+      { title: 'קודם כל, מי את/ה', hint: 'שלוש שאלות, בלי שום פרט מזהה.',
         required: ['cohort'],
         html:
           optsField('cohort', 'באיזה שלב את/ה במחלקה?', '', C.COHORTS) +
@@ -215,7 +215,7 @@ window.Survey = (function () {
     window.DB.submit(buildPayload(), quote).then(function (res) {
       btn.disabled = false; btn.textContent = 'שליחה';
       if (!res.ok) {
-        showError('השליחה נכשלה. בדוק/י חיבור אינטרנט ונסה/י שוב — התשובות שלך נשמרו בדף.');
+        showError('השליחה נכשלה. בדוק/י חיבור אינטרנט ונסה/י שוב. התשובות שלך נשמרו בדף.');
         return;
       }
       finish(quote ? quote.body : null);
@@ -233,6 +233,7 @@ window.Survey = (function () {
     document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
     window.Dashboard.load();   // רענון הדשבורד כדי שהמונה יזוז
     window.App.refreshCounters();
+    window.App.hideDock();
   }
 
   /* ---------- ניווט ---------- */

@@ -330,7 +330,12 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
 .service-card.mini .desc { font-size: 13.5px; }
 
 /* ---------- הסמכות ---------- */
-.cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+/* max-width כדי שההסמכות ימלאו את השורה שלהן במקום להשאיר חצי סקשן ריק.
+   הוספת הסמכה שלישית פשוט תגלוש לשורה שנייה. */
+.cert-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px; max-width: 760px;
+}
 .cert-card {
   display: flex; align-items: center; gap: 14px;
   background: var(--surface); border: 1px solid var(--hairline);
@@ -344,6 +349,65 @@ a.cert-card:hover { border-color: var(--hairline-2); background: var(--surface-2
 /* כרטיס ממתין לתוכן אמיתי - לא בודים תעודה, מסמנים חזותית שזה בדרך */
 .cert-card.pending { border-style: dashed; border-color: var(--hairline-2); background: transparent; }
 .cert-card.pending .name { color: var(--ink-2); }
+
+/* ---------- שורת סטטוס בהירו ---------- */
+.hero-status {
+  list-style: none; margin: 22px auto 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 8px 0; justify-content: center;
+  font-size: 14px; color: var(--ink-2);
+}
+.hero-status li { padding: 0 14px; position: relative; }
+.hero-status li + li::before {
+  content: ''; position: absolute; inset-inline-start: 0; top: 50%;
+  transform: translateY(-50%); width: 1px; height: 13px; background: var(--hairline-2);
+}
+
+/* ---------- אודות: תמונה + טקסט ---------- */
+.about-lead { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 26px; }
+.about-photo {
+  flex: 0 0 132px; width: 132px; height: 132px;
+  border-radius: var(--radius); object-fit: cover;
+  border: 1px solid var(--hairline-2);
+}
+/* אם הקובץ עוד לא הועלה, הטקסט פשוט תופס את כל הרוחב במקום להשאיר חור */
+.about-lead.no-photo .about-photo { display: none; }
+.about-text { min-width: 0; }
+.about-text p { color: var(--ink-2); max-width: 68ch; }
+.about-text p + p { margin-top: 12px; }
+@media (max-width: 640px) {
+  .about-lead { flex-direction: column; gap: 16px; }
+}
+
+/* ---------- סגירת עמוד השירותים ---------- */
+.services-cta {
+  margin-top: 56px; padding-top: 34px;
+  border-top: 1px solid var(--hairline);
+  text-align: center;
+}
+.services-cta h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 800; }
+.services-cta p { color: var(--ink-2); margin: 10px auto 0; max-width: 52ch; }
+.services-cta .cta { margin-top: 22px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ---------- רמז אינטראקטיביות בדשבורד ---------- */
+.dash-hint {
+  display: flex; align-items: center; gap: 11px;
+  margin: 0 0 14px; padding: 11px 16px;
+  background: color-mix(in srgb, var(--s1) 11%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--s1) 38%, var(--hairline-2));
+  border-radius: var(--radius-s);
+  color: var(--ink); font-size: 14.5px;
+}
+.dash-hint[hidden] { display: none; }
+.dash-hint .ic { font-size: 17px; line-height: 1; }
+.dash-hint .tx { flex: 1; }
+.dash-hint .hint-close {
+  background: none; border: none; color: var(--ink-3);
+  font-size: 14px; line-height: 1; border-radius: 6px;
+  width: 44px; height: 44px; display: grid; place-items: center;
+  flex: 0 0 44px; margin-block: -11px;
+}
+.dash-hint .hint-close:hover { color: var(--ink); background: var(--surface-2); }
+
 
 /* ---------- תצוגה מקדימה של פרויקטים/שירותים בעמוד הבית ---------- */
 .teaser-more { margin-top: 24px; text-align: center; }
@@ -391,6 +455,17 @@ a.cert-card:hover { border-color: var(--hairline-2); background: var(--surface-2
   flex: 0 0 auto; width: var(--card-w);
   transition: box-shadow 0.2s, border-color 0.2s;
 }
+/* פקד עצירה: hover לבדו לא מספיק, במגע ובמקלדת אין דרך אחרת לעצור כדי לקרוא */
+.carousel-toggle {
+  align-self: flex-start;
+  min-width: 44px; min-height: 44px;
+  display: inline-grid; place-items: center;
+  background: var(--surface); color: var(--ink-2);
+  border: 1px solid var(--hairline-2); border-radius: var(--radius-s);
+  font-size: 12px; line-height: 1;
+}
+.carousel-toggle:hover { background: var(--surface-2); color: var(--ink); }
+.carousel-toggle:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; }
 
 /* ---------- פוטר ---------- */
 footer {
@@ -426,6 +501,9 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
   display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
 }
 .visitor-counts { flex: 0 0 auto; display: flex; gap: 12px; flex-wrap: wrap; }
+/* חובה: display המפורש למעלה גובר על [hidden] של דפדפן, ובלעדי השורה הזו
+   הסתרת המספרים עד הסף פשוט לא עובדת */
+.visitor-counts[hidden] { display: none; }
 .visitor-count-big {
   display: flex; flex-direction: column; gap: 3px;
   background: var(--surface-2); border: 1px solid var(--hairline);
@@ -665,7 +743,10 @@ table.viz-table th {
   text-align: start; padding: 8px 10px; font-weight: 700; cursor: pointer; white-space: nowrap;
   border-bottom: 1px solid var(--hairline-2); user-select: none;
 }
-table.viz-table th .si { color: var(--s1); font-size: 10px; }
+/* חץ המיון היה --s1 (#3987e5) על --surface-2, כלומר יחס 4.38 - מתחת ל-4.5
+   של AA. 12px עדיין נחשב טקסט רגיל ולכן הגודל לבדו לא פותר; מבהירים את
+   הכחול ל-#4a93e8 שנותן 5.03 על אותו רקע ונשאר באותו גוון. */
+table.viz-table th .si { color: #4a93e8; font-size: 12px; }
 table.viz-table td {
   padding: 7px 10px; border-bottom: 1px solid var(--hairline); color: var(--ink-2);
   font-variant-numeric: tabular-nums; white-space: nowrap;
@@ -796,6 +877,9 @@ table.viz-table td.num { font-weight: 600; color: var(--ink); }
   .topnav nav a { padding: 8px 8px; font-size: 13px; }
   /* היחיד ששכחנו בסבב הראשון: קישור טקסט קטן בלי padding כלל */
   .slicer-bar .clear-f { padding: 13px 4px; }
+  /* קישורי הפוטר נשכחו בסבב הראשון: היו 21px גובה, מתחת ל-44px. */
+  footer .links { gap: 6px; flex-wrap: wrap; }
+  footer .links a, footer .links button { padding: 12px 10px; }
 }
 
 /* כרטיס הסיפור (התובנה) */

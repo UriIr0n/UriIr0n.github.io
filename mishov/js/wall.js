@@ -1,11 +1,15 @@
 /* =====================================================================
-   קיר המשפטים — הרץ ברקע ב-hero, והאינטראקטיבי בסקשן שלו.
+   קיר המשפטים. שתי מסילות זזות ב-hero, וקרוסלה בהחלקה בסקשן שלו.
    ===================================================================== */
 window.Wall = (function () {
   var C = window.CFG;
   var quotes = [];      // מאושרים מהשרת
   var pending = [];     // המשפט של המשתמש הנוכחי, מקומית בלבד
   var filter = null;
+
+  var PLUS = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+             'stroke-width="2.4" stroke-linecap="round" aria-hidden="true">' +
+             '<path d="M12 5v14M5 12h14"/></svg>';
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -18,23 +22,27 @@ window.Wall = (function () {
     return t ? t.label : 'כללי';
   }
 
-  /* ---------------- הקיר הרץ ברקע ----------------
-     שלושה טורים, כל אחד עם הרשימה פעמיים כדי שהלולאה תיסגר בלי קפיצה.
-     כשאין משפטים מאושרים הקיר נשאר ריק — לא ממלאים אותו בטקסט מומצא. */
-  function renderHero() {
-    var el = document.getElementById('heroWall');
+  /* ---------------- המסילות הזזות ----------------
+     שתי שורות בכיוונים הפוכים. כל שורה מחזיקה את הרשימה פעמיים כדי
+     שהלולאה תיסגר בלי קפיצה. בלי משפטים מאושרים אין מסילות, לא
+     ממלאים אותן בטקסט מומצא. */
+  function renderRails() {
+    var el = document.getElementById('heroRails');
     if (!el) return;
-    if (!quotes.length) { el.innerHTML = ''; return; }
+    if (quotes.length < 2) { el.innerHTML = ''; return; }
 
-    var cols = [[], [], []];
-    quotes.forEach(function (q, i) { cols[i % 3].push(q); });
+    // מספיק פתקים כדי שהשורה תמלא מסך רחב גם כשיש מעט משפטים
+    var pool = quotes.slice();
+    while (pool.length < 8) pool = pool.concat(quotes);
 
-    el.innerHTML = cols.map(function (col, i) {
-      if (!col.length) return '';
-      var cards = col.map(function (q) {
-        return '<div class="wq">' + esc(q.body) + '</div>';
+    var rows = [[], []];
+    pool.forEach(function (q, i) { rows[i % 2].push(q); });
+
+    el.innerHTML = rows.map(function (row, i) {
+      var cards = row.map(function (q) {
+        return '<div class="note"><p class="txt">' + esc(q.body) + '</p></div>';
       }).join('');
-      return '<div class="col ' + 'abc'[i] + '">' + cards + cards + '</div>';
+      return '<div class="rail r' + (i + 1) + '">' + cards + cards + '</div>';
     }).join('');
   }
 
@@ -56,13 +64,15 @@ window.Wall = (function () {
     el.querySelectorAll('.chip').forEach(function (b) {
       b.addEventListener('click', function () {
         filter = b.dataset.t || null;
-        renderFilters(); renderGrid();
+        renderFilters(); renderTrack();
+        var track = document.getElementById('wallGrid');
+        if (track) track.scrollTo({ left: 0, behavior: 'smooth' });
       });
     });
   }
 
-  /* ---------------- הרשת האינטראקטיבית ---------------- */
-  function renderGrid() {
+  /* ---------------- הקרוסלה ---------------- */
+  function renderTrack() {
     var el = document.getElementById('wallGrid');
     var note = document.getElementById('wallNote');
     if (!el) return;
@@ -73,8 +83,8 @@ window.Wall = (function () {
     }));
 
     if (!list.length) {
-      el.innerHTML = '<div class="gated">עוד לא אושרו משפטים לפרסום. ' +
-        '<b>המשפט הראשון על הקיר יכול להיות שלך.</b></div>';
+      el.innerHTML = '<div class="gated" style="flex:1 1 100%;max-width:none">עוד לא אושרו משפטים. ' +
+        '<b>הראשון על הקיר יכול להיות שלך.</b></div>';
       if (note) note.textContent = '';
       return;
     }
@@ -84,7 +94,7 @@ window.Wall = (function () {
         return '<article class="quote pending">' +
           '<p class="quote-body">' + esc(q.body) + '</p>' +
           '<div class="quote-meta"><span class="quote-theme warn">ממתין לאישור</span>' +
-          '<span>יעלה לקיר אחרי בדיקה</span></div></article>';
+          '<span style="font-size:12.5px">יעלה לקיר אחרי בדיקה</span></div></article>';
       }
       var isDone = done.has(q.id);
       return '<article class="quote">' +
@@ -93,13 +103,14 @@ window.Wall = (function () {
           '<span class="quote-theme">' + esc(themeLabel(q.theme)) + '</span>' +
           '<button type="button" class="endorse' + (isDone ? ' done' : '') + '" data-id="' + q.id + '" ' +
             (isDone ? 'aria-disabled="true"' : '') + '>' +
-            (isDone ? 'חיזקת' : 'גם אני חוויתי את זה') +
-            ' · <b>' + (q.endorsements || 0) + '</b></button>' +
+            (isDone ? '' : PLUS) +
+            '<span>' + (isDone ? 'נספר' : 'גם לי קרה') + '</span>' +
+            '<b>' + (q.endorsements || 0) + '</b></button>' +
         '</div></article>';
     }).join('');
 
     if (note) {
-      note.textContent = quotes.length + ' משפטים מאושרים · ' +
+      note.textContent = quotes.length + ' משפטים · ' +
         quotes.reduce(function (a, q) { return a + (q.endorsements || 0); }, 0) + ' חיזוקים';
     }
 
@@ -113,13 +124,31 @@ window.Wall = (function () {
         window.DB.endorse(id);
         b.classList.add('done');
         b.setAttribute('aria-disabled', 'true');
-        b.innerHTML = 'חיזקת · <b>' + q.endorsements + '</b>';
+        b.innerHTML = '<span>נספר</span><b>' + q.endorsements + '</b>';
         window.App.toast('נספר. תודה.');
       });
     });
   }
 
-  function render() { renderHero(); renderFilters(); renderGrid(); }
+  /* ---------------- חצים בדסקטופ ---------------- */
+  function wireNav() {
+    var track = document.getElementById('wallGrid');
+    if (!track || track.dataset.nav) return;
+    track.dataset.nav = '1';
+
+    function step(dir) {
+      var first = track.querySelector('.quote, .gated');
+      var w = first ? first.getBoundingClientRect().width + 12 : 320;
+      // ב-RTL scrollLeft שלילי בדפדפנים מודרניים, ולכן הכיוון נשמר כמו שהוא
+      track.scrollBy({ left: dir * w, behavior: 'smooth' });
+    }
+    var p = document.getElementById('wallPrev');
+    var n = document.getElementById('wallNext');
+    if (p) p.addEventListener('click', function () { step(1); });
+    if (n) n.addEventListener('click', function () { step(-1); });
+  }
+
+  function render() { renderRails(); renderFilters(); renderTrack(); wireNav(); }
 
   function load() {
     return window.DB.approvedQuotes().then(function (qs) {
@@ -134,7 +163,7 @@ window.Wall = (function () {
     if (!body) return;
     pending = [{ body: body, _pending: true }];
     filter = null;
-    renderFilters(); renderGrid();
+    renderFilters(); renderTrack();
   }
 
   return { load: load, render: render, addPending: addPending,

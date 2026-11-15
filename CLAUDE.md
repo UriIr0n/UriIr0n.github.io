@@ -20,9 +20,9 @@ HTML/CSS/JS סטטי, בלי build ובלי framework. GitHub Pages.
 
 ## איך זה עולה לאוויר
 
-GitHub Pages מריפו המשתמש: push לענף שמוגדר כ-Pages ב-`UriIr0n/UriIr0n.github.io`
-מפרסם. **הענף הנוכחי הוא `claude/student-feedback-system-2jrt21`** ולא `main` —
-לוודא לאיזה ענף דוחפים לפני "תעלה לאוויר", אחרת הפרסום לא יזוז.
+GitHub Pages מפרסם מהענף **`main`** (נבדק ב-API, 15.11.2026). הענף המקומי
+`claude/student-feedback-system-2jrt21` מכיל גם את `mishov/` שעוד לא באוויר, ולכן הוא לא מתמזג
+ל-main כמו שהוא. "תעלה לאוויר" = להחיל את השינוי על main (worktree של origin/main) ולדחוף ל-main.
 
 ## Git
 

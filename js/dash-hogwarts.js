@@ -23,8 +23,7 @@ const DashHogwarts = (() => {
 
   function build() {
     ui = Shell.build(root, {
-      key: 'hog', emoji: '🪄',
-      title: 'היעדרויות סגל הוגוורטס: פרופיל בית',
+      key: 'hog', title: 'היעדרויות סגל הוגוורטס: פרופיל בית',
       original: 'דשבורד היעדרויות: פרופיל מחלקתי (Power BI)',
       about: {
         problem: 'מנהלי מחלקות לא ידעו לענות על שאלה פשוטה: "האם ההיעדרויות אצלי חריגות ביחס לארגון?" הנתונים ישבו בדוחות רבעוניים של מערכת הנוכחות, בפורמט שאף מנהל לא פותח, ולא היו ערכי סף מוסכמים שקובעים מה בכלל נחשב חריג.',
@@ -209,7 +208,7 @@ const DashHogwarts = (() => {
       categories: D.acadMonths.map(m => m.slice(0, 4) + '\''),
       series: [
         { name: 'תשנ"ד', color: '#3987e5', values: ms['תשנ"ד'][metric] },
-        { name: 'תשנ"ג', color: '#898781', values: ms['תשנ"ג'][metric] },
+        { name: 'תשנ"ג', color: '#8ea69b', values: ms['תשנ"ג'][metric] },
       ],
       height: 300, valueFmt: v => C.pctF(v),
     });

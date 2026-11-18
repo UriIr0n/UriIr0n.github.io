@@ -1,0 +1,109 @@
+/* =====================================================================
+   redesign.css - שכבת העיצוב של גרסת המגייסים (נובמבר 2026)
+   פלטה "ירוק עמוק": ירוק בקבוק, נקודות מנטה, דגש זהב. נטען אחרי style.css.
+   ===================================================================== */
+:root {
+  --gold: #f0c14b;
+  --gold-ink: #1d1704;
+  --mint: #d6e7de;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+
+body { font-family: var(--font); }
+h1, h2, h3 { text-wrap: balance; }
+
+/* ---------- ניווט ---------- */
+.topnav {
+  background: rgba(15, 38, 33, 0.86);
+  padding-block: 14px;
+  padding-left: max(28px, env(safe-area-inset-left, 0px));
+  padding-right: max(28px, env(safe-area-inset-right, 0px));
+}
+.topnav .brand { text-decoration: none; font-weight: 700; font-size: 17px; color: var(--ink); }
+.topnav nav a.nav-cv {
+  color: var(--gold-ink); background: var(--gold); font-weight: 500; margin-inline-start: 8px;
+}
+.topnav nav a.nav-cv:hover { background: #f5cf6b; color: var(--gold-ink); }
+
+/* ---------- כפתורים ---------- */
+.btn { border-radius: 999px; font-weight: 500; }
+.btn.primary { background: var(--gold); color: var(--gold-ink); border-color: transparent; }
+.btn.primary:hover { background: #f5cf6b; }
+.btn.ghost { background: transparent; border: 1px solid var(--hairline-2); color: var(--ink); }
+.btn.ghost:hover { background: var(--surface); }
+.btn:focus-visible, .topnav a:focus-visible, .proj-card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ---------- Hero ---------- */
+.hero2 {
+  max-width: 1200px; margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 24px; align-items: center;
+  padding: 56px 28px 64px;
+}
+.hero2 > * { min-width: 0; }
+.hero2-copy { display: grid; gap: 22px; justify-items: start; }
+.hero2-status { display: inline-flex; align-items: center; gap: 9px; font-size: 14px; color: var(--ink-2); }
+.hero2-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 4px rgba(240, 193, 75, 0.16); }
+.hero2 h1 { font-size: clamp(36px, 5.2vw, 64px); line-height: 1.05; font-weight: 300; letter-spacing: -0.5px; }
+.hero2 h1 b { display: block; font-weight: 700; }
+.hero2-copy p { color: var(--ink-2); font-size: 18px; line-height: 1.65; max-width: 48ch; }
+.hero2-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero2-phase { font-family: var(--mono); font-size: 12.5px; color: var(--gold); }
+.hero2-viz { position: relative; height: 460px; }
+.hero2-viz canvas { width: 100%; height: 100%; display: block; }
+.hero2-cap { position: absolute; bottom: 4px; left: 0; font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+
+/* ---------- מספרים ---------- */
+.facts {
+  max-width: 1120px; margin: 0 auto; padding: 8px 28px 72px;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;
+}
+.fact { display: grid; gap: 6px; align-content: start; border-inline-start: 1px solid var(--hairline-2); padding-inline-start: 16px; }
+.fact strong { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; line-height: 1; color: var(--mint); font-variant-numeric: tabular-nums; }
+.fact span { color: var(--ink-3); font-size: 14px; line-height: 1.45; }
+
+/* ---------- כותרות סקשן ---------- */
+.section-head h2 { font-weight: 700; letter-spacing: -0.3px; }
+
+/* ---------- כרטיסי פרויקט ---------- */
+.proj-card { border-radius: 18px; background: var(--surface); }
+.proj-card .theme { font-family: var(--mono); font-weight: 500; font-size: 12px; }
+
+/* ---------- ציר ניסיון ---------- */
+.timeline { list-style: none; display: grid; gap: 0; border-top: 1px solid var(--hairline-2); }
+.timeline li {
+  display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 8px 32px;
+  padding-block: 24px; border-bottom: 1px solid var(--hairline);
+}
+.timeline .when { font-family: var(--mono); font-size: 13px; color: var(--gold); padding-top: 4px; }
+.timeline h3 { font-size: 19px; font-weight: 700; }
+.timeline h3 span { font-weight: 400; color: var(--ink-3); }
+.timeline p { color: var(--ink-2); margin-top: 6px; max-width: 64ch; line-height: 1.7; }
+
+/* ---------- קשר ---------- */
+.contact2 .section-head h2 { font-size: clamp(28px, 4vw, 44px); }
+
+/* ---------- הסמכות בלי אייקון ---------- */
+.cert-card { border-inline-start: 3px solid var(--gold); }
+
+/* ---------- מובייל ---------- */
+@media (max-width: 860px) {
+  .hero2 { grid-template-columns: 1fr; padding-top: 24px; }
+  .hero2-viz { height: 300px; order: -1; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 28px; }
+  .timeline li { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .hero2, .facts {
+    padding-left: max(22px, env(safe-area-inset-left, 0px));
+    padding-right: max(22px, env(safe-area-inset-right, 0px));
+  }
+  .topnav nav a:not(.nav-cv) { padding-inline: 8px; font-size: 13px; }
+}
+@media (max-width: 520px) {
+  .topnav nav a[href="#/about"], .topnav nav a[href="#/#experience"] { display: none; }
+}
+
+/* ---------- קישורי "לכל ה..." ---------- */
+.section-more-link { color: var(--gold); border-color: rgba(240, 193, 75, 0.35); background: rgba(240, 193, 75, 0.06); }
+.section-more-link:hover { background: rgba(240, 193, 75, 0.12); color: var(--gold); }

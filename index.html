@@ -3,167 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>אורי עירון | דשבורדים ב-Power BI ואוטומציה, עם AI</title>
-<meta name="description" content="דשבורדים תפעוליים ב-Power BI ואוטומציה לתהליכי עבודה, בנויים בעזרת AI. דוגמאות עבודה אינטראקטיביות בדף הפרויקטים.">
-<meta property="og:title" content="אורי עירון | Power BI ואוטומציה">
-<meta property="og:description" content="דשבורדים ואוטומציה לעסק שלכם, בנויים בעזרת AI, עם דוגמאות עבודה אינטראקטיביות.">
+<title>אורי עירון | אנליסט דאטה ו-BI</title>
+<meta name="description" content="אורי עירון, Business Data Analyst. דשבורדי Power BI בשימוש שוטף, אוטומציה בפייתון, ושחזורים אינטראקטיביים של העבודה עם נתונים סינתטיים.">
+<meta property="og:title" content="אורי עירון | אנליסט דאטה ו-BI">
+<meta property="og:description" content="דוח שלקח 4 שעות בשבוע, ועכשיו מתעדכן לבד. Power BI, פייתון ואוטומציה.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<meta name="theme-color" content="#0f2621">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230f2621'/><rect x='7' y='17' width='4' height='8' fill='%23d6e7de'/><rect x='14' y='11' width='4' height='14' fill='%23f0c14b'/><rect x='21' y='14' width='4' height='11' fill='%23d6e7de'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=53">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=54">
+<link rel="stylesheet" href="css/redesign.css?v=1">
 </head>
 <body>
 
 <a class="skip-link" href="#main">דילוג לתוכן</a>
 
 <header class="topnav">
-  <div class="brand">אורי<span> עירון</span> · BI</div>
+  <a class="brand" href="#/">אורי עירון</a>
   <nav>
-    <a href="#/" data-nav>ראשי</a>
-    <a href="#/services" data-nav>שירותים</a>
     <a href="#/projects" data-nav>פרויקטים</a>
+    <a href="#/#experience" data-nav>ניסיון</a>
     <a href="#/about" data-nav>אודות</a>
     <a href="#/#contact" data-nav>צור קשר</a>
+    <a class="nav-cv" href="assets/Uri-Iron-CV.pdf" download>קורות חיים</a>
   </nav>
 </header>
 
 <!-- ===================== עמוד הבית ===================== -->
 <div class="page active" id="page-home" role="main">
 
-  <div class="welcome-back" id="welcome-back" hidden>
-    <span class="wb-emoji" aria-hidden="true">👋</span>
-    <span class="wb-text">אני שמח לראות אותך שוב!</span>
-    <button type="button" class="wb-close" id="welcome-back-close" aria-label="סגירת ההודעה">✕</button>
-  </div>
-
-  <section class="hero">
-    <div class="ghost-dash" aria-hidden="true">
-      <svg id="gd-svg" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice"></svg>
+  <section class="hero2" id="main">
+    <div class="hero2-copy">
+      <span class="hero2-status"><i aria-hidden="true"></i>פתוח לתפקיד הבא · אנליסט BI / דאטה · מרכז</span>
+      <h1>דוח שלקח 4 שעות בשבוע. <b>עכשיו הוא מתעדכן לבד.</b></h1>
+      <p>אני אורי עירון, Business Data Analyst באוניברסיטת אריאל. Power BI, פייתון ואוטומציה: אני לוקח נתונים מפוזרים ממערכות ה-HR ומסדר אותם לתמונה שמנהל מבין במבט אחד.</p>
+      <div class="hero2-cta">
+        <a class="btn primary" href="#/projects">לדשבורדים שבניתי</a>
+        <a class="btn ghost" href="assets/Uri-Iron-CV.pdf" download>קורות חיים (PDF)</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <span class="hero2-phase" id="hero-phase" aria-hidden="true">מצב: נתונים גולמיים</span>
     </div>
-    <p class="hero-eyebrow" id="main">אורי עירון · Power BI ואוטומציה, בעזרת AI</p>
-    <h1>דשבורדים שמנהלים באמת פותחים כל יום.<br><span class="accent">ואוטומציה שחוסכת שעות.</span></h1>
-    <p class="sub">
-      אני בונה כלי עבודה ב-Power BI ומחבר אליהם אוטומציה שמורידה עבודה ידנית, עם כלי AI שעוזרים לי
-      לבנות מהר ומדויק יותר. דוגמאות אמיתיות ניתן לראות בדף הפרויקטים.
-    </p>
-    <ul class="hero-status">
-      <li>Business Data Analyst</li>
-      <li>אזור המרכז</li>
-      <li>Power BI · Python · AI</li>
-      <li>פול־טיים</li>
-    </ul>
-    <div class="cta">
-      <a class="btn primary" href="mailto:uriiron20@gmail.com" data-copy-email>✉ בואו נדבר על הפרויקט שלכם</a>
-      <a class="btn" href="#/recruit">לדשבורד אינטראקטיבי ←</a>
-      <a class="btn" href="assets/Uri-Iron-CV.pdf" download>↓ קורות חיים (PDF)</a>
-      <a class="btn" href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
+    <div class="hero2-viz" aria-hidden="true">
+      <canvas id="hero-canvas"></canvas>
+      <span class="hero2-cap">1,500 נקודות · גולמי ← דוח</span>
     </div>
   </section>
 
-  <section class="block" id="services-teaser">
-    <div class="section-head">
-      <h2>שירותים</h2>
-    </div>
-    <div class="services-grid mini">
-      <article class="service-card mini" style="--accent:#3987e5">
-        <div class="head"><span class="emoji" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="7"/><line x1="18" y1="20" x2="18" y2="15"/></svg></span><h3>Power BI</h3></div>
-        <p class="desc">כלי עבודה תפעוליים שמנהלים פותחים כל יום.</p>
-      </article>
-      <article class="service-card mini" style="--accent:#199e70">
-        <div class="head"><span class="emoji" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></span><h3>אוטומציה</h3></div>
-        <p class="desc">תהליכים חוזרים שרצים לבד, בלי שתזכרו להריץ אותם.</p>
-      </article>
-    </div>
-    <div class="teaser-more"><a class="section-more-link" href="#/services">לפירוט השירותים ←</a></div>
+  <section class="facts" aria-label="במספרים">
+    <div class="fact"><strong>5</strong><span>דשבורדי Power BI בשימוש שוטף בארגון</span></div>
+    <div class="fact"><strong>60+</strong><span>מדדי DAX בדשבורד אחד</span></div>
+    <div class="fact"><strong>4 ש׳</strong><span>עבודה ידנית בשבוע שהפכה לאוטומציה בפייתון</span></div>
+    <div class="fact"><strong>&lt;10 שנ׳</strong><span>היעד: מנהל מוצא תשובה בדוח</span></div>
   </section>
 
   <section class="block" id="projects-teaser">
     <div class="section-head">
-      <h2>דוגמאות עבודה</h2>
-      <p>שלוש דוגמאות מתוך חמישה דשבורדים תפעוליים שבניתי, עם נתונים בדיוניים לחלוטין
-        כדי לשמור על פרטיות הארגון.</p>
+      <h2>דשבורדים שבניתי, בשחזור אינטראקטיבי</h2>
+      <p>שלושה מתוך חמישה דשבורדים שרצים אצלי בעבודה. המבנה והלוגיקה זהים למקור, הנתונים בדיוניים לגמרי כדי לשמור על פרטיות הארגון. אפשר ללחוץ, לסנן ולפתוח כל אחד.</p>
     </div>
     <div class="projects-grid" id="projects-teaser-grid"></div>
-    <div class="teaser-more"><a class="section-more-link" href="#/projects">לכל 5 הפרויקטים ←</a></div>
+    <div class="teaser-more"><a class="section-more-link" href="#/projects">לכל חמשת הדשבורדים ←</a></div>
   </section>
 
-  <section class="visitors-live">
-    <div class="visitors-live-head">
-      <span class="live-badge"><span class="live-dot"></span><span class="kicker">LIVE</span></span>
-      <h2>מי נכנס לאתר?</h2>
-    </div>
-    <div class="visitors-live-body">
-      <!-- מתחיל מוסתר: visitors.js חושף רק כשהמונה עובר את הסף (25), כדי
-           שמספר חד-ספרתי לא ישמש הוכחה חברתית שלילית -->
-      <div class="visitor-counts" id="visitor-counts" hidden>
-        <div class="visitor-count-big" id="visitor-count"></div>
-        <div class="visitor-count-big returning" id="visitor-returning-count"></div>
-      </div>
-      <div class="visitors-live-divider" aria-hidden="true"></div>
-      <div class="visitor-roles">
-        <div class="visitor-roles-prompt" id="visitor-roles-prompt">
-          <span class="visitor-roles-label">רוצים להיות חלק מהגרף? תבחרו:</span>
-          <div class="seg" id="visitor-roles-btns"></div>
+  <section class="block" id="experience">
+    <div class="section-head"><h2>ניסיון והשכלה</h2></div>
+    <ol class="timeline">
+      <li>
+        <div class="when">דצמבר 2025 עד היום</div>
+        <div class="what">
+          <h3>Business Data Analyst <span>· אוניברסיטת אריאל</span></h3>
+          <p>מוביל את הדוחות והדשבורדים של הארגון: גיוס ותכנון תקנים, היעדרויות, הרשמת סטודנטים ופילוח עובדים. בניתי pipeline בפייתון שקולט דוחות מהמייל, מנקה ומעדכן את Power BI לבד, וצ'אטבוט RAG לאוניברסיטה מקצה לקצה.</p>
         </div>
-        <div class="visitor-roles-chart" id="visitor-roles-chart"></div>
-      </div>
-    </div>
+      </li>
+      <li>
+        <div class="when">2025</div>
+        <div class="what">
+          <h3>עוזר מחקר <span>· המחלקה למדעי הנתונים, אוניברסיטת אריאל</span></h3>
+          <p>פרויקט NLP על נתוני חינוך: עיבוד טקסט, הנדסת פיצ'רים והערכת מודלים.</p>
+        </div>
+      </li>
+      <li>
+        <div class="when">2023 עד 2025</div>
+        <div class="what">
+          <h3>מנהל צוות מכירות <span>· Danny Bowman</span></h3>
+          <p>ניהול צוות ועבודה מול ממשקים, ומשם הרגל לדבר עם אנשים לפני שבונים להם דוח.</p>
+        </div>
+      </li>
+      <li>
+        <div class="when">2022 עד 2026</div>
+        <div class="what">
+          <h3>B.Sc. הנדסת תעשייה וניהול <span>· אוניברסיטת אריאל</span></h3>
+          <p>ממוצע 87. ציון 100 בקורס פייתון. פרס פרויקט מצטיין בקורס ניתוח נתונים, על ניתוח תאונות רכבת בארה"ב.</p>
+        </div>
+      </li>
+    </ol>
+    <div class="teaser-more"><a class="section-more-link" href="#/about">עוד עליי, כלים והסמכות ←</a></div>
   </section>
 
-  <section class="block" id="contact">
+  <section class="block contact2" id="contact">
     <div class="section-head">
-      <h2>מדברים?</h2>
-      <p>דשבורד או אוטומציה - ספרו לי מה אתם צריכים.
-        הכי מהיר במייל או בלינקדאין, ואני עונה בדרך כלל באותו יום.</p>
+      <h2>מחפשים אנליסט BI או דאטה?</h2>
+      <p>הכי מהיר במייל או בלינקדאין. אני עונה בדרך כלל באותו יום.</p>
     </div>
     <div class="contact-actions">
-      <a class="btn primary" href="mailto:uriiron20@gmail.com" data-copy-email>✉ uriiron20@gmail.com</a>
-      <a class="btn" href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
-      <button type="button" class="btn" data-copy-phone>📞 052-624-6347</button>
+      <a class="btn primary" href="mailto:uriiron20@gmail.com" data-copy-email>uriiron20@gmail.com</a>
+      <a class="btn ghost" href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
+      <button type="button" class="btn ghost" data-copy-phone>052-624-6347</button>
+      <a class="btn ghost" href="assets/Uri-Iron-CV.pdf" download>קורות חיים (PDF)</a>
     </div>
   </section>
 
-</div>
-
-<!-- ===================== עמוד שירותים ===================== -->
-<div class="page" id="page-services">
-  <div class="dash-wrap projects-page">
-    <div class="dash-head">
-      <a class="back-btn" href="#/"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg> חזרה</a>
-      <div class="title-box">
-        <h1>שירותים</h1>
-        <div class="sub">שני תחומים שאני עובד בהם כל יום</div>
-      </div>
-    </div>
-    <h2 class="sr-only">רשימת השירותים</h2>
-    <div class="services-grid">
-      <article class="service-card" style="--accent:#3987e5">
-        <div class="head"><span class="emoji" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="7"/><line x1="18" y1="20" x2="18" y2="15"/></svg></span><h3>דשבורדים ב-Power BI</h3></div>
-        <p class="desc">דשבורדים תפעוליים שמנהלים פותחים כל יום כדי להחליט מה לעשות. אני בונה אותם
-          עם כלי AI שעוזרים לי לעבוד מהר ומדויק יותר. זה התחום שיש לי בו הכי הרבה ניסיון.</p>
-        <div class="tags"><span>DAX ומידול נתונים</span><span>Power Query ואוטומציה</span><span>RLS ו-Bookmarks</span></div>
-        <a class="proof-link" href="#/projects">← לדוגמאות מהפרויקטים שבניתי</a>
-      </article>
-      <article class="service-card" style="--accent:#199e70">
-        <div class="head"><span class="emoji" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></span><h3>אוטומציה של תהליכי עבודה</h3></div>
-        <p class="desc">חיבור בין מערכות, קבצים ומיילים כך שהעבודה החוזרת קורית בלי מגע יד. אני מתחזק
-          אוטומציה כזו בעבודה שלי, וזה חוסך לי כארבע שעות עבודה ידנית בשבוע.</p>
-        <div class="tags"><span>Python</span><span>n8n</span><span>Task Scheduler</span><span>רענון נתונים אוטומטי</span></div>
-        <a class="proof-link" href="#/claude">← לדוגמה: דוח שהפך לאוטומציה מלאה</a>
-      </article>
-    </div>
-
-    <div class="services-cta">
-      <h2>מה אתם צריכים?</h2>
-      <p>ספרו לי על התהליך שלוקח לכם יותר מדי זמן, ואני אגיד אם ואיך אפשר לקצר אותו.</p>
-      <div class="cta">
-        <a class="btn primary" href="mailto:uriiron20@gmail.com" data-copy-email>✉ uriiron20@gmail.com</a>
-        <a class="btn" href="https://www.linkedin.com/in/uri-iron/" target="_blank" rel="noopener">LinkedIn</a>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ===================== עמוד אודות ===================== -->
@@ -192,7 +144,7 @@
           בפחות מעשר שניות.</p>
       </div>
     </div>
-    <button type="button" class="btn skills-open-btn" data-open-skills>לצפייה בכל הכלים והטכנולוגיות ↓</button>
+    <button type="button" class="btn skills-open-btn" data-open-skills>לצפייה בכל הכלים והטכנולוגיות</button>
     <dialog class="skills-modal" data-skills-modal>
       <div class="skills-modal-head">
         <h3>כלים וטכנולוגיות</h3>
@@ -246,22 +198,19 @@
     </div>
     <div class="cert-grid">
       <a class="cert-card" href="https://credentials.databricks.com/d8f1cb54-2351-4e04-92b8-5b06d7be6256" target="_blank" rel="noopener">
-        <span class="ic" aria-hidden="true">🎓</span>
-        <div class="body">
+                <div class="body">
           <div class="name">Academy Accreditation - Generative AI Fundamentals</div>
           <div class="issuer">Databricks · נובמבר 2026</div>
         </div>
       </a>
       <a class="cert-card" href="https://ude.my/UC-8b603235-0269-4ea1-9c17-48559e9aafaf" target="_blank" rel="noopener">
-        <span class="ic" aria-hidden="true">🎓</span>
-        <div class="body">
+                <div class="body">
           <div class="name">Microsoft Power BI Desktop for Business Intelligence</div>
           <div class="issuer">Udemy · 17 שעות · יולי 2026</div>
         </div>
       </a>
       <div class="cert-card">
-        <span class="ic" aria-hidden="true">🎓</span>
-        <div class="body">
+                <div class="body">
           <div class="name">Machine Learning with Python: Foundations</div>
         </div>
       </div>
@@ -312,7 +261,7 @@
       יומיומי: סלייסרים, חיתוכים צולבים, Drill-down וכותרות דינמיות. כל אחד מהם עבר אצלי את כל הדרך:
       אפיון מול המשתמשים, בנייה, הצגה להנהלה, תחזוקה שוטפת. כל דשבורד קיבל כאן "עולם" משלו כדי שיהיה גם כיף.</p>
     <div class="data-note">
-      <span class="ic">🔒</span>
+      
       <div><b>הערה על הנתונים:</b> כדי לשמור על פרטיות הארגון, לכל דשבורד יש <b>נתוני דמה בדיוניים
       לחלוטין</b>, עם עולם תוכן משלו. המבנה, הוויזואליזציות והלוגיקה העסקית משחזרים אחד-לאחד את
       הפרויקטים האמיתיים שבניתי ב-Power BI. הדשבורדים רצים <b>ישירות בדפדפן</b>, ללא Power BI Service.</div>
@@ -341,17 +290,18 @@
   <div>נבנה עם <b>Claude Code</b> ב-HTML / CSS / JavaScript ונילה, ללא ספריות וללא Power BI Service. © אורי עירון</div>
 </footer>
 
-<script src="js/charts.js?v=22"></script>
-<script src="js/shell.js?v=20"></script>
+<script src="js/charts.js?v=23"></script>
+<script src="js/shell.js?v=21"></script>
 <script src="js/data.js?v=17"></script>
-<script src="js/dash-recruit.js?v=18"></script>
-<script src="js/dash-hogwarts.js?v=16"></script>
-<script src="js/dash-claude.js?v=16"></script>
-<script src="js/dash-nasa.js?v=17"></script>
-<script src="js/dash-olympic.js?v=17"></script>
+<script src="js/dash-recruit.js?v=19"></script>
+<script src="js/dash-hogwarts.js?v=17"></script>
+<script src="js/dash-claude.js?v=17"></script>
+<script src="js/dash-nasa.js?v=18"></script>
+<script src="js/dash-olympic.js?v=18"></script>
 <script src="js/carousel.js?v=9"></script>
-<script src="js/main.js?v=28"></script>
-<script src="js/visitors.js?v=31"></script>
+<script src="js/main.js?v=29"></script>
+<script src="js/hero.js?v=1"></script>
+<script src="js/visitors.js?v=32"></script>
 <script src="js/skills-modal.js?v=1"></script>
 </body>
 </html>

@@ -19,8 +19,7 @@ const DashRecruit = (() => {
 
   function build() {
     ui = Shell.build(root, {
-      key: 'recruit', emoji: '🚀',
-      title: 'גיוס ב-NovaTech: חדר המצב של צוות הרכש',
+      key: 'recruit', title: 'גיוס ב-NovaTech: חדר המצב של צוות הרכש',
       original: 'דשבורד גיוס ארגוני (Power BI)',
       about: {
         problem: 'לא היה שום דוח שעונה על השאלה "כמה משרות פתוחות לנו עכשיו, וכמה זמן הן פתוחות". אפיינתי מאפס שלושה דוחות מקור מול מערכת "אדם" (משרות חדשות, פתוחות וסגורות), וישבתי עם המגייסות, ראש מדור הגיוס והסמנכ"ל כדי להבין מה כל אחד מהם צריך לראות כדי לקבל החלטה.',
@@ -184,7 +183,7 @@ const DashRecruit = (() => {
       onChange: v => { state.ageDept = v; render(); },
     });
     C.seg($('ra-100'), {
-      options: [{ key: false, label: 'כל המשרות' }, { key: true, label: 'חריגות 100+ בלבד 🔥' }],
+      options: [{ key: false, label: 'כל המשרות' }, { key: true, label: 'חריגות 100+ בלבד' }],
       value: state.only100,
       onChange: v => { state.only100 = v; render(); },
     });

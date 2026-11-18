@@ -4,7 +4,7 @@
    ===================================================================== */
 const Charts = (() => {
   const NS = 'http://www.w3.org/2000/svg';
-  const INK = { p: '#ffffff', s: '#c3c2b7', m: '#898781', grid: '#2c2c2a', axis: '#383835', surface: '#1a1a19' };
+  const INK = { p: '#eef3ef', s: '#c3d4cb', m: '#8ea69b', grid: '#23453c', axis: '#2e5248', surface: '#15322b' };
 
   const fmt = (n, d = 0) => (n == null || isNaN(n)) ? '-' :
     Number(n).toLocaleString('he-IL', { maximumFractionDigits: d, minimumFractionDigits: 0 });
@@ -415,7 +415,7 @@ const Charts = (() => {
         const x = xEnd - w;
         const seg = el('rect', { x, y, width: w, height: bh, rx: 3, fill: k.color }, svg);
         const p = v / total * 100;
-        if (w > 40) txt(svg, x + w / 2, y + bh / 2 + 4, pctF(p, 0), { fill: '#0d0d0d', 'font-size': 10.5, 'font-weight': 700, 'text-anchor': 'middle' });
+        if (w > 40) txt(svg, x + w / 2, y + bh / 2 + 4, pctF(p, 0), { fill: '#0f2621', 'font-size': 10.5, 'font-weight': 700, 'text-anchor': 'middle' });
         seg.addEventListener('mousemove', ev => showTip(`<b>${row.label} · ${k.label}</b>${tipRow(k.color, 'כמות', valueFmt(v))}${tipRow(k.color, 'אחוז', pctF(p, 1))}`, ev));
         seg.addEventListener('mouseleave', hideTip);
         xEnd = x - 2;

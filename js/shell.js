@@ -23,7 +23,7 @@ const Shell = (() => {
         <div class="dash-head">
           <a class="back-btn" href="#/">${ICONS.back} חזרה</a>
           <div class="title-box">
-            <h1>${cfg.emoji} ${cfg.title}</h1>
+            <h1>${cfg.title}</h1>
             <div class="sub">שחזור של הפרויקט המקורי: <b>${cfg.original}</b></div>
           </div>
           <span class="badge">${ICONS.lock} נתונים בדיוניים להדגמה</span>
@@ -37,7 +37,7 @@ const Shell = (() => {
             <div class="col"><h3>האתגר העסקי</h3><p>${cfg.about.problem}</p></div>
             <div class="col"><h3>מה בניתי</h3><ul>${cfg.about.built.map(x => `<li>${x}</li>`).join('')}</ul></div>
             <div class="col"><h3>טכניקות Power BI</h3><ul>${cfg.about.tech.map(x => `<li>${x}</li>`).join('')}</ul></div>
-            ${cfg.about.impact ? `<div class="impact">🛠️ ${cfg.about.impact}</div>` : ''}
+            ${cfg.about.impact ? `<div class="impact">${cfg.about.impact}</div>` : ''}
           </div>
         </details>
 
@@ -46,7 +46,7 @@ const Shell = (() => {
         </div>` : ''}
 
         <div class="dash-hint" data-dash-hint hidden>
-          <span class="ic" aria-hidden="true">👆</span>
+          
           <span class="tx">הדשבורד הזה חי: לחצו על עמודה, פלח או שורה בטבלה והכל מסתנן יחד.</span>
           <button type="button" class="hint-close" data-hint-close aria-label="הבנתי, סגירת ההסבר">✕</button>
         </div>
@@ -101,7 +101,7 @@ const Shell = (() => {
       get activeTab() { return activeTab; },
       onTab(cb) { tabCb = cb; },
       setStory(html) {
-        storyEl.innerHTML = html ? `<span class="ic">💡</span><div>${html}</div>` : '';
+        storyEl.innerHTML = html ? `<div>${html}</div>` : '';
         storyEl.style.display = html ? 'flex' : 'none';
       },
     };

@@ -73,7 +73,7 @@
     const el = document.getElementById('visitor-count');
     if (!el) return;
 
-    const label = '👁 מבקרים באתר';
+    const label = 'מבקרים באתר';
     const render = n => {
       el.innerHTML = typeof n === 'number'
         ? `<b>${heNum(n)}</b><span>${label}</span>`

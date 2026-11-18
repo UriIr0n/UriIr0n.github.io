@@ -5,7 +5,7 @@
 
   const PROJECTS = [
     {
-      id: 'recruit', emoji: '🚀', accent: '#3987e5',
+      id: 'recruit', accent: '#3987e5',
       theme: 'בעולם של: חברת הייטק NovaTech Inc.',
       title: 'חדר המצב של הגיוס',
       original: 'דשבורד גיוס ארגוני',
@@ -13,7 +13,7 @@
       tags: ['אפיון מול מערכת "אדם"', 'Power Query: איחוד תיקיות', 'Drill-down', 'מגמות שנתיות'],
     },
     {
-      id: 'hogwarts', emoji: '🪄', accent: '#9085e9',
+      id: 'hogwarts', accent: '#9085e9',
       theme: 'בעולם של: הוגוורטס',
       title: 'היעדרויות סגל: פרופיל בית',
       original: 'דשבורד היעדרויות: פרופיל מחלקתי',
@@ -21,7 +21,7 @@
       tags: ['RLS: הרשאות ברמת שורה', 'ערכי סף וחריגים', 'השוואה אשתקד', 'גרף⇄טבלה ב-Bookmarks'],
     },
     {
-      id: 'claude', emoji: '✨', accent: '#d95926',
+      id: 'claude', accent: '#d95926',
       theme: 'בעולם של: Anthropic, מנויי Claude',
       title: 'המרוץ למיליון נרשמים',
       original: 'סטטוס הרשמה: השוואה תקופתית',
@@ -29,7 +29,7 @@
       tags: ['אוטומציה מקצה לקצה', 'איחוד נתוני עבר', 'ציר זמן מנורמל', 'השוואת מחזורים'],
     },
     {
-      id: 'nasa', emoji: '🛰️', accent: '#199e70',
+      id: 'nasa', accent: '#199e70',
       theme: 'בעולם של: נאס"א',
       title: 'הרכב הסוכנות: מסלולים, דרגות ותקנים',
       original: 'פילוח ארגוני: סגל בכיר',
@@ -37,7 +37,7 @@
       tags: ['60+ מדדי DAX', 'Custom Visual', '3 שכבות Bookmarks', 'טבלת גישור'],
     },
     {
-      id: 'olympic', emoji: '🥇', accent: '#e66767',
+      id: 'olympic', accent: '#e66767',
       theme: 'בעולם של: המשלחת האולימפית',
       title: 'המשלחת האולימפית: דמוגרפיה',
       original: 'פילוח עובדים',
@@ -75,7 +75,6 @@
     return `
     <a class="proj-card" style="--accent:${p.accent}" href="#/${p.id}" aria-label="פתיחת דשבורד ${p.title}">
       <div class="head">
-        <span class="emoji" aria-hidden="true">${p.emoji}</span>
         <div><div class="theme">${p.theme}</div><h3>${p.title}</h3></div>
       </div>
       <div class="orig">שחזור של: ${p.original}</div>
@@ -123,7 +122,7 @@
     const [rawPage, anchor] = h.split('#');
     // תמיכה בקישור עמוק לטאב ספציפי בתוך דשבורד: #/recruit:age
     const [page, tabKey] = rawPage.split(':');
-    const STATIC_PAGES = ['projects', 'services', 'about']; // עמודי תוכן סטטיים, לא דשבורדים אינטראקטיביים
+    const STATIC_PAGES = ['projects', 'about']; // עמודי תוכן סטטיים, לא דשבורדים אינטראקטיביים
     const isDash = !!DASHBOARDS[page];
     const isStatic = STATIC_PAGES.includes(page);
     const target = isDash || isStatic ? page : 'home';
@@ -224,7 +223,7 @@
         e.preventDefault();
         // קודם מעתיקים את הכתובת ללוח (בזמן שיש עדיין פוקוס), כגיבוי
         copy(EMAIL).then(
-          () => showToast('✉ פתחתי לך חלון כתיבה במייל · הכתובת גם הועתקה: ' + EMAIL),
+          () => showToast('פתחתי חלון כתיבה במייל. הכתובת גם הועתקה: ' + EMAIL),
           () => showToast('המייל שלי: ' + EMAIL),
         );
         // פותחים חלון כתיבה של Gmail בלשונית חדשה, עם טיוטה מוכנה ומותאמת
@@ -237,83 +236,12 @@
     document.querySelectorAll('[data-copy-phone]').forEach(btn => {
       btn.addEventListener('click', () => {
         copy(PHONE).then(
-          () => showToast('📞 מספר הטלפון הועתק: ' + PHONE),
+          () => showToast('מספר הטלפון הועתק: ' + PHONE),
           () => showToast('הטלפון שלי: ' + PHONE),
         );
       });
     });
 
-  })();
-
-  /* ---------- דשבורד הרפאים ברקע ה-Hero ---------- */
-  (function ghostDash() {
-    const svg = document.getElementById('gd-svg');
-    if (!svg) return;
-    const NS = 'http://www.w3.org/2000/svg';
-    const el = (tag, attrs, parent = svg) => {
-      const e = document.createElementNS(NS, tag);
-      for (const k in attrs) e.setAttribute(k, attrs[k]);
-      parent.appendChild(e); return e;
-    };
-    // מחולל דטרמיניסטי - אותה תנועה בכל טעינה
-    let seed = 20260712;
-    const rnd = () => (seed = (seed * 48271) % 2147483647) / 2147483647;
-
-    // קווי רשת
-    for (let y = 130; y <= 480; y += 88)
-      el('line', { x1: 30, y1: y, x2: 1170, y2: y, stroke: '#3987e5', 'stroke-width': 1, opacity: 0.07 });
-
-    // עמודות "נושמות" לאורך התחתית
-    const barColors = ['#3987e5', '#9085e9', '#199e70'];
-    for (let i = 0; i < 26; i++) {
-      const x = 40 + i * 44;
-      const h = 90 + rnd() * 150;
-      const bar = el('rect', {
-        x, y: 560 - h, width: 24, height: h, rx: 4,
-        fill: barColors[i % 3], opacity: 0.18, class: 'gd-bar',
-      });
-      bar.style.setProperty('--a', (0.35 + rnd() * 0.25).toFixed(2));
-      bar.style.setProperty('--b', (0.75 + rnd() * 0.25).toFixed(2));
-      bar.style.setProperty('--dur', (3 + rnd() * 3.5).toFixed(1) + 's');
-      bar.style.setProperty('--del', (-rnd() * 6).toFixed(1) + 's');
-    }
-
-    // שני גרפי קווים שמציירים את עצמם
-    const wave = (baseY, amp, phase) => {
-      let d = `M0,${baseY}`;
-      for (let x = 60; x <= 1200; x += 60) {
-        const y = baseY - Math.sin(x / 160 + phase) * amp - rnd() * 26;
-        d += ` L${x},${Math.round(y)}`;
-      }
-      return d;
-    };
-    const l1 = el('path', { d: wave(300, 42, 0.5), stroke: '#3987e5', 'stroke-width': 2.5, opacity: 0.3, class: 'gd-line', pathLength: 1 });
-    l1.style.setProperty('--dur', '12s');
-    const l2 = el('path', { d: wave(370, 30, 2.2), stroke: '#9085e9', 'stroke-width': 2, opacity: 0.22, class: 'gd-line', pathLength: 1 });
-    l2.style.setProperty('--dur', '12s');
-    l2.style.setProperty('--del', '-6s');
-
-    // דונאט מסתובב לאט (פינה עליונה)
-    const donut = el('g', { class: 'gd-spin', opacity: 0.2 });
-    const segs = [[0, 130, '#3987e5'], [140, 90, '#9085e9'], [240, 70, '#199e70'], [320, 30, '#c98500']];
-    segs.forEach(([start, len, color]) => {
-      const c = 2 * Math.PI * 64;
-      el('circle', {
-        cx: 1050, cy: 150, r: 64, fill: 'none', stroke: color, 'stroke-width': 17,
-        'stroke-dasharray': `${(len / 360) * c} ${c}`,
-        transform: `rotate(${start} 1050 150)`,
-      }, donut);
-    });
-
-    // כרטיסי KPI עם נקודת דופק
-    [[70, 90], [250, 90]].forEach(([x, y], i) => {
-      const g = el('g', { opacity: 0.18 });
-      el('rect', { x, y, width: 150, height: 64, rx: 10, fill: 'none', stroke: '#c3c2b7', 'stroke-width': 1.2 }, g);
-      el('rect', { x: x + 88, y: y + 38, width: 46, height: 8, rx: 4, fill: '#c3c2b7', opacity: 0.5 }, g);
-      el('rect', { x: x + 46, y: y + 16, width: 88, height: 12, rx: 5, fill: '#c3c2b7', opacity: 0.8 }, g);
-      const dot = el('circle', { cx: x + 22, cy: y + 22, r: 5, fill: i ? '#199e70' : '#3987e5', class: 'gd-pulse' }, g);
-      dot.style.setProperty('--del', i ? '-1.2s' : '0s');
-    });
   })();
 
   /* ---------- רינדור מחדש בשינוי גודל ---------- */

@@ -124,7 +124,7 @@ const DashHogwarts = (() => {
     kpiCompare($('hg-k2'), 'ניצול מחלה (אגף חולים)', hSick, oSick, true);
     kpiCompare($('hg-k3'), 'סך היעדרות', hTot, oTot, true);
 
-    const statusColors = { ok: '#199e70', low: '#3987e5', high: '#c98500', crit: '#e66767' };
+    const statusColors = { ok: '#17a478', low: '#059eb1', high: '#b98a00', crit: '#d15d4d' };
 
     toggleTile($('hg-t1'), 'vac', 'חופשה: סטטוס סגל', 'גרף ⇄ טבלה (Bookmarks)',
       body => C.donut(body, {
@@ -207,7 +207,7 @@ const DashHogwarts = (() => {
     const mkChart = (id, metric) => C.columns($(id), {
       categories: D.acadMonths.map(m => m.slice(0, 4) + '\''),
       series: [
-        { name: 'תשנ"ד', color: '#3987e5', values: ms['תשנ"ד'][metric] },
+        { name: 'תשנ"ד', color: '#059eb1', values: ms['תשנ"ד'][metric] },
         { name: 'תשנ"ג', color: '#8ea69b', values: ms['תשנ"ג'][metric] },
       ],
       height: 300, valueFmt: v => C.pctF(v),

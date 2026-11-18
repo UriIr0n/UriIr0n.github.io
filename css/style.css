@@ -9,15 +9,15 @@
   --grid: #23453c;
   --hairline: rgba(214, 231, 222, 0.10);
   --hairline-2: rgba(214, 231, 222, 0.18);
-  --s1: #3987e5;
-  --s2: #2fc28c;
-  --s3: #c98500;
+  --s1: #b98a00;
+  --s2: #bf5884;
+  --s3: #73a434;
   /* s4/critical הובהרו כדי לעבור 4.5:1 מול הרקע (היו 3.93 ו-4.05) */
-  --s4: #12b312;
-  --s5: #9085e9;
-  --s6: #e66767;
-  --s7: #d55181;
-  --s8: #d95926;
+  --s4: #059eb1;
+  --s5: #d15d4d;
+  --s6: #17a478;
+  --s7: #b66100;
+  --s8: #008e89;
   --good: #0ca30c;
   --critical: #e05555;
   --radius: 14px;
@@ -116,7 +116,7 @@ button { font-family: inherit; cursor: pointer; }
 .data-note {
   max-width: 860px; margin: 0 auto 8px; padding: 14px 20px;
   display: flex; gap: 12px; align-items: flex-start;
-  background: rgba(201, 133, 0, 0.08); border: 1px solid rgba(201, 133, 0, 0.35);
+  background: rgba(240, 193, 75, 0.08); border: 1px solid rgba(240, 193, 75, 0.35);
   border-radius: var(--radius-s); color: var(--ink-2); font-size: 13.5px;
 }
 .data-note .ic { font-size: 17px; line-height: 1.3; }
@@ -176,7 +176,7 @@ dialog.skills-modal::backdrop { background: rgba(0, 0, 0, 0.62); backdrop-filter
   font-size: 13px; padding: 6px 12px; border-radius: 999px;
   background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink-2);
 }
-.chip.main { border-color: rgba(57, 135, 229, 0.5); color: #9ec5f4; background: rgba(57, 135, 229, 0.1); }
+.chip.main { border-color: rgba(240, 193, 75, 0.5); color: #9ec5f4; background: rgba(240, 193, 75, 0.1); }
 
 /* ---------- גריד פרויקטים ---------- */
 .projects-grid {
@@ -460,7 +460,7 @@ footer .links a:hover, footer .links button:hover { color: var(--ink); }
 .dash-head .badge {
   margin-inline-start: auto;
   font-size: 12px; padding: 6px 13px; border-radius: 999px;
-  background: rgba(201, 133, 0, 0.12); border: 1px solid rgba(201, 133, 0, 0.4); color: #eda100;
+  background: rgba(240, 193, 75, 0.12); border: 1px solid rgba(240, 193, 75, 0.4); color: #eda100;
   white-space: nowrap;
 }
 
@@ -633,10 +633,10 @@ table.viz-table th {
   text-align: start; padding: 8px 10px; font-weight: 700; cursor: pointer; white-space: nowrap;
   border-bottom: 1px solid var(--hairline-2); user-select: none;
 }
-/* חץ המיון היה --s1 (#3987e5) על --surface-2, כלומר יחס 4.38 - מתחת ל-4.5
+/* חץ המיון היה --s1 (#b98a00) על --surface-2, כלומר יחס 4.38 - מתחת ל-4.5
    של AA. 12px עדיין נחשב טקסט רגיל ולכן הגודל לבדו לא פותר; מבהירים את
-   הכחול ל-#4a93e8 שנותן 5.03 על אותו רקע ונשאר באותו גוון. */
-table.viz-table th .si { color: #4a93e8; font-size: 12px; }
+   הכחול ל-#cc9a12 שנותן 5.03 על אותו רקע ונשאר באותו גוון. */
+table.viz-table th .si { color: #cc9a12; font-size: 12px; }
 table.viz-table td {
   padding: 7px 10px; border-bottom: 1px solid var(--hairline); color: var(--ink-2);
   font-variant-numeric: tabular-nums; white-space: nowrap;
@@ -646,7 +646,7 @@ table.viz-table td.num { font-weight: 600; color: var(--ink); }
 .pill { font-size: 11px; padding: 2px 9px; border-radius: 999px; font-weight: 700; }
 .pill.ok { background: rgba(12, 163, 12, 0.14); color: #2fbf3f; }
 .pill.warn { background: rgba(250, 178, 25, 0.14); color: #fab219; }
-.pill.bad { background: rgba(208, 59, 59, 0.16); color: #e66767; }
+.pill.bad { background: rgba(208, 59, 59, 0.16); color: #d15d4d; }
 
 /* Tooltip */
 .viz-tip {
@@ -700,7 +700,7 @@ table.viz-table td.num { font-weight: 600; color: var(--ink); }
   position: fixed; bottom: 26px; left: 50%; transform: translate(-50%, 16px);
   z-index: 300; direction: rtl;
   background: #262624; color: var(--ink);
-  border: 1px solid rgba(25, 158, 112, 0.5);
+  border: 1px solid rgba(23, 164, 120, 0.5);
   border-radius: 12px; padding: 12px 22px;
   font-size: 14px; font-weight: 600;
   box-shadow: 0 12px 34px -10px rgba(0, 0, 0, 0.8);
@@ -771,4 +771,4 @@ button, a, select, summary, [role="tab"] { cursor: pointer; }
 }
 
 /* טעינה / ריק */
-::selection { background: rgba(57, 135, 229, 0.4); }
+::selection { background: rgba(240, 193, 75, 0.4); }

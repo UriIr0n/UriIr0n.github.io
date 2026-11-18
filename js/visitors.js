@@ -96,10 +96,10 @@
   (() => {
     const ROLE_KEY = LS('role');
     const ROLES = [
-      { key: 'client',    label: 'מתעניין/ת בשירות', counter: 'role-client',    color: '#199e70' },
-      { key: 'recruiter', label: 'מגייס/ת',          counter: 'role-recruiter', color: '#3987e5' },
-      { key: 'bi',        label: 'קולגה',            counter: 'role-bi',        color: '#9085e9' },
-      { key: 'friend',    label: 'חבר/מכר/סקרן',     counter: 'role-friend',    color: '#e66767' },
+      { key: 'client',    label: 'מתעניין/ת בשירות', counter: 'role-client',    color: '#17a478' },
+      { key: 'recruiter', label: 'מגייס/ת',          counter: 'role-recruiter', color: '#b98a00' },
+      { key: 'bi',        label: 'קולגה',            counter: 'role-bi',        color: '#059eb1' },
+      { key: 'friend',    label: 'חבר/מכר/סקרן',     counter: 'role-friend',    color: '#d15d4d' },
     ];
 
     const promptEl = document.getElementById('visitor-roles-prompt');

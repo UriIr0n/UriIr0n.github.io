@@ -6,7 +6,7 @@ const DashClaude = (() => {
   const D = DATA.claude;
   const C = Charts;
   const root = document.getElementById('page-claude');
-  const REGION_COLORS = { 'אמריקה': '#3987e5', 'אירופה והמזרח התיכון': '#c98500', 'אסיה-פסיפיק': '#199e70' };
+  const REGION_COLORS = { 'אמריקה': '#b98a00', 'אירופה והמזרח התיכון': '#008e89', 'אסיה-פסיפיק': '#17a478' };
 
   const state = { country: null, region: null, track: null };
   let ui = null, built = false;

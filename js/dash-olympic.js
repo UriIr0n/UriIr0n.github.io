@@ -82,7 +82,7 @@ const DashOlympic = (() => {
     const gset = filtered('gender');
     C.donut($('ol-gdonut'), {
       items: D.genders.map(g => ({
-        label: g.label, key: g.key, color: g.key === 'f' ? '#d55181' : '#3987e5',
+        label: g.label, key: g.key, color: g.key === 'f' ? '#bf5884' : '#b98a00',
         value: gset.filter(a => a.gender === g.key).length,
       })).filter(x => x.value), size: 150, centerTitle: 'ספורטאים', valueLabel: 'ספורטאים',
       selectedKey: state.gender,
@@ -95,7 +95,7 @@ const DashOlympic = (() => {
     C.columns($('ol-age'), {
       categories: D.ageBuckets.map(b => b.label),
       keys: D.ageBuckets.map(b => b.key),
-      series: [{ name: 'ספורטאים', color: '#3987e5', values: D.ageBuckets.map(b => aset.filter(a => a.ageB === b.key).length) }],
+      series: [{ name: 'ספורטאים', color: '#b98a00', values: D.ageBuckets.map(b => aset.filter(a => a.ageB === b.key).length) }],
       height: 235, showValues: true, selectedKey: state.ageB,
       onClick: it => toggle('ageB', it.key),
     });
@@ -105,7 +105,7 @@ const DashOlympic = (() => {
     C.columns($('ol-ten'), {
       categories: D.tenureBuckets.map(b => b.label),
       keys: D.tenureBuckets.map(b => b.key),
-      series: [{ name: 'ספורטאים', color: '#199e70', values: D.tenureBuckets.map(b => tset.filter(a => a.tenB === b.key).length) }],
+      series: [{ name: 'ספורטאים', color: '#17a478', values: D.tenureBuckets.map(b => tset.filter(a => a.tenB === b.key).length) }],
       height: 235, showValues: true, selectedKey: state.tenB,
       onClick: it => toggle('tenB', it.key),
     });
@@ -126,7 +126,7 @@ const DashOlympic = (() => {
     const cset = filtered('center');
     C.columns($('ol-center'), {
       categories: D.centers, keys: D.centers,
-      series: [{ name: 'ספורטאים', color: '#9085e9', values: D.centers.map(c => cset.filter(a => a.center === c).length) }],
+      series: [{ name: 'ספורטאים', color: '#059eb1', values: D.centers.map(c => cset.filter(a => a.center === c).length) }],
       height: 235, showValues: true, selectedKey: state.center,
       onClick: it => toggle('center', it.key),
     });

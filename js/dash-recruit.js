@@ -6,8 +6,8 @@ const DashRecruit = (() => {
   const D = DATA.recruit;
   const C = Charts;
   const root = document.getElementById('page-recruit');
-  const GROUP_COLORS = { 'טכנולוגי': '#3987e5', 'עסקי': '#199e70' };
-  const REASON_COLORS = ['#3987e5', '#9085e9', '#199e70', '#c98500', '#d55181'];
+  const GROUP_COLORS = { 'טכנולוגי': '#b98a00', 'עסקי': '#17a478' };
+  const REASON_COLORS = ['#b98a00', '#059eb1', '#17a478', '#008e89', '#bf5884'];
 
   const state = {
     year: 2026, month: 5, fillType: null,
@@ -269,15 +269,15 @@ const DashRecruit = (() => {
     C.columns($('rt-cols'), {
       categories: rows.map(m => m.monthName),
       series: [
-        { name: 'נפתחו', color: '#3987e5', values: rows.map(m => m.opened) },
-        { name: 'נסגרו', color: '#199e70', values: rows.map(m => m.closed) },
+        { name: 'נפתחו', color: '#b98a00', values: rows.map(m => m.opened) },
+        { name: 'נסגרו', color: '#17a478', values: rows.map(m => m.closed) },
       ],
       height: 280,
     });
 
     C.lines($('rt-area'), {
       x: rows.map(m => m.monthName).reverse(),
-      series: [{ name: 'משרות פתוחות', color: '#3987e5', values: rows.map(m => m.stock).reverse() }],
+      series: [{ name: 'משרות פתוחות', color: '#b98a00', values: rows.map(m => m.stock).reverse() }],
       area: true, height: 280,
     });
 

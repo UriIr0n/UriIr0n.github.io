@@ -5,7 +5,7 @@
 
   const PROJECTS = [
     {
-      id: 'recruit', accent: '#3987e5',
+      id: 'recruit', accent: '#b98a00',
       theme: 'בעולם של: חברת הייטק NovaTech Inc.',
       title: 'חדר המצב של הגיוס',
       original: 'דשבורד גיוס ארגוני',
@@ -13,7 +13,7 @@
       tags: ['אפיון מול מערכת "אדם"', 'Power Query: איחוד תיקיות', 'Drill-down', 'מגמות שנתיות'],
     },
     {
-      id: 'hogwarts', accent: '#9085e9',
+      id: 'hogwarts', accent: '#059eb1',
       theme: 'בעולם של: הוגוורטס',
       title: 'היעדרויות סגל: פרופיל בית',
       original: 'דשבורד היעדרויות: פרופיל מחלקתי',
@@ -21,7 +21,7 @@
       tags: ['RLS: הרשאות ברמת שורה', 'ערכי סף וחריגים', 'השוואה אשתקד', 'גרף⇄טבלה ב-Bookmarks'],
     },
     {
-      id: 'claude', accent: '#d95926',
+      id: 'claude', accent: '#b66100',
       theme: 'בעולם של: Anthropic, מנויי Claude',
       title: 'המרוץ למיליון נרשמים',
       original: 'סטטוס הרשמה: השוואה תקופתית',
@@ -29,7 +29,7 @@
       tags: ['אוטומציה מקצה לקצה', 'איחוד נתוני עבר', 'ציר זמן מנורמל', 'השוואת מחזורים'],
     },
     {
-      id: 'nasa', accent: '#199e70',
+      id: 'nasa', accent: '#17a478',
       theme: 'בעולם של: נאס"א',
       title: 'הרכב הסוכנות: מסלולים, דרגות ותקנים',
       original: 'פילוח ארגוני: סגל בכיר',
@@ -37,7 +37,7 @@
       tags: ['60+ מדדי DAX', 'Custom Visual', '3 שכבות Bookmarks', 'טבלת גישור'],
     },
     {
-      id: 'olympic', accent: '#e66767',
+      id: 'olympic', accent: '#d15d4d',
       theme: 'בעולם של: המשלחת האולימפית',
       title: 'המשלחת האולימפית: דמוגרפיה',
       original: 'פילוח עובדים',

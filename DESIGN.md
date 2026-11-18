@@ -11,7 +11,7 @@ Direction "מכאוס לדוח", palette "ירוק עמוק", picked by Uri from
 | `--ink` / `--ink-2` / `--ink-3` | `#eef3ef` / `#c3d4cb` / `#8ea69b` | text levels |
 | `--mint` | `#d6e7de` | hero particles, fact numbers |
 | `--gold` | `#f0c14b` | the one accent: primary buttons, CV button, status dot, dates, highlighted bar |
-| `--s1`...`--s8` | unchanged chart series | data colors inside dashboards only |
+| `--s1`...`--s8` | `#b98a00 #bf5884 #73a434 #059eb1 #d15d4d #17a478 #b66100 #008e89` | chart series, in this order (validated with the dataviz palette script on `#15322b`: all checks pass, one adjacent deutan pair at ΔE 6.2 so legends stay on). No blue or purple anywhere. |
 
 Gold is the only UI accent. Chart series colors stay for data, never for chrome.
 

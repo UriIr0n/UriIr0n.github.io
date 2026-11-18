@@ -130,8 +130,8 @@ const DashNasa = (() => {
     C.columns($('na-gender'), {
       categories: D.tracks.map(t => t.name),
       series: [
-        { name: 'נשים', color: '#d55181', values: D.tracks.map((t, i) => Math.round(trackCount(t) * (fShare + [0.02, 0.09, 0.05, -0.06][i]))) },
-        { name: 'גברים', color: '#3987e5', values: D.tracks.map((t, i) => trackCount(t) - Math.round(trackCount(t) * (fShare + [0.02, 0.09, 0.05, -0.06][i]))) },
+        { name: 'נשים', color: '#bf5884', values: D.tracks.map((t, i) => Math.round(trackCount(t) * (fShare + [0.02, 0.09, 0.05, -0.06][i]))) },
+        { name: 'גברים', color: '#b98a00', values: D.tracks.map((t, i) => trackCount(t) - Math.round(trackCount(t) * (fShare + [0.02, 0.09, 0.05, -0.06][i]))) },
       ],
       height: 240,
     });
@@ -140,13 +140,13 @@ const DashNasa = (() => {
     const tenured = dvs.reduce((a, x) => a + x.tenure, 0);
     C.donut($('na-tenure'), {
       items: [
-        { label: 'בעלי קביעות', key: 'y', color: '#199e70', value: tenured },
-        { label: 'בהליך / ללא', key: 'n', color: '#c98500', value: Math.max(0, totCount - tenured) },
+        { label: 'בעלי קביעות', key: 'y', color: '#17a478', value: tenured },
+        { label: 'בהליך / ללא', key: 'n', color: '#008e89', value: Math.max(0, totCount - tenured) },
       ], centerTitle: 'אנשי סגל', size: 165, valueLabel: 'אנשי סגל',
     });
 
     const guests = D.guestRanks.map((gr, i) => ({
-      label: gr, key: gr, color: ['#9085e9', '#3987e5', '#199e70', '#c98500'][i],
+      label: gr, key: gr, color: ['#059eb1', '#b98a00', '#17a478', '#008e89'][i],
       value: dvs.reduce((a, x) => a + x.guests[gr], 0),
     }));
     C.hbars($('na-guests'), { items: guests, valueLabel: 'קבלנים', rowH: 34 });
@@ -178,10 +178,10 @@ const DashNasa = (() => {
     C.lines($('nm-lines'), {
       x: y.map(r => String(r.year)),
       series: [
-        { name: 'סך שעות סימולטור', color: '#3987e5', values: y.map(r => r.totalHours) },
-        { name: 'שעות סגל נאס"א', color: '#199e70', values: y.map(r => r.staffHours) },
-        { name: 'שעות קבלני חוץ', color: '#c98500', values: y.map(r => r.contractorHours) },
-        { name: 'מועמדויות לתוכנית האסטרונאוטים', color: '#9085e9', values: y.map(r => r.applications), dash: '6 4' },
+        { name: 'סך שעות סימולטור', color: '#b98a00', values: y.map(r => r.totalHours) },
+        { name: 'שעות סגל נאס"א', color: '#17a478', values: y.map(r => r.staffHours) },
+        { name: 'שעות קבלני חוץ', color: '#008e89', values: y.map(r => r.contractorHours) },
+        { name: 'מועמדויות לתוכנית האסטרונאוטים', color: '#059eb1', values: y.map(r => r.applications), dash: '6 4' },
       ],
       height: 330,
     });
